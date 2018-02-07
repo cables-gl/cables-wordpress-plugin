@@ -20,6 +20,7 @@ class Shape {
     private $presets;
     private $hasScreenshotSeries;
     private $info;
+    private $json;
 
     /**
      * Shape constructor. Private, use factory-method
@@ -42,6 +43,7 @@ class Shape {
         $shape->setPresets(Preset::fromJson($jsonshape->presets));
         $shape->setHasScreenshotSeries($jsonshape->hasScreenshotSeries);
         $shape->setInfo($jsonshape->info);
+        $shape->setJson(json_encode($jsonshape));
         return $shape;
     }
 
@@ -170,6 +172,22 @@ class Shape {
     public function getInfo() {
         return $this->info;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getJson() {
+        return $this->json;
+    }
+
+    /**
+     * @param mixed $json
+     */
+    private function setJson($json) {
+        $this->json = $json;
+    }
+
+
 
 
 }

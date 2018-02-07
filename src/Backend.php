@@ -36,6 +36,7 @@ class Backend {
 
     public function admin_menu() {
         add_menu_page('Polyshapes', 'Polyshapes', 'manage_options', 'polyshapes_backend', array($this, 'plugin_page'), 'dashicons-admin-appearance');
+        add_submenu_page('polyshapes_backend', 'Shape', 'Shape', 'manage_options', 'polyshapes_backend_shape', array($this, 'shape_page'));
     }
 
     public function plugin_page() {
@@ -43,6 +44,17 @@ class Backend {
         $api = new Api\Polyshapes();
         $shapes = $api->getAllShapes();
         echo $this->twig->render($template, array('shapes' => $shapes));
+    }
+
+    public function shape_page() {
+        $template = $this->twig->loadTemplate('admin/shape.twig');
+        $api = new Api\Polyshapes();
+        $shape = $api->getShape($_GET['shape']);
+        $js = $api->getJavscriptForShape($shape);
+        echo $this->twig->render($template, array(
+            'shape' => $shape,
+            'javascript' => $js
+        ));
     }
 
     public function isDevEnv() {

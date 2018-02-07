@@ -19,6 +19,15 @@ class Polyshapes {
     /**
      * @return Shape[]
      */
+    public function getShape(string $id) : Shape {
+        $response = $this->callRemote('/shape/' . $id);
+        $jsonshape = json_decode($response['body']);
+        return Shape::fromJson($jsonshape);
+    }
+
+    /**
+     * @return Shape[]
+     */
     public function getAllShapes(): array {
         $response = $this->callRemote('/list');
         $jsonshapes = json_decode($response['body']);
@@ -36,6 +45,11 @@ class Polyshapes {
             )
         );
         return wp_remote_get(static::$BASE_URL . $method, $args);
+    }
+
+    public function getJavscriptForShape(Shape $shape) : string {
+        $response = $this->callRemote('/p/' . $shape->getId());
+        return $response['body'];
     }
 
 }
