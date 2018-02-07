@@ -29,13 +29,14 @@ class Shortcodes {
     }
 
     public function singlePolyshapeCode($atts, $content, $tag) {
-        $template = $this->twig->loadTemplate('admin/shape.twig');
+        $template = $this->twig->loadTemplate('frontend/shape.shortcode.twig');
         $api = new Api\Polyshapes();
         $shape = $api->getShape($atts['id']);
         $js = $api->getJavscriptForShape($shape);
         echo $this->twig->render($template, array(
             'shape' => $shape,
-            'javascript' => $js
+            'javascript' => $js,
+            'targetSelector' => '#polypatch'
         ));
     }
 

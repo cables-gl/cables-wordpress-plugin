@@ -1,0 +1,58 @@
+<script type="text/javascript">{{ javascript|raw }}</script>
+<script type="text/javascript">
+    jQuery('{{ targetSelector }}').html('');
+</script>
+
+<script type="text/javascript">
+
+    var ps = ps || {};
+
+    ps.shapeInfo ={{ shape.json|raw }};
+    ps.customizer = {};
+    ps.customizer.activatePreset = function (presetId) {
+        if (presetId >= 0 && presetId < ps.shapeInfo.presets.length) {
+            var presetParams = ps.shapeInfo.presets[presetId].parameters;
+            for (var cablesVar in presetParams) {
+                if (presetParams.hasOwnProperty(cablesVar)) {
+                    ps.shapeInfo.customizerData.parameters[cablesVar].gui.options.default = presetParams[cablesVar];
+                    switch (ps.shapeInfo.customizerData.parameters[cablesVar].gui.type) {
+                        case 'color':
+                            var floatColorArr = [
+                                ps.customizer.twoBytesToFloat(presetParams[cablesVar][0]),
+                                ps.customizer.twoBytesToFloat(presetParams[cablesVar][1]),
+                                ps.customizer.twoBytesToFloat(presetParams[cablesVar][2])
+                            ];
+                            CABLES.patch.vars[cablesVar] = floatColorArr;
+                            break;
+                        default:
+                            CABLES.patch.vars[cablesVar] = presetParams[cablesVar];
+                            break;
+                    }
+                }
+            }
+            window.polyshapes.updateParams();
+            this.lastSelectedPreset = presetId;
+        }
+    };
+    ps.customizer.twoBytesToFloat = function (val) {
+        return val === 0 ? 0 : (val / 255);
+    };
+
+    jQuery('{{ targetSelector }}').each(function () {
+        CABLES.EMBED.addPatch(this, {
+                "patch": patchData,
+                "prefixAssetPath": "{{ polyshapes_url }}/assets/{{ shape.id }}/",
+                "canvas":
+                    {
+                        "preserveDrawingBuffer": true,
+                        "premultipliedAlpha": false,
+                        "alpha": false
+                    },
+                "onFinishedLoading": function () {
+                    ps.customizer.activatePreset(0);
+                }
+            }
+        );
+    });
+
+</script>

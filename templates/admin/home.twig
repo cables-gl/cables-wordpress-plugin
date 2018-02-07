@@ -2,13 +2,14 @@
     <div class="row" style="padding-top:5px">
         <div class="item-grid row">
         {% for shape in shapes %}
-            <article class=" cute-4-tablet left">
+            <article class="cute-4-tablet left">
                 <div class="item screenshotSeries" data-id="{{ shape.id }}" onclick="document.location.href='admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}';">
-                    <a class="imgcontainer" href="admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}"><img src="{{ polyshapes_url }}/api/s/{{ shape.id }}" class="responsive-img "></a>
+                    <a class="imgcontainer" href="admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}">
+                        <img src="{{ polyshapes_url }}/api/s/{{ shape.id }}" class="responsive-img ">
+                    </a>
                     <div class="text">
                         <span class="title">{{ shape.title }}</span>
                     </div>
-                    <div style="clear:both;"></div>
                 </div>
             </article>
         {% endfor %}

@@ -29,15 +29,23 @@ class Frontend {
     }
 
     public function shape_footer() {
+        if(!$this->isThemeHookActivated()) return;
+
+        $options = get_option('polyshapes_backend');
         $template = $this->twig->loadTemplate('frontend/shape.footer.twig');
         $api = new Api\Polyshapes();
-        $shape = $api->getShape('SysXgGVDl');
+        $shape = $api->getShape($options['shape_id']);
         $js = $api->getJavscriptForShape($shape);
         echo $this->twig->render($template, array(
             'shape' => $shape,
             'javascript' => $js,
-            'target' => 'masthead'
+            'targetSelector' => $options['target_selector']
         ));
+    }
+
+    private function isThemeHookActivated() {
+        $options = get_option('polyshapes_backend');
+        return $options['theme_hook'];
     }
 
 }

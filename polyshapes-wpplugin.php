@@ -29,5 +29,5 @@ if (is_admin()) {
     $backend->display();
 }else{
     $frontend = new Frontend($twig);
-    //$frontend->display();
+    $frontend->display();
 }
