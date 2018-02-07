@@ -11,6 +11,7 @@ License: MIT
 
 
 use Polyshapes\Plugin\Backend;
+use Polyshapes\Plugin\Frontend;
 use Polyshapes\Plugin\Shortcodes;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -26,4 +27,7 @@ $shortcodes->register();
 if (is_admin()) {
     $backend = new Backend($twig);
     $backend->display();
+}else{
+    $frontend = new Frontend($twig);
+    $frontend->display();
 }
