@@ -1,0 +1,17 @@
+{
+  "name": "undev/polyshapes-plugin",
+  "description": "Integration of polyshapes.io into Wordpress",
+  "authors": [
+    {
+      "name": "Stephan Maihofer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Polyshapes\\Plugin\\": ["src/"]
+    }
+  },
+  "require": {
+    "twig/twig": "1.35.0"
+  }
+}
