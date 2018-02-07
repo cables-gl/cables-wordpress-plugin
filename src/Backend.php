@@ -8,6 +8,7 @@
 
 namespace Polyshapes\Plugin;
 
+use Polyshapes\Plugin\Api;
 use Twig_Environment;
 
 class Backend {
@@ -39,6 +40,12 @@ class Backend {
 
     public function plugin_page() {
         $template = $this->twig->loadTemplate('admin/home.twig');
-        echo $this->twig->render($template, array());
+        $api = new Api\Polyshapes();
+        $shapes = $api->getAllShapes();
+        echo $this->twig->render($template, array('shapes' => $shapes));
+    }
+
+    public function isDevEnv() {
+        return true;
     }
 }

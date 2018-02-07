@@ -1,1 +1,17 @@
-shapeshifter!
+<section class="center padding-bottom" id="shapes-page">
+    <div class="row" style="padding-top:5px">
+        <div class="item-grid row">
+        {% for shape in shapes %}
+            <article class=" cute-4-tablet left">
+                <div class="item screenshotSeries" data-id="{{ shape.id }}" onclick="document.location.href='https://dev.polyshapes.io/{{ shape.id }}';">
+                    <a class="imgcontainer" href="https://dev.polyshapes.io/shape/r14tr7LDx"><img src="https://dev.polyshapes.io/api/s/{{ shape.id }}" class="responsive-img "></a>
+                    <div class="text">
+                        <span class="title">{{ shape.title }}</span>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </article>
+        {% endfor %}
+        </div>
+    </div>
+</section>
