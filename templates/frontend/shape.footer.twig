@@ -1,4 +1,4 @@
-<script type="text/javascript">{{ javascript }}</script>
+<script type="text/javascript">{{ javascript|raw }}</script>
 <script type="text/javascript">
 
     jQuery('#{{ target }}').html('<canvas id="glcanvas_polypatch" width="1188" height="500"></canvas><div id="performance" style="position: absolute; left: 0px; top: 0px; opacity: 0.9; padding: 4px; cursor: pointer; background: rgb(34, 34, 34); font-family: monospace; font-size: 11px; z-index: 9999;"> &nbsp; </div>');
@@ -53,6 +53,6 @@
 
         });
 
-    ps.shapeInfo={{ shape.json }};
+    ps.shapeInfo={{ shape.json|raw }};
 
 </script>
