@@ -34,7 +34,7 @@ class Backend {
     }
 
     public function admin_menu() {
-        add_menu_page('Polyshapes', 'Polyshapes', 'manage_options', 'polyshapes_backend', array($this, 'plugin_page'));
+        add_menu_page('Polyshapes', 'Polyshapes', 'manage_options', 'polyshapes_backend', array($this, 'plugin_page'), 'dashicons-admin-appearance');
     }
 
     public function plugin_page() {
