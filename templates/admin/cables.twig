@@ -1,0 +1,19 @@
+<section class="center padding-bottom" id="shapes-page">
+    <div class="row" style="padding-top:5px">
+        <div class="item-grid row">
+            {% for patch in patches %}
+                <article class="cute-4-tablet left">
+                    <div class="item screenshotSeries" data-id="{{ patch.id }}"
+                         onclick="document.location.href='admin.php?page=polyshapes_backend_patch&patch={{ patch.id }}';">
+                        <a class="imgcontainer" href="admin.php?page=polyshapes_backend_patch&patch={{ patch.id }}">
+                            <img src="https://cables.gl/api/project/{{ patch.id }}/screenshot" class="responsive-img ">
+                        </a>
+                        <div class="text">
+                            <span class="title">{{ patch.name }}</span>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>

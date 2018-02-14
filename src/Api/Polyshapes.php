@@ -17,7 +17,7 @@ class Polyshapes {
     private static $BASE_URL = 'https://dev.polyshapes.io/api';
 
     /**
-     * @return Shape[]
+     * @return Shape
      */
     public function getShape(string $id) : Shape {
         $response = $this->callRemote('/shape/' . $id);
