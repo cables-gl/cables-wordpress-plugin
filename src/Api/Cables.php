@@ -56,6 +56,7 @@ class Cables {
         $destination_path = plugin_dir_path(__FILE__) . '../../public/patches/' . $patchId . '/';
         $unzipfile = unzip_file( $filename, $destination_path);
         if ( is_wp_error( $unzipfile ) ) {
+            print_r($unzipfile);
             echo 'There was an error unzipping the file.';
         }
     }
