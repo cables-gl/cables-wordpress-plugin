@@ -150,11 +150,14 @@ class Backend {
     }
 
     public function patch_import_page() {
+        $template = $this->twig->loadTemplate('admin/import.twig');
         $api = new Api\Cables();
         $patchId = $_GET['patch'];
         $export = $api->getPatchExport($patchId);
         $api->importPatch($patchId, $export);
-        wp_redirect('admin.php?page=polyshapes_backend_patch&patch=' . $patchId);
+        echo $this->twig->render($template, array(
+            'id' => $patchId
+        ));
     }
 
     public function settings_page() {
