@@ -1,0 +1,16 @@
+<div id="theme-options-wrap">
+    <div class="icon32" id="icon-tools">
+        <br />
+    </div>
+    <h2>cables.gl Settings</h2>
+    <p>Settings to configure the integration of cables.gl into your Wordpress installation.</p>
+    <form method="post" action="options.php">
+
+        {{ fields | raw}}
+        {{ sections | raw }}
+
+        <p class="submit">
+            <input name="Submit" type="submit" class="button-primary" value="{{ save }}" />
+        </p>
+    </form>
+</div>

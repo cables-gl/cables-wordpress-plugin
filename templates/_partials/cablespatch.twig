@@ -1,0 +1,29 @@
+{% if isImported %}
+<canvas id="glcanvas" width="100vw" height="100vh"></canvas>
+
+<script type="text/javascript" src="{{ patchDir }}js/libs.core.min.js"></script>
+<script type="text/javascript" src="{{ patchDir }}js/cables.min.js"></script>
+
+<script type="text/javascript" src="{{ patchDir }}js/ops.js"></script>
+
+<script>
+
+    function showError(err)
+    {
+        alert(err);
+    }
+
+    document.addEventListener("DOMContentLoaded", function(event)
+    {
+        CABLES.patch=new CABLES.Patch(
+            {
+                patchFile:'{{ patchDir }}js/{{ patch.name }}.json',
+                prefixAssetPath:'{{ patchDir }}/',
+                glCanvasId:'glcanvas',
+                glCanvasResizeToWindow:true,
+                onError:showError
+            });
+    });
+
+</script>
+{% endif %}

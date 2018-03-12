@@ -1,0 +1,33 @@
+{
+  "name": "undev/cables_wordpress_plugin",
+  "description": "Integration of cables.gl into Wordpress",
+  "homepage": "http://www.cables.gl",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "undefined development",
+      "email": "hi@undev.de"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:undev/cables_api_php_client.git"
+    }
+  ],
+  "config": {
+    "vendor-dir": "vendor"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cables\\Plugin\\Wordpress\\": [
+        "src/"
+      ]
+    }
+  },
+  "require": {
+    "php": ">=7.0.0",
+    "twig/twig": "1.35.0",
+    "cables/cables_api_php_client": "dev-master as 0.0.1"
+  }
+}
