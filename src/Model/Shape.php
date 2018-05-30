@@ -11,16 +11,14 @@ namespace Polyshapes\Plugin\Model;
 
 class Shape {
 
-    private $cablesId;
     private $title;
-    private $created;
-    private $updated;
     private $id;
     private $customizerData;
     private $presets;
     private $hasScreenshotSeries;
     private $info;
     private $json;
+    private $fileName;
 
     /**
      * Shape constructor. Private, use factory-method
@@ -34,24 +32,25 @@ class Shape {
      */
     public static function fromJson($jsonshape): Shape {
         $shape = new Shape();
-        $shape->setCablesId($jsonshape->cablesId);
         $shape->setTitle($jsonshape->title);
-        $shape->setCreated($jsonshape->created);
-        $shape->setUpdated($jsonshape->updated);
-        $shape->setId($jsonshape->id);
-        $shape->setCustomizerData(CustomizerData::fromJson($jsonshape->customizerData));
-        $shape->setPresets(Preset::fromJson($jsonshape->presets));
-        $shape->setHasScreenshotSeries($jsonshape->hasScreenshotSeries);
-        $shape->setInfo($jsonshape->info);
+        $shape->setId($jsonshape->_id);
         $shape->setJson(json_encode($jsonshape));
+        $shape->setFileName($jsonshape->file_shape);
         return $shape;
     }
 
     /**
-     * @param mixed $cablesId
+     * @return mixed
      */
-    private function setCablesId($cablesId) {
-        $this->cablesId = $cablesId;
+    public function getFileName() {
+        return $this->fileName;
+    }
+
+    /**
+     * @param mixed $fileName
+     */
+    public function setFileName($fileName) {
+        $this->fileName = $fileName;
     }
 
     /**
@@ -59,20 +58,6 @@ class Shape {
      */
     private function setTitle($title) {
         $this->title = $title;
-    }
-
-    /**
-     * @param mixed $created
-     */
-    private function setCreated($created) {
-        $this->created = $created;
-    }
-
-    /**
-     * @param mixed $updated
-     */
-    private function setUpdated($updated) {
-        $this->updated = $updated;
     }
 
     /**
@@ -113,29 +98,8 @@ class Shape {
     /**
      * @return mixed
      */
-    public function getCablesId() {
-        return $this->cablesId;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTitle() {
         return $this->title;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCreated() {
-        return $this->created;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUpdated() {
-        return $this->updated;
     }
 
     /**
@@ -186,8 +150,5 @@ class Shape {
     private function setJson($json) {
         $this->json = $json;
     }
-
-
-
 
 }

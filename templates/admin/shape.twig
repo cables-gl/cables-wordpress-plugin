@@ -1,8 +1,28 @@
-<section class="shape" id="polypatch" style="width: 800px; height: 450px"></section>
+{% include '_partials/polyshape.twig' %}
 <div class="shortcode">
-    [polyshape id='{{ shape.id }}']
+    Shortcode: [polyshape id='{{ shape.id }}']
 </div>
 
-{% include '_partials/polyshape.twig' %}
+<form method="POST" action="{{ action_url }}">
 
+    <input type="hidden" name="action" value="polyshapes_set_shape_options">
+    <input type="hidden" name="shape" value="{{ shape.id }}">
+
+    <table class="form-table">
+        <tbody>
+        <tr>
+            <th scope="row"><label for="element_replacement">Activate Element Replacement:</label></th>
+            <td><input name="element_replacement" id="element_replacement" type="checkbox"{% if replacesElements %} checked="checked"{% endif %}></td>
+        </tr>
+        <tr>
+            <th scope="row"><label for="target_selector">Target Element (CSS-Selector):</label></th>
+            <td><input name="target_selector" id="target_selector" type="text" value="{{ targetSelector }}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="submit">
+        <input name="Submit" type="submit" class="button-primary" value="Save Changes">
+    </p>
+</form>
 

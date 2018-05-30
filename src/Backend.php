@@ -28,60 +28,9 @@ class Backend {
         self::enqueue_scripts();
         add_action('admin_menu', array($this, 'admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
-    }
+        add_action('admin_post_polyshapes_login', array($this, 'polyshapes_login'));
+        add_action('admin_post_polyshapes_set_shape_options', array($this, 'polyshapes_set_shape_options'));
 
-    public function register_settings() {
-
-        register_setting('polyshapes_backend', 'polyshapes_backend', array($this, 'validate_setting'));
-
-        add_settings_section('polyshapes_backend_theme', 'Theme-Hook', array($this, 'section_cb'), __FILE__);
-
-        add_settings_field('theme_hook', 'Activate Element Replacement:', array($this, 'theme_hook_setting'), __FILE__, 'polyshapes_backend_theme');
-        add_settings_field('shape_id', 'Shape-Id:', array($this, 'shape_id_setting'), __FILE__, 'polyshapes_backend_theme');
-        add_settings_field('target_selector', 'Target Element (CSS-Selector):', array($this, 'target_selector_setting'), __FILE__, 'polyshapes_backend_theme');
-
-
-        add_settings_section('polyshapes_cables_integration', 'Cables Integration', array($this, 'section_cables'), __FILE__);
-
-        add_settings_field('cables_api_key', 'Api-Key:', array($this, 'cables_api_key_setting'), __FILE__, 'polyshapes_cables_integration');
-
-
-    }
-
-    public function theme_hook_setting() {
-        $options = get_option('polyshapes_backend');
-        if($options['theme_hook']) {
-            echo "<input name='polyshapes_backend[theme_hook]' type='checkbox' checked='checked'/>";
-        }else{
-            echo "<input name='polyshapes_backend[theme_hook]' type='checkbox'/>";
-        }
-    }
-
-    public function shape_id_setting() {
-        $options = get_option('polyshapes_backend');
-        echo "<input name='polyshapes_backend[shape_id]' type='text' value='{$options['shape_id']}' />";
-    }
-
-    public function target_selector_setting() {
-        $options = get_option('polyshapes_backend');
-        echo "<input name='polyshapes_backend[target_selector]' type='text' value='{$options['target_selector']}' />";
-    }
-
-    public function cables_api_key_setting() {
-        $options = get_option('polyshapes_backend');
-        echo "<input name='polyshapes_backend[cables_api_key]' type='text' width='96' value='{$options['cables_api_key']}' />";
-    }
-
-    public function validate_setting($plugin_options) {
-        return $plugin_options;
-    }
-
-    public function section_cb() {
-        echo "Activating the theme hook will replace the innerHtml of every element on the public page with the polyshape corresponding tho the given ID";
-    }
-
-    public function section_cables() {
-        echo "Enter your API-Key that you find in the settings of your cables.gl useraccount";
     }
 
     public function enqueue_scripts() {
@@ -89,74 +38,129 @@ class Backend {
         wp_enqueue_style('polyshapes_backend', plugins_url() . '/polyshapes-wpplugin/public/css/backend.css');
     }
 
+    public function register_settings() {
+
+        register_setting('polyshapes_backend', 'polyshapes_backend', array($this, 'validate_setting'));
+
+        add_settings_section('polyshapes_backend_theme', 'Polyshapes Settings', array($this, 'section_cb'), __FILE__);
+
+        add_settings_field('api_key', 'Api-Key:', array($this, 'api_key_setting'), __FILE__, 'polyshapes_backend_theme');
+
+
+    }
+
+    public function target_selector_setting() {
+        $options = get_option('polyshapes_backend');
+        echo "<input name='polyshapes_backend[target_selector]' type='text' value='{$options['target_selector']}' />";
+    }
+
+    public function api_key_setting() {
+        $options = get_option('polyshapes_backend');
+        echo $options['api_key'];
+    }
+
+    public function validate_setting($plugin_options) {
+        return $plugin_options;
+    }
+
+    public function section_cb() {
+        echo "Settings to configure the integration of polyshapes.io into your Wordpress installation.";
+    }
+
     public function admin_menu() {
         add_menu_page('Polyshapes', 'Polyshapes', 'manage_options', 'polyshapes_backend', array($this, 'plugin_page'), 'dashicons-admin-appearance');
-        add_submenu_page('polyshapes_backend', 'Shape', null, 'manage_options', 'polyshapes_backend_shape', array($this, 'shape_page'));
-        $options = get_option('polyshapes_backend');
-        if($options['cables_api_key']) {
-            add_submenu_page('polyshapes_backend', 'cables.gl', 'cables.gl', 'manage_options', 'polyshapes_backend_cables', array($this, 'cables_page'));
-            add_submenu_page('polyshapes_backend', 'Patch', null, 'manage_options', 'polyshapes_backend_patch', array($this, 'patch_page'));
-            add_submenu_page('polyshapes_backend', 'Import Patch', null, 'manage_options', 'polyshapes_backend_patch_import', array($this, 'patch_import_page'));
-
-        }
+        add_submenu_page('polyshapes_backend', 'Imports', 'Imports', 'manage_options', 'polyshapes_backend_imports', array($this, 'imports_page'));
         add_submenu_page('polyshapes_backend', 'Settings', 'Settings', 'administrator', 'polyshapes_backend_settings', array($this, 'settings_page'));
+
+        add_submenu_page('polyshapes_backend', 'Import', null, 'manage_options', 'polyshapes_backend_import', array($this, 'import_page'));
+        add_submenu_page('polyshapes_backend', 'Shape', null, 'manage_options', 'polyshapes_backend_shape', array($this, 'shape_page'));
 
     }
 
     public function plugin_page() {
-        $template = $this->twig->loadTemplate('admin/home.twig');
+        $options = get_option('polyshapes_backend');
+        $params = array();
+        if (!$options['api_key']) {
+            $template = $this->twig->loadTemplate('admin/auth.twig');
+            $params['action_url'] = esc_url(admin_url('admin-post.php'));
+        } else {
+            $template = $this->twig->loadTemplate('admin/home.twig');
+        }
+        echo $this->twig->render($template, $params);
+
+    }
+
+    public function import_page() {
+        $shapeId = $_GET['shape'];
         $api = new Api\Polyshapes();
-        $shapes = $api->getAllShapes();
-        echo $this->twig->render($template, array('shapes' => $shapes));
+        $shape = $api->getShape($shapeId);
+        $api->importShape($shape);
+        wp_redirect(admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId));
+        exit;
+    }
+
+    public function imports_page() {
+        $template = $this->twig->loadTemplate('admin/imports.twig');
+        $params = array();
+        $api = new Api\Polyshapes();
+        $params['shapes'] = $api->getAllShapes();
+        echo $this->twig->render($template, $params);
+    }
+
+    public function polyshapes_login() {
+        status_header(200);
+        $email = $_REQUEST['email'];
+        $password = $_REQUEST['password'];
+        $api = new Api\Polyshapes();
+        $response = $api->login($email, $password);
+        if ($response && isset($response->apikey)) {
+            $options = get_option('polyshapes_backend');
+            $options['api_key'] = $response->apikey->key;
+            update_option('polyshapes_backend', $options);
+        }
+        wp_redirect(admin_url('admin.php?page=polyshapes_backend'));
+        exit;
+    }
+
+    public function polyshapes_set_shape_options() {
+        status_header(200);
+        $shapeId = $_REQUEST['shape'];
+        $elementReplacement = $_REQUEST['element_replacement'];
+        $targetSelector = $_REQUEST['target_selector'];
+        $options = get_option('polyshapes_backend');
+        if (!is_array($options['shapes'])) {
+            $options['shapes'] = array();
+        }
+        $options['shapes'][$shapeId] = array("element_replacement" => $elementReplacement, "target_selector" => $targetSelector);
+        update_option('polyshapes_backend', $options);
+        wp_redirect(admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId));
+        exit;
     }
 
     public function shape_page() {
         $template = $this->twig->loadTemplate('admin/shape.twig');
         $api = new Api\Polyshapes();
-        $shape = $api->getShape($_GET['shape']);
-        $js = $api->getJavscriptForShape($shape);
-        echo $this->twig->render($template, array(
-            'shape' => $shape,
-            'javascript' => $js,
-            'targetSelector' => '#polypatch'
-        ));
-    }
-
-    public function cables_page() {
-        $template = $this->twig->loadTemplate('admin/cables.twig');
-        $api = new Api\Cables();
-        $patches = $api->getMyPatches();
-        echo $this->twig->render($template, array('patches' => $patches));
-    }
-
-    public function patch_page() {
-        $template = $this->twig->loadTemplate('admin/patch.twig');
-        $api = new Api\Cables();
-        $patchId = $_GET['patch'];
-        $imported = $api->isImported($patchId);
-        $export = $api->getPatchExport($patchId);
-        foreach ($api->getMyPatches() as $myPatch) {
-            if($myPatch->getId() == $patchId) {
-                $patchName = $myPatch->getName();
+        $shapeId = $_GET['shape'];
+        $shape = $api->getShape($shapeId);
+        $shape->patchname = 'randompoints_example';
+        $imported = $api->isImported($shape);
+        $options = get_option('polyshapes_backend');
+        $replacesElements = false;
+        $targetSelector = "";
+        if(is_array($options['shapes'])) {
+            if(is_array($options['shapes'][$shapeId])) {
+                $shapeConfig = $options['shapes'][$shapeId];
+                $replacesElements = $shapeConfig['element_replacement'];
+                $targetSelector = $shapeConfig['target_selector'];
             }
         }
         echo $this->twig->render($template, array(
-            'export' => $export,
-            'id' => $patchId,
-            'name' => str_replace(' ', '_', $patchName),
+            'shape' => $shape,
             'isImported' => $imported,
-            'patchDir' => $api->getPatchDirUrl($patchId)
-        ));
-    }
-
-    public function patch_import_page() {
-        $template = $this->twig->loadTemplate('admin/import.twig');
-        $api = new Api\Cables();
-        $patchId = $_GET['patch'];
-        $export = $api->getPatchExport($patchId);
-        $api->importPatch($patchId, $export);
-        echo $this->twig->render($template, array(
-            'id' => $patchId
+            'replacesElements' => $replacesElements,
+            'targetSelector' => $targetSelector,
+            'patchDir' => $api->getShapeDirUrl($shape),
+            'action_url' => esc_url(admin_url('admin-post.php'))
         ));
     }
 
@@ -181,7 +185,4 @@ class Backend {
 
     }
 
-    public function isDevEnv() {
-        return true;
-    }
 }

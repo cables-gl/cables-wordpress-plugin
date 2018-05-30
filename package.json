@@ -1,0 +1,19 @@
+{
+  "name": "undev-polyshapes-plugin",
+  "version": "0.0.1",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "1.0.2",
+    "grunt-cli": "1.2.0",
+    "grunt-composer": "0.4.5"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
+  },
+  "dependencies": {
+    "grunt-bumpup": "0.6.3",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-compress": "1.4.3",
+    "grunt-replace": "1.0.1"
+  }
+}

@@ -9,47 +9,103 @@
 namespace Polyshapes\Plugin\Api;
 
 use Polyshapes\Plugin\Model\Shape;
+use Polyshapes\Plugin\Model\ShapeExport;
 
 class Polyshapes {
 
-    private static $API_USERNAME = 'polyshapes';
-    private static $API_PASSWORD = 'undefined';
     private static $BASE_URL = 'https://dev.polyshapes.io/api';
 
     /**
      * @return Shape
      */
     public function getShape(string $id) : Shape {
-        $response = $this->callRemote('/shape/' . $id);
+        $response = $this->getRemote('/shapes/shape/' . $id);
         $jsonshape = json_decode($response['body']);
-        return Shape::fromJson($jsonshape);
+        return Shape::fromJson($jsonshape->shape);
     }
 
     /**
      * @return Shape[]
      */
     public function getAllShapes(): array {
-        $response = $this->callRemote('/list');
+        $response = $this->getRemote('/shapes');
         $jsonshapes = json_decode($response['body']);
         $shapes = array();
-        foreach ($jsonshapes as $jsonshape) {
+        foreach ($jsonshapes->shapes as $jsonshape) {
             $shapes[] = Shape::fromJson($jsonshape);
         }
         return $shapes;
     }
 
-    private function callRemote(string $method): array {
+    public function login($email, $password) {
+        $clientId = $this->getClientId();
+        $params = array(
+            'email' => $email,
+            'password' => $password,
+            'clientid' => $clientId
+        );
+        $response = $this->postRemote('/user/login', $params);
+        return json_decode($response['body']);
+    }
+
+    private function getRemote(string $method): array {
+        $options = get_option('polyshapes_backend');
         $args = array(
             'headers' => array(
-                'Authorization' => 'Basic ' . base64_encode(static::$API_USERNAME . ':' . static::$API_PASSWORD)
+                'X-Api-Key' => $options['api_key'],
+                'X-Client-Id' => $this->getClientId()
             )
         );
         return wp_remote_get(static::$BASE_URL . $method, $args);
     }
 
+    private function postRemote(string $method, $params = array()) {
+        return wp_safe_remote_post(static::$BASE_URL . $method, array('body' => $params));
+    }
+
     public function getJavscriptForShape(Shape $shape) : string {
-        $response = $this->callRemote('/p/' . $shape->getId());
+        $response = $this->getRemote('/p/' . $shape->getId());
         return $response['body'];
     }
+
+    private function getClientId() {
+        $url = parse_url(get_site_url());
+        $clientId = $url['host'];
+        return $clientId;
+    }
+
+    public function isImported(Shape $shape) : bool {
+        $filename = plugin_dir_path(__FILE__) . '../../public/patches/' . $shape->getId() . '/cables.txt';
+        return file_exists($filename);
+    }
+
+    public function getShapeDirUrl(Shape $shape) {
+        $filename = plugin_dir_url(__FILE__) . '../../public/patches/' . $shape->getId() . '/';
+        return $filename;
+    }
+
+    public function importShape(Shape $shape) {
+
+        $method = '/shapes/shape/' . $shape->getId() . '/package';
+        $response = $this->getRemote($method);
+
+        WP_Filesystem();
+        $upload_dir = wp_upload_dir();
+        $filename = trailingslashit($upload_dir['path']).$shape->getId().'.zip';
+
+        // by this point, the $wp_filesystem global should be working, so let's use it to create a file
+        global $wp_filesystem;
+        if ( ! $wp_filesystem->put_contents( $filename, $response['body'], FS_CHMOD_FILE) ) {
+            echo 'error saving file!';
+        }
+
+        $destination_path = plugin_dir_path(__FILE__) . '../../public/patches/' . $shape->getId() . '/';
+        $unzipfile = unzip_file( $filename, $destination_path);
+        if ( is_wp_error( $unzipfile ) ) {
+            print_r($unzipfile);
+            echo 'There was an error unzipping the file.';
+        }
+    }
+
 
 }

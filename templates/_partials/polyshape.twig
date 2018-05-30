@@ -1,58 +1,31 @@
-<script type="text/javascript">{{ javascript|raw }}</script>
-<script type="text/javascript">
-    jQuery('{{ targetSelector }}').html('');
-</script>
+{% if isImported %}
+    <br/>
+    <br/>
+    <canvas id="glcanvas" width="100px" height="100px"></canvas>
 
-<script type="text/javascript">
+    <script type="text/javascript" src="{{ patchDir }}js/libs.core.min.js"></script>
+    <script type="text/javascript" src="{{ patchDir }}js/cables.min.js"></script>
 
-    var ps = ps || {};
+    <script type="text/javascript" src="{{ patchDir }}js/ops.js"></script>
 
-    ps.shapeInfo ={{ shape.json|raw }};
-    ps.customizer = {};
-    ps.customizer.activatePreset = function (presetId) {
-        if (presetId >= 0 && presetId < ps.shapeInfo.presets.length) {
-            var presetParams = ps.shapeInfo.presets[presetId].parameters;
-            for (var cablesVar in presetParams) {
-                if (presetParams.hasOwnProperty(cablesVar)) {
-                    ps.shapeInfo.customizerData.parameters[cablesVar].gui.options.default = presetParams[cablesVar];
-                    switch (ps.shapeInfo.customizerData.parameters[cablesVar].gui.type) {
-                        case 'color':
-                            var floatColorArr = [
-                                ps.customizer.twoBytesToFloat(presetParams[cablesVar][0]),
-                                ps.customizer.twoBytesToFloat(presetParams[cablesVar][1]),
-                                ps.customizer.twoBytesToFloat(presetParams[cablesVar][2])
-                            ];
-                            CABLES.patch.vars[cablesVar] = floatColorArr;
-                            break;
-                        default:
-                            CABLES.patch.vars[cablesVar] = presetParams[cablesVar];
-                            break;
-                    }
-                }
-            }
-            window.polyshapes.updateParams();
-            this.lastSelectedPreset = presetId;
+    <script>
+
+        function showError(err)
+        {
+            alert(err);
         }
-    };
-    ps.customizer.twoBytesToFloat = function (val) {
-        return val === 0 ? 0 : (val / 255);
-    };
 
-    jQuery('{{ targetSelector }}').each(function () {
-        CABLES.EMBED.addPatch(this, {
-                "patch": patchData,
-                "prefixAssetPath": "{{ polyshapes_url }}/assets/{{ shape.id }}/",
-                "canvas":
-                    {
-                        "preserveDrawingBuffer": true,
-                        "premultipliedAlpha": false,
-                        "alpha": false
-                    },
-                "onFinishedLoading": function () {
-                    ps.customizer.activatePreset(0);
-                }
-            }
-        );
-    });
+        document.addEventListener("DOMContentLoaded", function(event)
+        {
+            CABLES.patch=new CABLES.Patch(
+                {
+                    patchFile:'{{ patchDir }}js/{{ shape.patchname }}.json',
+                    prefixAssetPath:'{{ patchDir }}/',
+                    glCanvasId:'glcanvas',
+                    glCanvasResizeToWindow:false,
+                    onError:showError
+                });
+        });
 
-</script>
+    </script>
+{% endif %}

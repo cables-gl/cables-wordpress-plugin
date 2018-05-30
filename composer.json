@@ -1,9 +1,21 @@
 {
   "name": "undev/polyshapes-plugin",
+  "version": "0.0.1",
+  "type": "wordpress-plugin",
   "description": "Integration of polyshapes.io into Wordpress",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "polyshapes"
+  ],
+  "homepage": "https://www.polyshapes.io/",
   "authors": [
     {
-      "name": "Stephan Maihofer"
+      "name": "undefined development",
+      "email": "hi@undev.de",
+      "homepage": "https://undev.studio",
+      "role": "Developer"
+
     }
   ],
   "autoload": {
@@ -12,6 +24,7 @@
     }
   },
   "require": {
+    "php": ">=7.0",
     "twig/twig": "1.35.0"
   }
 }

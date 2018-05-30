@@ -1,1 +1,31 @@
-{% include '_partials/polyshape.twig' %}
+
+<script type="text/javascript">
+    function showError(err) {
+        alert(err);
+    }
+</script>
+{% for shape in shapes %}
+    <script type="text/javascript" src="{{ shape.patchDir }}js/libs.core.min.js"></script>
+    <script type="text/javascript" src="{{ shape.patchDir }}js/cables.min.js"></script>
+
+    <script type="text/javascript" src="{{ shape.patchDir }}js/ops.js"></script>
+
+    <script type="text/javascript">
+        jQuery('{{ shape.targetSelector }}').html('');
+    </script>
+    <script type="text/javascript">
+        jQuery('{{ shape.targetSelector }}').each(function () {
+            CABLES.EMBED.addPatch(this, {
+                    "patch": patchData,
+                    "prefixAssetPath": "{{ polyshapes_url }}/assets/{{ shape.id }}/",
+                    "canvas":
+                        {
+                            "preserveDrawingBuffer": true,
+                            "premultipliedAlpha": false,
+                            "alpha": false
+                        }
+                }
+            );
+        });
+    </script>
+{% endfor %}

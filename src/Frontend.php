@@ -33,19 +33,46 @@ class Frontend {
 
         $options = get_option('polyshapes_backend');
         $template = $this->twig->loadTemplate('frontend/shape.footer.twig');
-        $api = new Api\Polyshapes();
-        $shape = $api->getShape($options['shape_id']);
-        $js = $api->getJavscriptForShape($shape);
-        echo $this->twig->render($template, array(
-            'shape' => $shape,
-            'javascript' => $js,
-            'targetSelector' => $options['target_selector']
-        ));
+        $shapes = array();
+        foreach ($this->getElementReplacingShapeIds() as $shapeId) {
+            $api = new Api\Polyshapes();
+            $shape = $api->getShape($shapeId);
+            $js = $api->getJavscriptForShape($shape);
+            $shapeConfig = array(
+                'shape' => $shape,
+                'patchDir' => $api->getShapeDirUrl($shape),
+                'javascript' => $js,
+                'targetSelector' => $options['shapes'][$shapeId]['target_selector']
+            );
+            $shapes[] = $shapeConfig;
+        }
+
+        echo $this->twig->render($template, array('shapes' => $shapes));
     }
 
     private function isThemeHookActivated() {
         $options = get_option('polyshapes_backend');
-        return $options['theme_hook'];
+        if(is_array($options['shapes'])) {
+            foreach ($options['shapes'] as $shape) {
+                if($shape['element_replacement'] === "on") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private function getElementReplacingShapeIds() {
+        $ids = array();
+        $options = get_option('polyshapes_backend');
+        if(is_array($options['shapes'])) {
+            foreach ($options['shapes'] as $id => $shape) {
+                if ($shape['element_replacement'] === "on") {
+                    $ids[] = $id;
+                }
+            }
+        }
+        return $ids;
     }
 
 }

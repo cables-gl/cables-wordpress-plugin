@@ -1,18 +1,12 @@
-<section class="center padding-bottom" id="shapes-page">
-    <div class="row" style="padding-top:5px">
-        <div class="item-grid row">
-        {% for shape in shapes %}
-            <article class="cute-4-tablet left">
-                <div class="item screenshotSeries" data-id="{{ shape.id }}" onclick="document.location.href='admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}';">
-                    <a class="imgcontainer" href="admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}">
-                        <img src="{{ polyshapes_url }}/api/s/{{ shape.id }}" class="responsive-img ">
-                    </a>
-                    <div class="text">
-                        <span class="title">{{ shape.title }}</span>
-                    </div>
-                </div>
-            </article>
-        {% endfor %}
-        </div>
-    </div>
-</section>
+<script src="{{ polyshapes_url }}/client/js/polyclient.max.js" type="text/javascript" ></script>
+
+<div id="mylist"></div>
+
+<script>
+    (function() {
+        PS.config={
+            host:"{{ polyshapes_url }}"
+        };
+        PS.getShapeList("#mylist");
+    })();
+</script>

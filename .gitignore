@@ -1,3 +1,5 @@
 .idea/
 vendor/
 *.iml
+node_modules/
+target/
