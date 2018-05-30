@@ -11,21 +11,25 @@
     <script type="text/javascript" src="{{ shape.patchDir }}js/ops.js"></script>
 
     <script type="text/javascript">
-        jQuery('{{ shape.targetSelector }}').html('');
+        {% for targetSelector in shape.targetSelectors %}
+            jQuery('#{{ targetSelector }}').replaceWith(function() {
+                return '<canvas id="{{ targetSelector }}"></canvas>';
+            });
+        {% endfor %}
     </script>
     <script type="text/javascript">
-        jQuery('{{ shape.targetSelector }}').each(function () {
-            CABLES.EMBED.addPatch(this, {
-                    "patch": patchData,
-                    "prefixAssetPath": "{{ polyshapes_url }}/assets/{{ shape.id }}/",
-                    "canvas":
-                        {
-                            "preserveDrawingBuffer": true,
-                            "premultipliedAlpha": false,
-                            "alpha": false
-                        }
-                }
-            );
-        });
+        {% for targetSelector in shape.targetSelectors %}
+            document.addEventListener("DOMContentLoaded", function(event)
+            {
+                CABLES.patch=new CABLES.Patch(
+                    {
+                        patchFile:'{{ shape.patchDir }}js/{{ shape.shape.patchName }}.json',
+                        prefixAssetPath:'{{ shape.patchDir }}/',
+                        glCanvasId:'{{ targetSelector }}',
+                        glCanvasResizeToWindow:true,
+                        onError:showError
+                    });
+            });
+        {% endfor %}
     </script>
 {% endfor %}

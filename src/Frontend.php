@@ -38,11 +38,15 @@ class Frontend {
             $api = new Api\Polyshapes();
             $shape = $api->getShape($shapeId);
             $js = $api->getJavscriptForShape($shape);
+            $bla = explode(',', $options['shapes'][$shapeId]['target_selector']);
+            foreach ($bla as $selector) {
+                $splittedSelectors[] = trim($selector);
+            }
             $shapeConfig = array(
                 'shape' => $shape,
                 'patchDir' => $api->getShapeDirUrl($shape),
                 'javascript' => $js,
-                'targetSelector' => $options['shapes'][$shapeId]['target_selector']
+                'targetSelectors' => $splittedSelectors
             );
             $shapes[] = $shapeConfig;
         }

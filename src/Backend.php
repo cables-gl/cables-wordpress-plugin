@@ -126,12 +126,12 @@ class Backend {
         status_header(200);
         $shapeId = $_REQUEST['shape'];
         $elementReplacement = $_REQUEST['element_replacement'];
-        $targetSelector = $_REQUEST['target_selector'];
+        $targetSelectors = $_REQUEST['target_selectors'];
         $options = get_option('polyshapes_backend');
         if (!is_array($options['shapes'])) {
             $options['shapes'] = array();
         }
-        $options['shapes'][$shapeId] = array("element_replacement" => $elementReplacement, "target_selector" => $targetSelector);
+        $options['shapes'][$shapeId] = array("element_replacement" => $elementReplacement, "target_selectors" => $targetSelectors);
         update_option('polyshapes_backend', $options);
         wp_redirect(admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId));
         exit;
@@ -142,23 +142,22 @@ class Backend {
         $api = new Api\Polyshapes();
         $shapeId = $_GET['shape'];
         $shape = $api->getShape($shapeId);
-        $shape->patchname = 'randompoints_example';
         $imported = $api->isImported($shape);
         $options = get_option('polyshapes_backend');
         $replacesElements = false;
-        $targetSelector = "";
+        $targetSelectors = "";
         if(is_array($options['shapes'])) {
             if(is_array($options['shapes'][$shapeId])) {
                 $shapeConfig = $options['shapes'][$shapeId];
                 $replacesElements = $shapeConfig['element_replacement'];
-                $targetSelector = $shapeConfig['target_selector'];
+                $targetSelectors = $shapeConfig['target_selectors'];
             }
         }
         echo $this->twig->render($template, array(
             'shape' => $shape,
             'isImported' => $imported,
             'replacesElements' => $replacesElements,
-            'targetSelector' => $targetSelector,
+            'targetSelectors' => $targetSelectors,
             'patchDir' => $api->getShapeDirUrl($shape),
             'action_url' => esc_url(admin_url('admin-post.php'))
         ));

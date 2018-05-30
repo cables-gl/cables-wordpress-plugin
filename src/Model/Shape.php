@@ -19,6 +19,7 @@ class Shape {
     private $info;
     private $json;
     private $fileName;
+    private $patchName;
 
     /**
      * Shape constructor. Private, use factory-method
@@ -35,8 +36,23 @@ class Shape {
         $shape->setTitle($jsonshape->title);
         $shape->setId($jsonshape->_id);
         $shape->setJson(json_encode($jsonshape));
+        $shape->setPatchName('randompoints_example');
         $shape->setFileName($jsonshape->file_shape);
         return $shape;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatchName() {
+        return $this->patchName;
+    }
+
+    /**
+     * @param mixed $patchName
+     */
+    public function setPatchName($patchName) {
+        $this->patchName = $patchName;
     }
 
     /**
