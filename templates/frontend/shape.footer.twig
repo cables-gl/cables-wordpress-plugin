@@ -4,6 +4,47 @@
         alert(err);
     }
 </script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        CABLES.EMBED.replaceWithPatch = function (_element, options) {
+            var el = _element;
+            var id = CABLES.generateUUID();
+            if (typeof _element === "string") {
+                id = _element;
+                el = document.getElementById(id);
+                if (!el) {
+                    console.error(id + ' Polyshape Container Element not found!');
+                    return;
+                }
+            }
+            var canvEl = document.createElement("canvas");
+            canvEl.id = "glcanvas_" + id;
+            canvEl.width = el.clientWidth;
+            canvEl.height = el.clientHeight;
+
+            window.addEventListener('resize', function () {
+                this.setAttribute("width", el.clientWidth);
+                this.height = el.clientHeight;
+            }.bind(canvEl));
+
+            el.innerHTML = '';
+            el.appendChild(canvEl);
+
+            options = options || {};
+            options.glCanvasId = canvEl.id;
+
+            if (!options.onError) {
+                options.onError = function (err) {
+                    console.log(err);
+                };
+            }
+
+            CABLES.patch = new CABLES.Patch(options);
+            return canvEl;
+
+        };
+    });
+</script>
 {% for shape in shapes %}
     <script type="text/javascript" src="{{ shape.patchDir }}js/libs.core.min.js"></script>
     <script type="text/javascript" src="{{ shape.patchDir }}js/cables.min.js"></script>
@@ -12,23 +53,13 @@
 
     <script type="text/javascript">
         {% for targetSelector in shape.targetSelectors %}
-            jQuery('#{{ targetSelector }}').replaceWith(function() {
-                return '<canvas id="{{ targetSelector }}"></canvas>';
-            });
-        {% endfor %}
-    </script>
-    <script type="text/javascript">
-        {% for targetSelector in shape.targetSelectors %}
-            document.addEventListener("DOMContentLoaded", function(event)
-            {
-                CABLES.patch=new CABLES.Patch(
-                    {
-                        patchFile:'{{ shape.patchDir }}js/{{ shape.shape.patchName }}.json',
-                        prefixAssetPath:'{{ shape.patchDir }}/',
-                        glCanvasId:'{{ targetSelector }}',
-                        glCanvasResizeToWindow:true,
-                        onError:showError
-                    });
+            document.addEventListener("DOMContentLoaded", function(event) {
+                CABLES.EMBED.replaceWithPatch('{{ targetSelector }}', {
+                    patchFile:'{{ shape.patchDir }}js/{{ shape.shape.patchName }}.json',
+                    prefixAssetPath:'{{ shape.patchDir }}/',
+                    onError:showError,
+                    glCanvasResizeToWindow:true
+                });
             });
         {% endfor %}
     </script>

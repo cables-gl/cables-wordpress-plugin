@@ -32,11 +32,11 @@ class Shortcodes {
         $template = $this->twig->loadTemplate('frontend/shape.shortcode.twig');
         $api = new Api\Polyshapes();
         $shape = $api->getShape($atts['id']);
-        $js = $api->getJavscriptForShape($shape);
         echo $this->twig->render($template, array(
             'shape' => $shape,
-            'javascript' => $js,
-            'targetSelector' => '#polypatch'
+            'targetSelector' => '#polypatch',
+            'isImported' => $api->isImported($shape),
+            'patchDir' => $api->getShapeDirUrl($shape)
         ));
     }
 
