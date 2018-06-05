@@ -1,6 +1,6 @@
 {
   "name": "undev/polyshapes-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "wordpress-plugin",
   "description": "Integration of polyshapes.io into Wordpress",
   "keywords": [
@@ -15,12 +15,13 @@
       "email": "hi@undev.de",
       "homepage": "https://undev.studio",
       "role": "Developer"
-
     }
   ],
   "autoload": {
     "psr-4": {
-      "Polyshapes\\Plugin\\": ["src/"]
+      "Polyshapes\\Plugin\\": [
+        "src/"
+      ]
     }
   },
   "require": {
