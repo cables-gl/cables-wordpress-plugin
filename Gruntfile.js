@@ -28,7 +28,18 @@ module.exports = function (grunt){
                         mode: 'zip'
                     },
                     expand: true,
-                    src: ['sql/**', 'src/**', 'vendor/**', 'templates/**', 'polyshapes-wpplugin.php', 'README.md']
+                    src: [
+                        'public/css/**',
+                        'public/images/**',
+                        'public/js/**',
+                        'public/patches/',
+                        'sql/**',
+                        'src/**',
+                        'vendor/**',
+                        'templates/**',
+                        'polyshapes-wpplugin.php',
+                        'README.md'
+                    ]
                 }
             },
             replace: {
