@@ -8,8 +8,9 @@
 
 namespace Polyshapes\Plugin\Api;
 
+use Polyshapes\Plugin\Frontend;
 use Polyshapes\Plugin\Model\Shape;
-use Polyshapes\Plugin\Model\ShapeExport;
+use Polyshapes\Plugin\Plugin;
 
 class Polyshapes {
 
@@ -18,10 +19,27 @@ class Polyshapes {
     /**
      * @return Shape
      */
-    public function getShape(string $id) : Shape {
+    public function getShape(string $id): Shape {
         $response = $this->getRemote('/shapes/shape/' . $id);
         $jsonshape = json_decode($response['body']);
         return Shape::fromJson($jsonshape->shape);
+    }
+
+    private function getRemote(string $method): array {
+        $options = get_option('polyshapes_backend');
+        $args = array(
+            'headers' => array(
+                'X-Api-Key' => $options['api_key'],
+                'X-Client-Id' => $this->getClientId()
+            )
+        );
+        return wp_remote_get(static::$BASE_URL . $method, $args);
+    }
+
+    private function getClientId() {
+        $url = parse_url(get_site_url());
+        $clientId = $url['host'];
+        return $clientId;
     }
 
     /**
@@ -48,39 +66,17 @@ class Polyshapes {
         return json_decode($response['body']);
     }
 
-    private function getRemote(string $method): array {
-        $options = get_option('polyshapes_backend');
-        $args = array(
-            'headers' => array(
-                'X-Api-Key' => $options['api_key'],
-                'X-Client-Id' => $this->getClientId()
-            )
-        );
-        return wp_remote_get(static::$BASE_URL . $method, $args);
-    }
-
     private function postRemote(string $method, $params = array()) {
         return wp_safe_remote_post(static::$BASE_URL . $method, array('body' => $params));
     }
 
-    public function getJavscriptForShape(Shape $shape) : string {
-        $response = $this->getRemote('/p/' . $shape->getId());
-        return $response['body'];
-    }
-
-    private function getClientId() {
-        $url = parse_url(get_site_url());
-        $clientId = $url['host'];
-        return $clientId;
-    }
-
-    public function isImported(Shape $shape) : bool {
-        $filename = plugin_dir_path(__FILE__) . '../../public/patches/' . $shape->getId() . '/cables.txt';
+    public function isImported(Shape $shape): bool {
+        $filename = Plugin::$basePath . 'public/patches/' . $shape->getId() . '/cables.txt';
         return file_exists($filename);
     }
 
     public function getShapeDirUrl(Shape $shape) {
-        $filename = plugin_dir_url(__FILE__) . '../../public/patches/' . $shape->getId() . '/';
+        $filename = Plugin::$baseUrl . 'public/patches/' . $shape->getId() . '/';
         return $filename;
     }
 
@@ -91,17 +87,17 @@ class Polyshapes {
 
         WP_Filesystem();
         $upload_dir = wp_upload_dir();
-        $filename = trailingslashit($upload_dir['path']).$shape->getId().'.zip';
+        $filename = trailingslashit($upload_dir['path']) . $shape->getId() . '.zip';
 
         // by this point, the $wp_filesystem global should be working, so let's use it to create a file
         global $wp_filesystem;
-        if ( ! $wp_filesystem->put_contents( $filename, $response['body'], FS_CHMOD_FILE) ) {
+        if (!$wp_filesystem->put_contents($filename, $response['body'], FS_CHMOD_FILE)) {
             echo 'error saving file!';
         }
 
-        $destination_path = plugin_dir_path(__FILE__) . '../../public/patches/' . $shape->getId() . '/';
-        $unzipfile = unzip_file( $filename, $destination_path);
-        if ( is_wp_error( $unzipfile ) ) {
+        $destination_path = Plugin::$basePath . 'public/patches/' . $shape->getId() . '/';
+        $unzipfile = unzip_file($filename, $destination_path);
+        if (is_wp_error($unzipfile)) {
             print_r($unzipfile);
             echo 'There was an error unzipping the file.';
         }

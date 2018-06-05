@@ -11,6 +11,12 @@
                                 <a class="imgcontainer" href="admin.php?page=polyshapes_backend_import&shape={{ shape.id }}">
                                     import
                                 </a>
+                                {% if shape.imported %}
+                                    &nbsp;
+                                    <a class="imgcontainer" href="admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}">
+                                        edit
+                                    </a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

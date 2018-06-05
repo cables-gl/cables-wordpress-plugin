@@ -12,6 +12,7 @@ use Polyshapes\Plugin\Api;
 use Twig_Environment;
 
 class Backend {
+
     /**
      * @var Twig_Environment
      */
@@ -51,7 +52,7 @@ class Backend {
 
     public function target_selector_setting() {
         $options = get_option('polyshapes_backend');
-        echo "<input name='polyshapes_backend[target_selector]' type='text' value='{$options['target_selector']}' />";
+        echo "<input name='polyshapes_backend[target_selectors]' type='text' value='{$options['target_selectors']}' />";
     }
 
     public function api_key_setting() {
@@ -95,7 +96,9 @@ class Backend {
         $api = new Api\Polyshapes();
         $shape = $api->getShape($shapeId);
         $api->importShape($shape);
-        wp_redirect(admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId));
+        $admin_url = admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId);
+        wp_redirect($admin_url);
+        print "<a href='" . $admin_url . "'>go to shape</a>";
         exit;
     }
 
@@ -118,7 +121,8 @@ class Backend {
             $options['api_key'] = $response->apikey->key;
             update_option('polyshapes_backend', $options);
         }
-        wp_redirect(admin_url('admin.php?page=polyshapes_backend'));
+        $admin_url = admin_url('admin.php?page=polyshapes_backend');
+        wp_redirect($admin_url);
         exit;
     }
 
@@ -133,7 +137,8 @@ class Backend {
         }
         $options['shapes'][$shapeId] = array("element_replacement" => $elementReplacement, "target_selectors" => $targetSelectors);
         update_option('polyshapes_backend', $options);
-        wp_redirect(admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId));
+        $admin_url = admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId);
+        wp_redirect($admin_url);
         exit;
     }
 

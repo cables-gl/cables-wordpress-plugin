@@ -9,6 +9,8 @@
 namespace Polyshapes\Plugin\Model;
 
 
+use Polyshapes\Plugin\Api\Polyshapes;
+
 class Shape {
 
     private $title;
@@ -20,6 +22,7 @@ class Shape {
     private $json;
     private $fileName;
     private $patchName;
+    private $imported;
 
     /**
      * Shape constructor. Private, use factory-method
@@ -36,7 +39,7 @@ class Shape {
         $shape->setTitle($jsonshape->title);
         $shape->setId($jsonshape->_id);
         $shape->setJson(json_encode($jsonshape));
-        $shape->setPatchName('randompoints_example');
+        $shape->setPatchName('polyshapes');
         $shape->setFileName($jsonshape->file_shape);
         return $shape;
     }
@@ -165,6 +168,14 @@ class Shape {
      */
     private function setJson($json) {
         $this->json = $json;
+    }
+
+    public function isImported() {
+        if($this->imported === null) {
+            $api = new Polyshapes();
+            $this->imported = $api->isImported($this);
+        }
+        return $this->imported;
     }
 
 }
