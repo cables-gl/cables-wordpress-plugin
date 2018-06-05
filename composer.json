@@ -1,6 +1,6 @@
 {
   "name": "undev/polyshapes-plugin",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "wordpress-plugin",
   "description": "Integration of polyshapes.io into Wordpress",
   "keywords": [
