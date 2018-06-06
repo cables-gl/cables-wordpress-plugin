@@ -1,4 +1,4 @@
-
+{% if shapes|length > 0 %}
 <script type="text/javascript">
     function showError(err) {
         alert(err);
@@ -45,12 +45,13 @@
         };
     });
 </script>
+{% endif %}
 {% for shape in shapes %}
     <script type="text/javascript" src="{{ shape.patchDir }}js/libs.core.min.js"></script>
     <script type="text/javascript" src="{{ shape.patchDir }}js/cables.min.js"></script>
-
     <script type="text/javascript" src="{{ shape.patchDir }}js/ops.js"></script>
 
+    {% if shape.element_replacement %}
     <script type="text/javascript">
         {% for targetSelector in shape.targetSelectors %}
             document.addEventListener("DOMContentLoaded", function(event) {
@@ -63,4 +64,28 @@
             });
         {% endfor %}
     </script>
+    {% endif %}
+    {% if shape.background %}
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function(event) {
+                var canvEl = document.createElement("canvas");
+                canvEl.id = 'polyshapes_background';
+                canvEl.style = 'visibility: visible; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: -1; background: #ffffff;'
+
+                var body = document.getElementsByTagName("body")[0];
+                body.insertBefore(canvEl, body.firstChild);
+
+                patchBackground=new CABLES.Patch(
+                {
+                    patchFile:'{{ shape.patchDir }}js/{{ shape.shape.patchName }}.json',
+                    prefixAssetPath:'{{ shape.patchDir }}/',
+                    glCanvasId:'polyshapes_background',
+                    glCanvasResizeToWindow:true,
+                    onError:alert
+                });
+                patchBackground.resume();
+            });
+        </script>
+    {% endif %}
+
 {% endfor %}

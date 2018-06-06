@@ -11,13 +11,38 @@
     <table class="form-table">
         <tbody>
         <tr>
+            <th scope="row"><label for="element_replacement">Display Mobile:</label></th>
+            <td><input name="mobile" id="mobile" type="checkbox"{% if mobile == "on" %} checked="checked"{% endif %}></td>
+        </tr>
+        <tr>
+            <th scope="row"><label for="element_replacement">Set as Background:</label></th>
+            <td><input name="background" id="background" type="checkbox"{% if background == "on" %} checked="checked"{% endif %}></td>
+        </tr>
+        <tr>
             <th scope="row"><label for="element_replacement">Activate Element Replacement:</label></th>
             <td><input name="element_replacement" id="element_replacement" type="checkbox"{% if replacesElements %} checked="checked"{% endif %}></td>
+        </tr>
+        <tr>
+            <th scope="row">Integrate in following places:</th>
+            <td>
+                <label for="page_type_home">Home</label>
+                <input name="page_types[home]" id="page_type_home" type="checkbox"{% if pages.home == "on" %} checked="checked"{% endif %}>
+                <label for="page_type_post">Post</label>
+                <input name="page_types[post]" id="page_type_post" type="checkbox"{% if pages.post == "on" %} checked="checked"{% endif %}>
+                <label for="page_type_page">Page</label>
+                <input name="page_types[page]" id="page_type_page" type="checkbox"{% if pages.page == "on" %} checked="checked"{% endif %}>
+            </td>
         </tr>
         <tr>
             <th scope="row"><label for="target_selectors">Target Element Id (without #, can be comma-seperated):</label></th>
             <td><input name="target_selectors" id="target_selectors" type="text" value="{{ targetSelectors }}"></td>
         </tr>
+        {% for key,cssSelector in cssSelectors %}
+        <tr>
+            <th scope="row">{{ key }}</th>
+            <td>{{ cssSelector }}</td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 

@@ -1,6 +1,6 @@
 {
   "name": "undev-polyshapes-plugin",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "devDependencies": {
     "grunt": "1.0.2",

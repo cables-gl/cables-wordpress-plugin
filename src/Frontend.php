@@ -29,7 +29,6 @@ class Frontend {
     }
 
     public function shape_footer() {
-        if(!$this->isThemeHookActivated()) return;
 
         $options = get_option('polyshapes_backend');
         $template = $this->twig->loadTemplate('frontend/shape.footer.twig');
@@ -37,44 +36,78 @@ class Frontend {
         foreach ($this->getElementReplacingShapeIds() as $shapeId) {
             $api = new Api\Polyshapes();
             $shape = $api->getShape($shapeId);
-            $bla = explode(',', $options['shapes'][$shapeId]['target_selectors']);
-            foreach ($bla as $selector) {
+            $shapeOptions = $options['shapes'][$shapeId];
+            if (!$this->isActiveByPageType($shapeOptions)) {
+                continue;
+            }
+            if (!$this->isActiveByMobileSetting($shapeOptions)) {
+                continue;
+            }
+            $selectorsSetting = explode(',', $shapeOptions['target_selectors']);
+            foreach ($selectorsSetting as $selector) {
                 $splittedSelectors[] = trim($selector);
             }
             $shapeConfig = array(
                 'shape' => $shape,
+                'background' => ($shapeOptions['background'] == "on"),
+                'element_replacement' => $this->isThemeHookActivated($shapeOptions),
                 'patchDir' => $api->getShapeDirUrl($shape),
                 'targetSelectors' => $splittedSelectors
             );
+
             $shapes[] = $shapeConfig;
         }
 
         echo $this->twig->render($template, array('shapes' => $shapes));
     }
 
-    private function isThemeHookActivated() {
-        $options = get_option('polyshapes_backend');
-        if(is_array($options['shapes'])) {
-            foreach ($options['shapes'] as $shape) {
-                if($shape['element_replacement'] === "on") {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private function getElementReplacingShapeIds() {
         $ids = array();
         $options = get_option('polyshapes_backend');
-        if(is_array($options['shapes'])) {
+        if (is_array($options['shapes'])) {
             foreach ($options['shapes'] as $id => $shape) {
                 if ($shape['element_replacement'] === "on") {
+                    $ids[] = $id;
+                } else if ($shape['background'] === "on") {
                     $ids[] = $id;
                 }
             }
         }
         return $ids;
+    }
+
+    private function isActiveByPageType($shapeOptions) {
+        $pageOptions = $shapeOptions['page_types'];
+        $isHome = (is_home() || is_front_page());
+        if (!is_array($pageOptions)) {
+            return false;
+        } else if ($isHome && $pageOptions['home'] == 'on') {
+            return true;
+        } else if ((!$isHome && is_page()) && $pageOptions['page'] == 'on') {
+            return true;
+        } else if (is_single() && $pageOptions['post'] == 'on') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function isActiveByMobileSetting($shapeOptions) {
+        if (wp_is_mobile()) {
+            if (array_key_exists('mobile', $shapeOptions)) {
+                return ($shapeOptions['mobile'] == "on");
+            }
+        }
+        return true;
+    }
+
+    private function isThemeHookActivated($shapeOptions) {
+        if (is_array($shapeOptions)) {
+            if ($shapeOptions['element_replacement'] === "on") {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

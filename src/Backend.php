@@ -50,11 +50,6 @@ class Backend {
 
     }
 
-    public function target_selector_setting() {
-        $options = get_option('polyshapes_backend');
-        echo "<input name='polyshapes_backend[target_selectors]' type='text' value='{$options['target_selectors']}' />";
-    }
-
     public function api_key_setting() {
         $options = get_option('polyshapes_backend');
         echo $options['api_key'];
@@ -131,11 +126,20 @@ class Backend {
         $shapeId = $_REQUEST['shape'];
         $elementReplacement = $_REQUEST['element_replacement'];
         $targetSelectors = $_REQUEST['target_selectors'];
+        $pageTypes = $_REQUEST['page_types'];
+        $background = $_REQUEST['background'];
+        $mobile = $_REQUEST['mobile'];
         $options = get_option('polyshapes_backend');
         if (!is_array($options['shapes'])) {
             $options['shapes'] = array();
         }
-        $options['shapes'][$shapeId] = array("element_replacement" => $elementReplacement, "target_selectors" => $targetSelectors);
+        $options['shapes'][$shapeId] = array(
+            "element_replacement" => $elementReplacement,
+            "target_selectors" => $targetSelectors,
+            'page_types' => $pageTypes,
+            'background' => $background,
+            'mobile' => $mobile
+        );
         update_option('polyshapes_backend', $options);
         $admin_url = admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId);
         wp_redirect($admin_url);
@@ -143,6 +147,7 @@ class Backend {
     }
 
     public function shape_page() {
+
         $template = $this->twig->loadTemplate('admin/shape.twig');
         $api = new Api\Polyshapes();
         $shapeId = $_GET['shape'];
@@ -151,20 +156,33 @@ class Backend {
         $options = get_option('polyshapes_backend');
         $replacesElements = false;
         $targetSelectors = "";
+        $setBackground = false;
+        $mobile = true;
+        $pageTypes = array('home' => 'on', 'post' => 'on', 'page' => 'on');
         if(is_array($options['shapes'])) {
             if(is_array($options['shapes'][$shapeId])) {
                 $shapeConfig = $options['shapes'][$shapeId];
                 $replacesElements = $shapeConfig['element_replacement'];
                 $targetSelectors = $shapeConfig['target_selectors'];
+                $pageTypes = $shapeConfig['page_types'];
+                $setBackground = $shapeConfig['background'];
+                $mobile = $shapeConfig['mobile'];
             }
         }
+
+
+
         echo $this->twig->render($template, array(
             'shape' => $shape,
             'isImported' => $imported,
+            'pages' => $pageTypes,
+            'background' => $setBackground,
+            'mobile' => $mobile,
             'replacesElements' => $replacesElements,
             'targetSelectors' => $targetSelectors,
             'patchDir' => $api->getShapeDirUrl($shape),
-            'action_url' => esc_url(admin_url('admin-post.php'))
+            'action_url' => esc_url(admin_url('admin-post.php')),
+            'cssSelectors' => $this->getPossibleCssSelectors()
         ));
     }
 
@@ -187,6 +205,18 @@ class Backend {
         $template = $this->twig->loadTemplate('admin/settings.twig');
         echo $this->twig->render($template, $vars);
 
+    }
+
+    private function getPossibleCssSelectors() {
+        $selectors = array();
+        $selectors['image'] = json_encode(get_header_image_tag());
+        $selectors['header'] = json_encode(get_custom_header());
+        $selectors['video'] = json_encode(get_header_video_url());
+        $selectors['css'] = json_encode(wp_custom_css_cb());
+        $selectors['css_post'] = json_encode(wp_get_custom_css_post());
+        $selectors['custom_css'] = json_encode(wp_get_custom_css());
+        $selectors['starter_content'] = json_encode(get_theme_starter_content());
+        return $selectors;
     }
 
 }
