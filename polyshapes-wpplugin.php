@@ -4,7 +4,7 @@ Plugin Name: Polyshapes Wordpress
 Plugin URI: https://polyshapes.io
 Description: Integration of polyshapes.io into Wordpress
 Version: 0.0.6
-Author: Stephan Maihoefer
+Author: undefined development
 Author URI: http://undev.de
 License: MIT
 */
