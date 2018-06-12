@@ -1,6 +1,6 @@
 {
   "name": "undev-polyshapes-wpplugin",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "devDependencies": {
     "grunt": "1.0.2",
