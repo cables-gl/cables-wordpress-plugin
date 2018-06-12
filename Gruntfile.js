@@ -25,7 +25,7 @@ module.exports = function (grunt){
             compress: {
                 main: {
                     options: {
-                        archive: 'target/polyshapes-wordpress-plugin.zip',
+                        archive: 'target/polyshapes-wpplugin.zip',
                         mode: 'zip'
                     },
                     expand: true,
