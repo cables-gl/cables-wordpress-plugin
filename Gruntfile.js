@@ -64,7 +64,8 @@ module.exports = function (grunt){
             },
             clean: [
                 'target',
-                'vendor'
+                'vendor',
+                'release.json'
             ]
         }
     );
