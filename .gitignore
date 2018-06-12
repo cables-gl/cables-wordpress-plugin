@@ -3,3 +3,4 @@ vendor/
 *.iml
 node_modules/
 target/
+release.json

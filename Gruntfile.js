@@ -2,6 +2,7 @@ module.exports = function (grunt){
 
     grunt.initConfig({
             pkg: grunt.file.readJSON('package.json'),
+            cmp: grunt.file.readJSON('composer.json'),
             bumpup: {
                 options: {
                     updateProps: {
@@ -88,6 +89,26 @@ module.exports = function (grunt){
         grunt.task.run('replace');        // replace version number in plugin file and readme
         grunt.task.run('composer:default:install');         // get php dependencies
         grunt.task.run('compress');     // build a release zip
+    });
+
+    grunt.registerTask('strider:releasefile', function (type) {
+        var jobId = process.env.STRIDER_JOB_ID;
+        var branch = process.env.STRIDER_BRANCH;
+        if(!jobId || !branch) {
+            grunt.fail.fatal("got no information in environment: STRIDER_JOB_ID or STRIDER_BRANCH missing!", 1);
+        }
+        var name =  process.env.STRIDER_PROJECT_NAME;
+        var cmp = grunt.config.get("cmp");
+        var projectName = name ? name : cmp.name;
+        var releaseJson = {
+            "name": projectName,
+            "version": cmp.version,
+            "download_url": cmp.extra.release.baseurl + projectName + "/api/artifact-repository/dl/" + jobId + "?branch=" + branch,
+            "sections" : {
+                "description": cmp.description
+            }
+        };
+        grunt.file.write('release.json', JSON.stringify(releaseJson, null, 2));
     });
 
     grunt.registerTask('build', ['clean', 'composer:default:install']);

@@ -1,8 +1,8 @@
 {
-  "name": "undev/polyshapes-plugin",
-  "version": "0.0.4",
+  "name": "undev/polyshapes-wpplugin",
+  "version": "0.0.6",
   "type": "wordpress-plugin",
-  "description": "Integration of polyshapes.io into Wordpress",
+  "description": "Plugin to access data of your polyshapes.io account",
   "keywords": [
     "wordpress",
     "plugin",
@@ -17,6 +17,11 @@
       "role": "Developer"
     }
   ],
+  "extra": {
+    "release": {
+      "baseurl": "https://ci.undev.de/undev/"
+    }
+  },
   "autoload": {
     "psr-4": {
       "Polyshapes\\Plugin\\": [
@@ -26,6 +31,7 @@
   },
   "require": {
     "php": ">=7.0",
-    "twig/twig": "1.35.0"
+    "twig/twig": "1.35.0",
+    "yahnis-elsts/plugin-update-checker": "4.4"
   }
 }
