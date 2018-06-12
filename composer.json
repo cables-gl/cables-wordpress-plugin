@@ -19,7 +19,7 @@
   ],
   "extra": {
     "release": {
-      "baseurl": "https://ci.undev.de/undev/"
+      "baseurl": "https://ci.undev.de/"
     }
   },
   "autoload": {
