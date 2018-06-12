@@ -93,10 +93,10 @@ module.exports = function (grunt){
     });
 
     grunt.registerTask('strider:releasefile', function (type) {
-        var jobId = process.env.STRIDER_JOB_ID;
+        var artifcatId = process.env.STRIDER_ARTIFACT_ID;
         var branch = process.env.STRIDER_BRANCH;
-        if(!jobId || !branch) {
-            grunt.fail.fatal("got no information in environment: STRIDER_JOB_ID or STRIDER_BRANCH missing!", 1);
+        if(!artifcatId || !branch) {
+            grunt.fail.fatal("got no information in environment: STRIDER_ARTIFACT_ID or STRIDER_BRANCH missing!", 1);
         }
         var name =  process.env.STRIDER_PROJECT_NAME;
         var cmp = grunt.config.get("cmp");
@@ -104,7 +104,7 @@ module.exports = function (grunt){
         var releaseJson = {
             "name": projectName,
             "version": cmp.version,
-            "download_url": cmp.extra.release.baseurl + projectName + "/api/artifact-repository/dl/" + jobId + "?branch=" + branch,
+            "download_url": cmp.extra.release.baseurl + projectName + "/api/artifact-repository/dl/" + artifcatId + "?branch=" + branch,
             "sections" : {
                 "description": cmp.description
             }
