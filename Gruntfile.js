@@ -109,7 +109,7 @@ module.exports = function (grunt) {
         grunt.task.run('bumpup:' + type); // bump up the version
         grunt.task.run('replace');        // replace version number in plugin file and readme
         grunt.task.run('composer:default:install');         // get php dependencies
-        grunt.task.run('compress');     // build a release zip
+        grunt.task.run('compress:main');     // build a release zip
         grunt.task.run('copy:update'); // copy files over to build an update zip
         grunt.task.run('compress:update');     // build a release zip
     });
