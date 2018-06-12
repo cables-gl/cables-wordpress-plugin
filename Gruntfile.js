@@ -1,4 +1,4 @@
-module.exports = function (grunt){
+module.exports = function (grunt) {
 
     grunt.initConfig({
             pkg: grunt.file.readJSON('package.json'),
@@ -22,6 +22,28 @@ module.exports = function (grunt){
                     }
                 }
             },
+            copy: {
+              update: {
+                  files: [
+                      {
+                          expand: true,
+                          src: [
+                              'public/css/**',
+                              'public/images/**',
+                              'public/js/**',
+                              'public/patches/',
+                              'sql/**',
+                              'src/**',
+                              'vendor/**',
+                              'templates/**',
+                              'polyshapes-wpplugin.php',
+                              'README.md'
+                          ],
+                          dest: '<%= cmp.name %>/'
+                      }
+                  ]
+              }
+            },
             compress: {
                 main: {
                     options: {
@@ -40,6 +62,15 @@ module.exports = function (grunt){
                         'templates/**',
                         'polyshapes-wpplugin.php',
                         'README.md'
+                    ]
+                },
+                update: {
+                    options: {
+                        archive: 'target/update/polyshapes-wpplugin.zip',
+                        mode: 'zip'
+                    },
+                    src: [
+                        '<%= cmp.name %>/**'
                     ]
                 }
             },
@@ -64,6 +95,7 @@ module.exports = function (grunt){
             },
             clean: [
                 'target',
+                'undev',
                 'vendor',
                 'release.json'
             ]
@@ -78,34 +110,42 @@ module.exports = function (grunt){
         grunt.task.run('replace');        // replace version number in plugin file and readme
         grunt.task.run('composer:default:install');         // get php dependencies
         grunt.task.run('compress');     // build a release zip
+        grunt.task.run('copy:update'); // copy files over to build an update zip
+        grunt.task.run('compress:update');     // build a release zip
     });
 
     // Alias task for release with buildmeta suffix support
     grunt.registerTask('release', function (type, build) {
         grunt.task.run('clean');        // clean previous builds
         var bumpParts = ['bumpup'];
-        if (type) { bumpParts.push(type); }
-        if (build) { bumpParts.push(build); }
+        if (type) {
+            bumpParts.push(type);
+        }
+        if (build) {
+            bumpParts.push(build);
+        }
         grunt.task.run(bumpParts.join(':')); // bump up the version
         grunt.task.run('replace');        // replace version number in plugin file and readme
         grunt.task.run('composer:default:install');         // get php dependencies
-        grunt.task.run('compress');     // build a release zip
+        grunt.task.run('compress:main');     // build a release zip
+        grunt.task.run('copy:update'); // copy files over to build an update zip
+        grunt.task.run('compress:update');     // build a release zip
     });
 
     grunt.registerTask('strider:releasefile', function (type) {
         var artifcatId = process.env.STRIDER_ARTIFACT_ID;
         var branch = process.env.STRIDER_BRANCH;
-        if(!artifcatId || !branch) {
+        if (!artifcatId || !branch) {
             grunt.fail.fatal("got no information in environment: STRIDER_ARTIFACT_ID or STRIDER_BRANCH missing!", 1);
         }
-        var name =  process.env.STRIDER_PROJECT_NAME;
+        var name = process.env.STRIDER_PROJECT_NAME;
         var cmp = grunt.config.get("cmp");
         var projectName = name ? name : cmp.name;
         var releaseJson = {
             "name": projectName,
             "version": cmp.version,
             "download_url": cmp.extra.release.baseurl + projectName + "/api/artifact-repository/dl/" + artifcatId + "?branch=" + branch,
-            "sections" : {
+            "sections": {
                 "description": cmp.description
             }
         };
@@ -113,7 +153,7 @@ module.exports = function (grunt){
     });
 
     grunt.registerTask('build', ['clean', 'composer:default:install']);
-    grunt.registerTask('package', ['default', 'compress']);
+    grunt.registerTask('package', ['default', 'compress:main', 'copy:update', 'compress:update']);
     grunt.registerTask('default', ['build']);
 
     // needed modules
@@ -122,5 +162,6 @@ module.exports = function (grunt){
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-bumpup');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
 }
