@@ -95,7 +95,7 @@ module.exports = function (grunt) {
             },
             clean: [
                 'target',
-                'undev',
+                '<%= cmp.name %>',
                 'vendor',
                 'release.json'
             ]
