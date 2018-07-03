@@ -72,7 +72,7 @@ class Plugin {
      * @return string
      */
     public static function getApiUrl() {
-        return static::$baseUrl . '/api';
+        return static::getConfig()['polyshapes_url'] . '/api';
     }
 
     /**
