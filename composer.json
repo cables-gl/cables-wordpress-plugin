@@ -32,6 +32,7 @@
   "require": {
     "php": ">=7.0",
     "twig/twig": "1.35.0",
-    "yahnis-elsts/plugin-update-checker": "4.4"
+    "yahnis-elsts/plugin-update-checker": "4.4",
+    "symfony/yaml": "3.4.0"
   }
 }

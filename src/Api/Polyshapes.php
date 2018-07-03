@@ -8,13 +8,10 @@
 
 namespace Polyshapes\Plugin\Api;
 
-use Polyshapes\Plugin\Frontend;
 use Polyshapes\Plugin\Model\Shape;
 use Polyshapes\Plugin\Plugin;
 
 class Polyshapes {
-
-    private static $BASE_URL = 'https://dev.polyshapes.io/api';
 
     /**
      * @return Shape
@@ -33,7 +30,7 @@ class Polyshapes {
                 'X-Client-Id' => $this->getClientId()
             )
         );
-        return wp_remote_get(static::$BASE_URL . $method, $args);
+        return wp_remote_get(Plugin::getApiUrl() . $method, $args);
     }
 
     private function getClientId() {
@@ -67,16 +64,16 @@ class Polyshapes {
     }
 
     private function postRemote(string $method, $params = array()) {
-        return wp_safe_remote_post(static::$BASE_URL . $method, array('body' => $params));
+        return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }
 
     public function isImported(Shape $shape): bool {
-        $filename = Plugin::$basePath . 'public/patches/' . $shape->getId() . '/cables.txt';
+        $filename = Plugin::getBasePath() . 'public/patches/' . $shape->getId() . '/cables.txt';
         return file_exists($filename);
     }
 
     public function getShapeDirUrl(Shape $shape) {
-        $filename = Plugin::$baseUrl . 'public/patches/' . $shape->getId() . '/';
+        $filename = Plugin::getBaseUrl() . 'public/patches/' . $shape->getId() . '/';
         return $filename;
     }
 
@@ -95,7 +92,7 @@ class Polyshapes {
             echo 'error saving file!';
         }
 
-        $destination_path = Plugin::$basePath . 'public/patches/' . $shape->getId() . '/';
+        $destination_path = Plugin::getBasePath() . 'public/patches/' . $shape->getId() . '/';
         $unzipfile = unzip_file($filename, $destination_path);
         if (is_wp_error($unzipfile)) {
             print_r($unzipfile);

@@ -8,14 +8,16 @@
 
 namespace Polyshapes\Plugin;
 
+use Symfony\Component\Yaml\Yaml;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
 
 class Plugin {
 
-    public static $baseUrl;
-    public static $basePath;
+    private static $baseUrl;
+    private static $basePath;
+    private static $config;
 
     /**
      * @var Twig_Environment
@@ -26,12 +28,14 @@ class Plugin {
      * Plugin constructor.
      */
     public function __construct(string $baseUrl, string $basePath) {
+
         static::$baseUrl = $baseUrl;
-        static::$basePath = $basePath;
+        static::$config = Yaml::parseFile($basePath . 'config/config.yml');
 
         $loader = new Twig_Loader_Filesystem($basePath . '/templates/');
         $twig = new Twig_Environment($loader, array('debug' => false));
-        $twig->addGlobal('polyshapes_url', "https://dev.polyshapes.io");
+        $polyshapes_url = self::getConfig()['polyshapes_url'];
+        $twig->addGlobal('polyshapes_url', $polyshapes_url);
         $twig->addExtension(new Twig_Extension_Debug());
         $this->twig = $twig;
 
@@ -48,6 +52,44 @@ class Plugin {
             $frontend = new Frontend($this->twig);
             $frontend->display();
         }
-
     }
+
+    /**
+     * @return string
+     */
+    public static function getBaseUrl() {
+        return static::$baseUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getBasePath() {
+        return static::$basePath;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getApiUrl() {
+        return static::$baseUrl . '/api';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getConfig() {
+        $globals = static::$config['global'];
+        $environment = static::$config['environment'];
+        if(array_key_exists($environment, static::$config)) {
+            $envConf = static::$config[$environment];
+            if(!is_array($envConf)) {
+                $envConf = array();
+            }
+        }else{
+            $envConf = array();
+        }
+        return array_merge($globals, $envConf);
+    }
+
 }

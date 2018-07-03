@@ -1,0 +1,5 @@
+environment: dev
+global:
+  polyshapes_url: https://polyshapes.io
+dev:
+  polyshapes_url: https://dev.polyshapes.io
