@@ -1,24 +1,27 @@
-wordpress:
-  image: wordpress:php7.0
-  links:
-    - wordpress_db:mysql
-  ports:
-    - 8080:80
-  environment:
-    WORDPRESS_DB_PASSWORD: db4wp
-  volumes:
-    - ./:/var/www/html/wp-content/plugins/polyshapes-wpplugin
-    - ./scripts/docker_php_config.ini:/usr/local/etc/php/conf.d/uploads.ini
-wordpress_db:
-  image: mysql:5.7
-  environment:
-    MYSQL_ROOT_PASSWORD: db4wp
-phpmyadmin:
-  image: corbinu/docker-phpmyadmin
-  links:
-    - wordpress_db:mysql
-  ports:
-    - 8181:80
-  environment:
-    MYSQL_USERNAME: root
-    MYSQL_ROOT_PASSWORD: db4wp
+version: "3"
+
+services:
+  wordpress:
+    image: wordpress:php7.0
+    links:
+      - wordpress_db:mysql
+    ports:
+      - 8082:80
+    environment:
+      WORDPRESS_DB_PASSWORD: db4wp
+    volumes:
+      - ./:/var/www/html/wp-content/plugins/polyshapes-wpplugin
+      - ./scripts/docker_php_config.ini:/usr/local/etc/php/conf.d/uploads.ini
+  wordpress_db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: db4wp
+  phpmyadmin:
+    image: corbinu/docker-phpmyadmin
+    links:
+      - wordpress_db:mysql
+    ports:
+      - 8181:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: db4wp
