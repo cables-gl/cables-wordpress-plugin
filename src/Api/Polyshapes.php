@@ -19,7 +19,7 @@ class Polyshapes {
     public function getShape(string $id): Shape {
         $response = $this->getRemote('/shapes/' . $id);
         $jsonshape = json_decode($response['body']);
-        return Shape::fromJson($jsonshape->shape);
+        return Shape::fromJson($jsonshape);
     }
 
     private function getRemote(string $method, array $params = array()): array {
@@ -84,6 +84,7 @@ class Polyshapes {
         WP_Filesystem();
         $upload_dir = wp_upload_dir();
         $filename = trailingslashit($upload_dir['path']) . $shape->getId() . '.zip';
+
 
         // by this point, the $wp_filesystem global should be working, so let's use it to create a file
         global $wp_filesystem;

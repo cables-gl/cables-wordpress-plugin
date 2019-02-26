@@ -89,6 +89,35 @@ polyshapes:
         preview: "Check Preview now"
         button_back: "< Previous"
         button: "Save & Publish"
+    style:
+      mainheadline: "Polyshapes: Style"
+      block1:
+        headline: "Location and pages"
+        location:
+          headline: "Where do you want your polyshape style to show?"
+          hero: "Hero Image"
+          background: "Background"
+          footer: "Footer"
+          custom:
+            field: "Custom Integration"
+            label:
+        pagetype:
+          headline: "Specify the pages you want to integrate the style to show:"
+          home: "on starting page"
+          all: "on all pages"
+          selected:
+            field: "on selected page"
+            label: "Select page"
+      block2:
+        headline: "Mobile integration"
+        text: "Show on mobile"
+        button: "Save Changes"
+      block3:
+        headline: "Advanced integration"
+        text: "Use this shortcode anywhere in the Wordpress-Editor to display your Shape in-place:"
+      sidebar1:
+        headline: "Your Shape"
+        text: "Configure the places the shape is integrated on the left side"
     settings:
       mainheadline: "Polyshapes: Settings"
       headline: "You are currently logged in to Polyshapes as"

@@ -1,53 +1,92 @@
-{% include '_partials/polyshape.twig' %}
-<div class="shortcode">
-    Shortcode: [polyshape id='{{ shape.id }}']
+<div class="wrap">
+    <div class="icon32"></div>
+    <h2>{{ "page_style_mainheadline"|i18n }}</h2>
+    <div id="poststuff">
+        <div id="post-body" class="metabox-holder columns-2">
+            <div id="post-body-content">
+                <div class="meta-box-sortables ui-sortable">
+                    <div class="postbox">
+                        <h2 class="hndle"><span>{{ "page_style_block1_headline"|i18n }}</span>
+                        </h2>
+                        <div class="inside">
+                            <form method="POST" action="{{ action_url }}">
+
+                                <input type="hidden" name="action" value="polyshapes_set_shape_options"/>
+                                <input type="hidden" name="shape" value="{{ shape.id }}"/>
+
+                                <p>
+                                    {{ "page_style_block1_location_headline"|i18n }}<br/>
+                                    <input type="checkbox" name="hero" id="polyshapes_hero"/>
+                                    <label for="polyshapes_hero">{{ "page_style_block1_location_hero"|i18n }}</label>
+                                    <input type="checkbox" name="background" id="polyshapes_background"/>
+                                    <label for="polyshapes_background">{{ "page_style_block1_location_background"|i18n }}</label>
+                                    <input type="checkbox" name="footer" id="polyshapes_footer"/>
+                                    <label for="polyshapes_footer">{{ "page_style_block1_location_footer"|i18n }}</label>
+                                    <input type="checkbox" name="custom" id="polyshapes_custom"/>
+                                    <label for="polyshapes_custom">{{ "page_style_block1_location_custom_field"|i18n }}</label>
+                                </p>
+                                <p>
+                                    {{ "page_style_block1_pagetype_headline"|i18n }}<br/>
+                                    <input type="checkbox" name="home" id="polyshapes_home"/>
+                                    <label for="polyshapes_home">{{ "page_style_block1_pagetype_home"|i18n }}</label>
+                                    <input type="checkbox" name="all" id="polyshapes_all"/>
+                                    <label for="polyshapes_all">{{ "page_style_block1_pagetype_all"|i18n }}</label>
+                                    <input type="checkbox" name="selected" id="polyshapes_selected"/>
+                                    <label for="polyshapes_selected">{{ "page_style_block1_pagetype_selected_field"|i18n }}</label>
+                                    <select id="page_type" name="polyshapes_page_type">
+                                        <option value="">{{ "page_style_block1_pagetype_selected_label"|i18n }}</option>
+                                    </select>
+                                </p>
+
+                                <p class="submit">
+                                    <input name="Submit" type="submit" class="button-primary" value="Save Changes">
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="postbox">
+                        <h2 class="hndle"><span>{{ "page_style_block2_headline"|i18n }}</span>
+                        </h2>
+                        <div class="inside">
+                            <p>
+                                <input name="mobile" id="mobile" type="checkbox"{% if mobile == "on" %} checked="checked"{% endif %}>
+                                <label for="element_replacement">{{ "page_style_block2_text"|i18n }}</label>
+                                <p>
+                                <button class="button-primary" name="Login">{{ "page_style_block2_button"|i18n }}</button>
+                                </p>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="postbox">
+                        <h2 class="hndle"><span>{{ "page_style_block3_headline"|i18n }}</span>
+                        </h2>
+                        <div class="inside">
+                            <p>
+                            <div class="shortcode">
+                                {{ "page_style_block3_text"|i18n }}
+                                <pre>[polyshape id='{{ shape.id }}']</pre>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="postbox-container-1" class="postbox-container">
+                <div class="meta-box-sortables">
+                    <div class="postbox">
+                        <h2 class="hndle"><span>{{ shape.title }}</span></h2>
+                        <div class="inside">
+                            <img src="{{ patchDir }}/screenshot.png" style="width: 100%;"/>
+                            <p>{{ "page_style_sidebar1_text"|i18n }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<form method="POST" action="{{ action_url }}">
 
-    <input type="hidden" name="action" value="polyshapes_set_shape_options">
-    <input type="hidden" name="shape" value="{{ shape.id }}">
 
-    <table class="form-table">
-        <tbody>
-        <tr>
-            <th scope="row"><label for="element_replacement">Display Mobile:</label></th>
-            <td><input name="mobile" id="mobile" type="checkbox"{% if mobile == "on" %} checked="checked"{% endif %}></td>
-        </tr>
-        <tr>
-            <th scope="row"><label for="element_replacement">Set as Background:</label></th>
-            <td><input name="background" id="background" type="checkbox"{% if background == "on" %} checked="checked"{% endif %}></td>
-        </tr>
-        <tr>
-            <th scope="row"><label for="element_replacement">Activate Element Replacement:</label></th>
-            <td><input name="element_replacement" id="element_replacement" type="checkbox"{% if replacesElements %} checked="checked"{% endif %}></td>
-        </tr>
-        <tr>
-            <th scope="row">Integrate in following places:</th>
-            <td>
-                <label for="page_type_home">Home</label>
-                <input name="page_types[home]" id="page_type_home" type="checkbox"{% if pages.home == "on" %} checked="checked"{% endif %}>
-                <label for="page_type_post">Post</label>
-                <input name="page_types[post]" id="page_type_post" type="checkbox"{% if pages.post == "on" %} checked="checked"{% endif %}>
-                <label for="page_type_page">Page</label>
-                <input name="page_types[page]" id="page_type_page" type="checkbox"{% if pages.page == "on" %} checked="checked"{% endif %}>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row"><label for="target_selectors">Target Element Id (without #, can be comma-seperated):</label></th>
-            <td><input name="target_selectors" id="target_selectors" type="text" value="{{ targetSelectors }}"></td>
-        </tr>
-        {% for key,cssSelector in cssSelectors %}
-        <tr>
-            <th scope="row">{{ key }}</th>
-            <td>{{ cssSelector }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <p class="submit">
-        <input name="Submit" type="submit" class="button-primary" value="Save Changes">
-    </p>
-</form>
 

@@ -20,7 +20,7 @@ class Shape {
     private $hasScreenshotSeries;
     private $info;
     private $json;
-    private $fileName;
+    private $downloadUrl;
     private $patchName;
     private $imported;
 
@@ -40,7 +40,7 @@ class Shape {
         $shape->setId($jsonshape->id);
         $shape->setJson(json_encode($jsonshape));
         $shape->setPatchName('polyshapes');
-        $shape->setFileName($jsonshape->downloadUrl);
+        $shape->setDownloadUrl($jsonshape->downloadUrl);
         return $shape;
     }
 
@@ -61,15 +61,15 @@ class Shape {
     /**
      * @return mixed
      */
-    public function getFileName() {
-        return $this->fileName;
+    public function getDownloadUrl() {
+        return $this->downloadUrl;
     }
 
     /**
-     * @param mixed $fileName
+     * @param mixed $downloadUrl
      */
-    public function setFileName($fileName) {
-        $this->fileName = $fileName;
+    public function setDownloadUrl($downloadUrl) {
+        $this->downloadUrl = $downloadUrl;
     }
 
     /**
