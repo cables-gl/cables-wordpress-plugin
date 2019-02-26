@@ -3,7 +3,7 @@
 Plugin Name: Polyshapes Wordpress
 Plugin URI: https://polyshapes.io
 Description: Integration of polyshapes.io into Wordpress
-Version: 0.3.0
+Version: 0.3.1
 Author: undefined development
 Author URI: http://undev.de
 License: MIT
@@ -21,7 +21,7 @@ $plugin = new Plugin($baseUrl, $basePath);
 $plugin->display();
 
 $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://ci.undev.de/releases/undev/polyshapes-wpplugin/master/release.json',
+    'https://ci.undev.de/releases/undev-studio/polyshapes_api_wpclient/master/release.json',
     __FILE__, //Full path to the main plugin file or functions.php.
     'undev/polyshapes-wpplugin'
 );
