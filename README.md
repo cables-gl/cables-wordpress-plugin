@@ -2,7 +2,7 @@
 Tags: polyshapes, wordpress, plugin
 Requires at least: 4.3.1
 Tested up to: 4.3.1
-Version: 0.3.2
+Version: 0.3.3
 
 Plugin to access data of your polyshapes.io account
 
