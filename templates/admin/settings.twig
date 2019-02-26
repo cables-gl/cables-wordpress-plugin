@@ -26,11 +26,13 @@
                     <h2 class="hndle"><span>{{ "page_settings_block2_headline"|i18n }}</span>
                     </h2>
                     <div class="inside">
-                        <p>
-                            {{ "page_settings_block2_text"|i18n }}
-                            <button class="button-primary"
-                                    name="Login">{{ "page_settings_block2_button"|i18n }}</button>
-                        </p>
+                        {{ "page_settings_block2_text"|i18n }}<br/><br/>
+                        <form action="{{ action_url }}" method="POST">
+                            <input type="hidden" name="action" value="polyshapes_logout">
+                            <input class="button-primary" type="submit" name="submit"
+                                   value="{{ "page_settings_block2_button"|i18n }}"/>
+
+                        </form>
                     </div>
                 </div>
             </div>

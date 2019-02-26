@@ -49,11 +49,13 @@
                         </h2>
                         <div class="inside">
                             <p>
-                                <input name="mobile" id="mobile" type="checkbox"{% if mobile == "on" %} checked="checked"{% endif %}>
+                                <input name="mobile" id="mobile"
+                                       type="checkbox"{% if mobile == "on" %} checked="checked"{% endif %}>
                                 <label for="element_replacement">{{ "page_style_block2_text"|i18n }}</label>
-                                <p>
-                                <button class="button-primary" name="Login">{{ "page_style_block2_button"|i18n }}</button>
-                                </p>
+                            <p>
+                                <button class="button-primary"
+                                        name="Login">{{ "page_style_block2_button"|i18n }}</button>
+                            </p>
                             </p>
                         </div>
                     </div>

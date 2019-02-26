@@ -30,6 +30,7 @@ class Backend {
         add_action('admin_menu', array($this, 'admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_post_polyshapes_login', array($this, 'polyshapes_login'));
+        add_action('admin_post_polyshapes_logout', array($this, 'polyshapes_logout'));
         add_action('admin_post_polyshapes_set_shape_options', array($this, 'polyshapes_set_shape_options'));
 
     }
@@ -95,8 +96,8 @@ class Backend {
 
     public function imports_page() {
         $active_tab = 'tab1';
-        if( isset( $_GET[ 'tab' ] ) ) {
-            $active_tab = $_GET[ 'tab' ];
+        if (isset($_GET['tab'])) {
+            $active_tab = $_GET['tab'];
         }
         $template = $this->twig->loadTemplate('admin/integration/integration.twig');
         $params = array();
@@ -115,6 +116,15 @@ class Backend {
         if ($response && isset($response->key)) {
             Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, $response->key);
         }
+        $admin_url = admin_url('admin.php?page=polyshapes_backend');
+        wp_redirect($admin_url);
+        exit;
+    }
+
+    public function polyshapes_logout() {
+        status_header(200);
+        $email = $_REQUEST['email'];
+        Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, null);
         $admin_url = admin_url('admin.php?page=polyshapes_backend');
         wp_redirect($admin_url);
         exit;
@@ -201,6 +211,7 @@ class Backend {
         ob_end_clean();
 
         $vars['save'] = esc_attr('Save Changes');
+        $vars['action_url'] = esc_url(admin_url('admin-post.php'));
 
         $template = $this->twig->loadTemplate('admin/settings.twig');
         echo $this->twig->render($template, $vars);
