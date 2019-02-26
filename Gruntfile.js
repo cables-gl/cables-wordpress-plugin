@@ -36,6 +36,7 @@ module.exports = function (grunt) {
                               'src/**',
                               'vendor/**',
                               'templates/**',
+                              'config/**',
                               'polyshapes-wpplugin.php',
                               'README.md'
                           ],
@@ -60,6 +61,7 @@ module.exports = function (grunt) {
                         'src/**',
                         'vendor/**',
                         'templates/**',
+                        'config/**',
                         'polyshapes-wpplugin.php',
                         'README.md'
                     ]
@@ -164,4 +166,4 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-}
+};
