@@ -1,0 +1,102 @@
+polyshapes:
+  global:
+    nav:
+      toggle: "toggle"
+  page:
+    backend:
+      menu:
+        main: "Polyshapes"
+        dashboard: "Dashboard"
+        imports: "Website Integration"
+        settings: "Settings"
+        import: "Import"
+        shape: "Shape"
+    dashboard:
+      mainheadline: "Polyshapes: Dashboard"
+      currentstyles:
+        headline: "Currenty integrated Style"
+        text: "Current website integration:"
+        button: "Change Website Integration"
+      lateststyles:
+        headline: "Your latest styles"
+        text: "These styles are not integrated into wordpress yet. Please visit the <a href=''>website integration tab</a> to integrate selected styles into your wordpress website."
+        button: "Load More"
+      sidebar1:
+        headline: "New to Polyshapes?"
+        image:
+        text: "Watch the video to get you started on creating beautiful website backgrounds with polyshapes."
+      sidebar2:
+        image:
+        text: "Or visit our website to find out more about polyshapes"
+        button: "Visit website"
+      sidebar3:
+        headline: "Gallery: New Polyshapes available!"
+        image:
+        text: "Polyshape:"
+        button: "Browse polyshapes gallery"
+    auth:
+      mainheadline: "Polyshapes: Welcome!"
+      block1:
+        headline: "Login or create an account!"
+        text: "You must be registered and logged in to polyshapes in order to use our service."
+        button: "Log in / Register now"
+        email:
+          label: "E-Mail:"
+        password:
+          label: "Password:"
+        submit:
+          label: "Log in"
+      block2:
+        headline: "New to Polyshapes?"
+        image1:
+        imagetext1: "Watch the video to get you started on creating beautiful website backgrounds with polyshapes."
+        image2:
+        imagetext2: "Or visit our website to find out more about polyshapes"
+        button: "Visit Website"
+      block3:
+        headline: "Extensive Help Center"
+        text: "Visit out help center for more support!"
+        button: "Go to help center"
+    integration:
+      mainheadline: "Integrate patch into website"
+      tab1:
+        tabtitle: "1. Choose Patch"
+        headline: "Please select one of your styles"
+        button: "Next Step >"
+      tab2:
+        tabtitle: "2. Define Position"
+        location:
+          headline: "Where do you want your polyshape style to show?"
+          hero: "Hero Image"
+          background: "Background"
+          footer: "Footer"
+          custom:
+            field: "Custom Integration"
+            label:
+        pagetype:
+          headline: "Specify the pages you want to integrate the style to show:"
+          home: "on starting page"
+          all: "on all pages"
+          selected:
+            field: "on selected page"
+            label: "Select page"
+        button_back: "< Previous"
+        button: "Next Step >"
+      tab3:
+        tabtitle: "3. Finish"
+        headline: "Selected Style"
+        integration: "Website integration"
+        preview: "Check Preview now"
+        button_back: "< Previous"
+        button: "Save & Publish"
+    settings:
+      mainheadline: "Polyshapes: Settings"
+      headline: "You are currently logged in to Polyshapes as"
+      block1:
+        headline: "Change your name and password"
+        text: "Please visit your <a href=''>Account Page</a> in Polyshapes to update any of your user information."
+      block2:
+        headline: "Log out of Polyshapes"
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        button: "Log out now"
+

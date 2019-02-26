@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  wordpress:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/var/www/html/wp-content/plugins/polyshapes-wpplugin
+      - ./scripts/docker_php_config.ini:/usr/local/etc/php/conf.d/uploads.ini
+  phpmyadmin:
+    image: corbinu/docker-phpmyadmin
+    links:
+      - wordpress_db:mysql
+    depends_on:
+      - wordpress_db
+    ports:
+      - 8181:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: db4wp
+    networks:
+      - polyshapes_wordpress_network

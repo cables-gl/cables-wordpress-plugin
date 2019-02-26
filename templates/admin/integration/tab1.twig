@@ -1,0 +1,36 @@
+<div id="poststuff">
+    <div id="post-body" class="metabox-holder columns-1">
+        <div id="post-body-content">
+            <div class="meta-box-sortables ui-sortable">
+                <div class="postbox">
+                    <h2><span>{{ "page_integration_tab1_headline"|i18n }}</span></h2>
+                    <div class="inside">
+                        {% for shape in shapes %}
+                            <article class="cute-4-tablet left">
+                                <div class="item screenshotSeries" data-id="{{ shape.id }}" onclick="document.location.href='admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}';">
+
+                                    <div class="text">
+                                        <span class="title">{{ shape.title }}</span>
+                                        {% if shape.fileName %}
+                                            <a class="imgcontainer" href="admin.php?page=polyshapes_backend_import&shape={{ shape.id }}">
+                                                import
+                                            </a>
+                                            {% if shape.imported %}
+                                                &nbsp;
+                                                <a class="imgcontainer" href="admin.php?page=polyshapes_backend_shape&shape={{ shape.id }}">
+                                                    edit
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                        <p><button class="button-primary" name="Login">{{ "page_integration_tab1_button"|i18n }}</button></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br class="clear">
+</div>

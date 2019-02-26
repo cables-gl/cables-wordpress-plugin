@@ -26,7 +26,7 @@ class Backend {
     }
 
     public function display() {
-        self::enqueue_scripts();
+        static::enqueue_scripts();
         add_action('admin_menu', array($this, 'admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_post_polyshapes_login', array($this, 'polyshapes_login'));
@@ -40,18 +40,13 @@ class Backend {
     }
 
     public function register_settings() {
-
         register_setting('polyshapes_backend', 'polyshapes_backend', array($this, 'validate_setting'));
-
         add_settings_section('polyshapes_backend_theme', 'Polyshapes Settings', array($this, 'section_cb'), __FILE__);
-
         add_settings_field('api_key', 'Api-Key:', array($this, 'api_key_setting'), __FILE__, 'polyshapes_backend_theme');
-
-
     }
 
     public function api_key_setting() {
-        $options = get_option('polyshapes_backend');
+        $options = Plugin::getPluginOptions();
         echo $options['api_key'];
     }
 
@@ -64,26 +59,27 @@ class Backend {
     }
 
     public function admin_menu() {
-        add_menu_page('Polyshapes', 'Polyshapes', 'manage_options', 'polyshapes_backend', array($this, 'plugin_page'), 'dashicons-admin-appearance');
-        add_submenu_page('polyshapes_backend', 'Imports', 'Imports', 'manage_options', 'polyshapes_backend_imports', array($this, 'imports_page'));
-        add_submenu_page('polyshapes_backend', 'Settings', 'Settings', 'administrator', 'polyshapes_backend_settings', array($this, 'settings_page'));
+        add_menu_page(Plugin::getTranslatedString('page_backend_menu_main'), Plugin::getTranslatedString('page_backend_menu_main'), 'manage_options', 'polyshapes_backend', array($this, 'polyshapes_dashboard'), 'dashicons-admin-appearance');
+        add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_dashboard'), 'Dashboard', 'manage_options', 'polyshapes_backend', array($this, 'polyshapes_dashboard'));
 
-        add_submenu_page('polyshapes_backend', 'Import', null, 'manage_options', 'polyshapes_backend_import', array($this, 'import_page'));
-        add_submenu_page('polyshapes_backend', 'Shape', null, 'manage_options', 'polyshapes_backend_shape', array($this, 'shape_page'));
-
+        if (Plugin::getPluginOption(Plugin::OPTIONS_API_KEY)) {
+            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'polyshapes_backend_imports', array($this, 'imports_page'));
+            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_settings'), Plugin::getTranslatedString('page_backend_menu_settings'), 'administrator', 'polyshapes_backend_settings', array($this, 'settings_page'));
+            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_import'), null, 'manage_options', 'polyshapes_backend_import', array($this, 'import_page'));
+            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_shape'), null, 'manage_options', 'polyshapes_backend_shape', array($this, 'shape_page'));
+        }
     }
 
-    public function plugin_page() {
-        $options = get_option('polyshapes_backend');
+    public function polyshapes_dashboard() {
+        $options = Plugin::getPluginOptions();
         $params = array();
         if (!$options['api_key']) {
             $template = $this->twig->loadTemplate('admin/auth.twig');
             $params['action_url'] = esc_url(admin_url('admin-post.php'));
         } else {
-            $template = $this->twig->loadTemplate('admin/home.twig');
+            $template = $this->twig->loadTemplate('admin/dashboard/dashboard.twig');
         }
         echo $this->twig->render($template, $params);
-
     }
 
     public function import_page() {
@@ -98,10 +94,15 @@ class Backend {
     }
 
     public function imports_page() {
-        $template = $this->twig->loadTemplate('admin/imports.twig');
+        $active_tab = 'tab1';
+        if( isset( $_GET[ 'tab' ] ) ) {
+            $active_tab = $_GET[ 'tab' ];
+        }
+        $template = $this->twig->loadTemplate('admin/integration/integration.twig');
         $params = array();
         $api = new Api\Polyshapes();
         $params['shapes'] = $api->getAllShapes();
+        $params['active_tab'] = $active_tab;
         echo $this->twig->render($template, $params);
     }
 
@@ -111,10 +112,8 @@ class Backend {
         $password = $_REQUEST['password'];
         $api = new Api\Polyshapes();
         $response = $api->login($email, $password);
-        if ($response && isset($response->apikey)) {
-            $options = get_option('polyshapes_backend');
-            $options['api_key'] = $response->apikey->key;
-            update_option('polyshapes_backend', $options);
+        if ($response && isset($response->key)) {
+            Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, $response->key);
         }
         $admin_url = admin_url('admin.php?page=polyshapes_backend');
         wp_redirect($admin_url);
@@ -129,18 +128,20 @@ class Backend {
         $pageTypes = $_REQUEST['page_types'];
         $background = $_REQUEST['background'];
         $mobile = $_REQUEST['mobile'];
-        $options = get_option('polyshapes_backend');
-        if (!is_array($options['shapes'])) {
-            $options['shapes'] = array();
+
+        $shapes = Plugin::getPluginOption(Plugin::OPTIONS_SHAPES);
+        if (!is_array($shapes)) {
+            $shapes = array();
         }
-        $options['shapes'][$shapeId] = array(
+        $shapes[$shapeId] = array(
             "element_replacement" => $elementReplacement,
             "target_selectors" => $targetSelectors,
             'page_types' => $pageTypes,
             'background' => $background,
             'mobile' => $mobile
         );
-        update_option('polyshapes_backend', $options);
+        Plugin::setPluginOption(Plugin::OPTIONS_SHAPES, $shapes);
+
         $admin_url = admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId);
         wp_redirect($admin_url);
         exit;
@@ -153,14 +154,14 @@ class Backend {
         $shapeId = $_GET['shape'];
         $shape = $api->getShape($shapeId);
         $imported = $api->isImported($shape);
-        $options = get_option('polyshapes_backend');
+        $options = Plugin::getPluginOptions();
         $replacesElements = false;
         $targetSelectors = "";
         $setBackground = false;
         $mobile = true;
         $pageTypes = array('home' => 'on', 'post' => 'on', 'page' => 'on');
-        if(is_array($options['shapes'])) {
-            if(is_array($options['shapes'][$shapeId])) {
+        if (is_array($options['shapes'])) {
+            if (is_array($options['shapes'][$shapeId])) {
                 $shapeConfig = $options['shapes'][$shapeId];
                 $replacesElements = $shapeConfig['element_replacement'];
                 $targetSelectors = $shapeConfig['target_selectors'];
@@ -169,7 +170,6 @@ class Backend {
                 $mobile = $shapeConfig['mobile'];
             }
         }
-
 
 
         echo $this->twig->render($template, array(

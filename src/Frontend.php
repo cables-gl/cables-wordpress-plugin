@@ -30,7 +30,7 @@ class Frontend {
 
     public function shape_footer() {
 
-        $options = get_option('polyshapes_backend');
+        $options = Plugin::getPluginOptions();
         $template = $this->twig->loadTemplate('frontend/shape.footer.twig');
         $shapes = array();
         foreach ($this->getElementReplacingShapeIds() as $shapeId) {
@@ -63,7 +63,7 @@ class Frontend {
 
     private function getElementReplacingShapeIds() {
         $ids = array();
-        $options = get_option('polyshapes_backend');
+        $options = Plugin::getPluginOptions();
         if (is_array($options['shapes'])) {
             foreach ($options['shapes'] as $id => $shape) {
                 if ($shape['element_replacement'] === "on") {

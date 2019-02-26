@@ -37,10 +37,10 @@ class Shape {
     public static function fromJson($jsonshape): Shape {
         $shape = new Shape();
         $shape->setTitle($jsonshape->title);
-        $shape->setId($jsonshape->_id);
+        $shape->setId($jsonshape->id);
         $shape->setJson(json_encode($jsonshape));
         $shape->setPatchName('polyshapes');
-        $shape->setFileName($jsonshape->file_shape);
+        $shape->setFileName($jsonshape->downloadUrl);
         return $shape;
     }
 

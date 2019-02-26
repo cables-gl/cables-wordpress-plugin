@@ -17,26 +17,25 @@ class Polyshapes {
      * @return Shape
      */
     public function getShape(string $id): Shape {
-        $response = $this->getRemote('/shapes/shape/' . $id);
+        $response = $this->getRemote('/shapes/' . $id);
         $jsonshape = json_decode($response['body']);
         return Shape::fromJson($jsonshape->shape);
     }
 
-    private function getRemote(string $method): array {
-        $options = get_option('polyshapes_backend');
+    private function getRemote(string $method, array $params = array()): array {
+        $options = Plugin::getPluginOptions();
         $args = array(
             'headers' => array(
                 'X-Api-Key' => $options['api_key'],
                 'X-Client-Id' => $this->getClientId()
             )
         );
+        $args = array_merge_recursive($args, $params);
         return wp_remote_get(Plugin::getApiUrl() . $method, $args);
     }
 
     private function getClientId() {
-        $url = parse_url(get_site_url());
-        $clientId = $url['host'];
-        return $clientId;
+        return "wordpress";
     }
 
     /**
@@ -46,7 +45,7 @@ class Polyshapes {
         $response = $this->getRemote('/shapes');
         $jsonshapes = json_decode($response['body']);
         $shapes = array();
-        foreach ($jsonshapes->shapes as $jsonshape) {
+        foreach ($jsonshapes as $jsonshape) {
             $shapes[] = Shape::fromJson($jsonshape);
         }
         return $shapes;
@@ -55,11 +54,11 @@ class Polyshapes {
     public function login($email, $password) {
         $clientId = $this->getClientId();
         $params = array(
-            'email' => $email,
-            'password' => $password,
-            'clientid' => $clientId
+            'headers' => array(
+                'Authorization' => 'Basic ' . base64_encode($email . ':' . $password)
+            )
         );
-        $response = $this->postRemote('/user/login', $params);
+        $response = $this->getRemote('/auth?clientId=' . $clientId, $params);
         return json_decode($response['body']);
     }
 
@@ -79,7 +78,7 @@ class Polyshapes {
 
     public function importShape(Shape $shape) {
 
-        $method = '/shapes/shape/' . $shape->getId() . '/package';
+        $method = '/shapes/' . $shape->getId() . '/archive';
         $response = $this->getRemote($method);
 
         WP_Filesystem();

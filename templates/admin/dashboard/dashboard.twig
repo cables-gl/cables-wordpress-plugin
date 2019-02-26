@@ -1,0 +1,48 @@
+<div class="wrap">
+    <h1>{{ "page_dashboard_mainheadline"|i18n }}</h1>
+    <div id="poststuff">
+        <div id="post-body" class="metabox-holder columns-2">
+            <div id="post-body-content">
+                <div class="meta-box-sortables ui-sortable">
+                    <div class="postbox">
+                        <div class="inside">
+                            {% include 'admin/dashboard/currentstyles.twig' %}
+                            <hr/>
+                            {% include 'admin/dashboard/lateststyles.twig' %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="postbox-container-1" class="postbox-container">
+                <div class="meta-box-sortables">
+                    <div class="postbox">
+                        <h2 class="hndle"><span>{{ "page_dashboard_sidebar1_headline"|i18n }}</span></h2>
+                        <div class="inside">
+                            <img src="{{ "page_dashboard_sidebar1_image"|i18n }}"/>
+                            <p>{{ "page_dashboard_sidebar1_text"|i18n }}</p>
+                        </div>
+                    </div>
+                    <div class="postbox">
+                        <div class="inside">
+                            <img src="{{ "page_dashboard_sidebar2_image"|i18n }}"/>
+                            <p>{{ "page_dashboard_sidebar2_text"|i18n }}</p>
+                            <button class="button-primary"
+                                    name="Login">{{ "page_dashboard_sidebar2_button"|i18n }}</button>
+                        </div>
+                    </div>
+                    <div class="postbox">
+                        <h2 class="hndle"><span>{{ "page_dashboard_sidebar3_headline"|i18n }}</span></h2>
+                        <div class="inside">
+                            <img src="{{ "page_dashboard_sidebar3_image"|i18n }}"/>
+                            <p>{{ "page_dashboard_sidebar3_text"|i18n }}</p>
+                            <button class="button-primary"
+                                    name="Login">{{ "page_dashboard_sidebar2_button"|i18n }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br class="clear">
+    </div>
+</div>

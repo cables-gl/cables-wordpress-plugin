@@ -9,7 +9,7 @@
 namespace Polyshapes\Plugin\Model;
 
 
-class ShapeExport {
+class ShapeData {
 
     private $size;
     private $path;
@@ -25,8 +25,8 @@ class ShapeExport {
      * @param $jsonshape
      * @return Patch
      */
-    public static function fromJson($json): ShapeExport {
-        $export = new ShapeExport();
+    public static function fromJson($json): ShapeData {
+        $export = new ShapeData();
         $export->setSize($json->size);
         $export->setPath($json->path);
         $export->setLog($json->log);

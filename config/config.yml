@@ -1,5 +1,8 @@
 environment: dev
 global:
   polyshapes_url: https://polyshapes.io
+  polyshapes_api_url: https://api.polyshapes.io/api/v1
+  default_language: en
 dev:
   polyshapes_url: https://dev.polyshapes.io
+  polyshapes_api_url: https://api.dev.polyshapes.io/api/v1
