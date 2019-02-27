@@ -35,7 +35,8 @@ class Polyshapes {
     }
 
     private function getClientId() {
-        return "wordpress";
+        $url = parse_url(get_site_url());
+        return "wordpress_" . $url['host'] . $url['path'];
     }
 
     /**
@@ -58,7 +59,7 @@ class Polyshapes {
                 'Authorization' => 'Basic ' . base64_encode($email . ':' . $password)
             )
         );
-        $response = $this->getRemote('/auth?clientId=' . $clientId, $params);
+        $response = $this->getRemote('/auth?createIfMissing=true&clientId=' . $clientId, $params);
         return json_decode($response['body']);
     }
 
