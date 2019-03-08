@@ -16,7 +16,8 @@ use Twig_Loader_Filesystem;
 class Plugin {
 
     const OPTIONS_API_KEY = 'api_key';
-    const OPTIONS_SHAPES = 'shapes';
+    const OPTIONS_STYLES = 'styles';
+    const OPTIONS_ACCOUNT_ID  = 'account_id';
 
     private static $baseUrl;
     private static $basePath;
@@ -98,7 +99,8 @@ class Plugin {
         } else {
             $envConf = array();
         }
-        return array_merge($globals, $envConf);
+        $merge = array_merge($globals, $envConf);
+        return $merge;
     }
 
     /**

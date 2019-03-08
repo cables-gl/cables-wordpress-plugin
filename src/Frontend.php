@@ -35,7 +35,7 @@ class Frontend {
         $shapes = array();
         foreach ($this->getElementReplacingShapeIds() as $shapeId) {
             $api = new Api\Polyshapes();
-            $shape = $api->getShape($shapeId);
+            $shape = $api->getStyle($shapeId);
             $shapeOptions = $options['shapes'][$shapeId];
             if (!$this->isActiveByPageType($shapeOptions)) {
                 continue;

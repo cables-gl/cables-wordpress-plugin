@@ -6,3 +6,6 @@ global:
 dev:
   polyshapes_url: https://dev.polyshapes.io
   polyshapes_api_url: https://api.dev.polyshapes.io/api/v1
+local:
+  polyshapes_url: http://frontend:3000
+  polyshapes_api_url: http://api:3000/api/v1

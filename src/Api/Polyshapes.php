@@ -8,18 +8,18 @@
 
 namespace Polyshapes\Plugin\Api;
 
-use Polyshapes\Plugin\Model\Shape;
+use Polyshapes\Plugin\Model\Style;
 use Polyshapes\Plugin\Plugin;
 
 class Polyshapes {
 
     /**
-     * @return Shape
+     * @return Style
      */
-    public function getShape(string $id): Shape {
-        $response = $this->getRemote('/shapes/' . $id);
+    public function getStyle(string $id): Style {
+        $response = $this->getRemote('/styles/' . $id);
         $jsonshape = json_decode($response['body']);
-        return Shape::fromJson($jsonshape);
+        return Style::fromJson($jsonshape);
     }
 
     private function getRemote(string $method, array $params = array()): array {
@@ -31,7 +31,9 @@ class Polyshapes {
             )
         );
         $args = array_merge_recursive($args, $params);
-        return wp_remote_get(Plugin::getApiUrl() . $method, $args);
+        $url = Plugin::getApiUrl() . $method;
+        $response = wp_remote_get($url, $args);
+        return $response;
     }
 
     private function getClientId() {
@@ -39,15 +41,20 @@ class Polyshapes {
         return "wordpress_" . $url['host'] . $url['path'];
     }
 
+    private function getAccountId() {
+        return Plugin::getPluginOption(Plugin::OPTIONS_ACCOUNT_ID);
+    }
+
     /**
-     * @return Shape[]
+     * @return Style[]
      */
-    public function getAllShapes(): array {
-        $response = $this->getRemote('/shapes');
+    public function getMyStyles(): array {
+        $url = '/accounts/' . $this->getAccountId() . '/styles';
+        $response = $this->getRemote($url);
         $jsonshapes = json_decode($response['body']);
         $shapes = array();
         foreach ($jsonshapes as $jsonshape) {
-            $shapes[] = Shape::fromJson($jsonshape);
+            $shapes[] = Style::fromJson($jsonshape);
         }
         return $shapes;
     }
@@ -67,19 +74,19 @@ class Polyshapes {
         return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }
 
-    public function isImported(Shape $shape): bool {
+    public function isImported(Style $shape): bool {
         $filename = Plugin::getBasePath() . 'public/patches/' . $shape->getId() . '/cables.txt';
         return file_exists($filename);
     }
 
-    public function getShapeDirUrl(Shape $shape) {
+    public function getShapeDirUrl(Style $shape) {
         $filename = Plugin::getBaseUrl() . 'public/patches/' . $shape->getId() . '/';
         return $filename;
     }
 
-    public function importShape(Shape $shape) {
+    public function importStyle(Style $shape) {
 
-        $method = '/shapes/' . $shape->getId() . '/archive';
+        $method = '/styles/' . $shape->getId() . '/archive';
         $response = $this->getRemote($method);
 
         WP_Filesystem();

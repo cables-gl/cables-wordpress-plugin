@@ -67,7 +67,7 @@ class Backend {
             add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'polyshapes_backend_imports', array($this, 'imports_page'));
             add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_settings'), Plugin::getTranslatedString('page_backend_menu_settings'), 'administrator', 'polyshapes_backend_settings', array($this, 'settings_page'));
             add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_import'), null, 'manage_options', 'polyshapes_backend_import', array($this, 'import_page'));
-            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_shape'), null, 'manage_options', 'polyshapes_backend_shape', array($this, 'shape_page'));
+            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_shape'), null, 'manage_options', 'polyshapes_backend_style', array($this, 'style_page'));
         }
     }
 
@@ -84,13 +84,13 @@ class Backend {
     }
 
     public function import_page() {
-        $shapeId = $_GET['shape'];
+        $styleId = $_GET['style'];
         $api = new Api\Polyshapes();
-        $shape = $api->getShape($shapeId);
-        $api->importShape($shape);
-        $admin_url = admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId);
+        $style = $api->getStyle($styleId);
+        $api->importStyle($style);
+        $admin_url = admin_url('admin.php?page=polyshapes_backend_style&style=' . $styleId);
         wp_redirect($admin_url);
-        print "<a href='" . $admin_url . "'>go to shape</a>";
+        print "<a href='" . $admin_url . "'>go to style</a>";
         exit;
     }
 
@@ -102,7 +102,7 @@ class Backend {
         $template = $this->twig->loadTemplate('admin/integration/integration.twig');
         $params = array();
         $api = new Api\Polyshapes();
-        $params['shapes'] = $api->getAllShapes();
+        $params['styles'] = $api->getMyStyles();
         $params['active_tab'] = $active_tab;
         echo $this->twig->render($template, $params);
     }
@@ -115,6 +115,7 @@ class Backend {
         $response = $api->login($email, $password);
         if ($response && isset($response->key)) {
             Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, $response->key);
+            Plugin::setPluginOption(Plugin::OPTIONS_ACCOUNT_ID, $response->accountId);
         }
         $admin_url = admin_url('admin.php?page=polyshapes_backend');
         wp_redirect($admin_url);
@@ -125,6 +126,7 @@ class Backend {
         status_header(200);
         $email = $_REQUEST['email'];
         Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, null);
+        Plugin::setPluginOption(Plugin::OPTIONS_ACCOUNT_ID, null);
         $admin_url = admin_url('admin.php?page=polyshapes_backend');
         wp_redirect($admin_url);
         exit;
@@ -132,38 +134,38 @@ class Backend {
 
     public function polyshapes_set_shape_options() {
         status_header(200);
-        $shapeId = $_REQUEST['shape'];
+        $styleId = $_REQUEST['style'];
         $elementReplacement = $_REQUEST['element_replacement'];
         $targetSelectors = $_REQUEST['target_selectors'];
         $pageTypes = $_REQUEST['page_types'];
         $background = $_REQUEST['background'];
         $mobile = $_REQUEST['mobile'];
 
-        $shapes = Plugin::getPluginOption(Plugin::OPTIONS_SHAPES);
-        if (!is_array($shapes)) {
-            $shapes = array();
+        $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
+        if (!is_array($styles)) {
+            $styles = array();
         }
-        $shapes[$shapeId] = array(
+        $styles[$styleId] = array(
             "element_replacement" => $elementReplacement,
             "target_selectors" => $targetSelectors,
             'page_types' => $pageTypes,
             'background' => $background,
             'mobile' => $mobile
         );
-        Plugin::setPluginOption(Plugin::OPTIONS_SHAPES, $shapes);
+        Plugin::setPluginOption(Plugin::OPTIONS_STYLES, $styles);
 
-        $admin_url = admin_url('admin.php?page=polyshapes_backend_shape&shape=' . $shapeId);
+        $admin_url = admin_url('admin.php?page=polyshapes_backend_style&style=' . $styleId);
         wp_redirect($admin_url);
         exit;
     }
 
-    public function shape_page() {
+    public function style_page() {
 
-        $template = $this->twig->loadTemplate('admin/shape.twig');
+        $template = $this->twig->loadTemplate('admin/style.twig');
         $api = new Api\Polyshapes();
-        $shapeId = $_GET['shape'];
-        $shape = $api->getShape($shapeId);
-        $imported = $api->isImported($shape);
+        $styleId = $_GET['style'];
+        $style = $api->getStyle($styleId);
+        $imported = $api->isImported($style);
         $options = Plugin::getPluginOptions();
         $replacesElements = false;
         $targetSelectors = "";
@@ -171,8 +173,8 @@ class Backend {
         $mobile = true;
         $pageTypes = array('home' => 'on', 'post' => 'on', 'page' => 'on');
         if (is_array($options['shapes'])) {
-            if (is_array($options['shapes'][$shapeId])) {
-                $shapeConfig = $options['shapes'][$shapeId];
+            if (is_array($options['shapes'][$styleId])) {
+                $shapeConfig = $options['shapes'][$styleId];
                 $replacesElements = $shapeConfig['element_replacement'];
                 $targetSelectors = $shapeConfig['target_selectors'];
                 $pageTypes = $shapeConfig['page_types'];
@@ -183,14 +185,14 @@ class Backend {
 
 
         echo $this->twig->render($template, array(
-            'shape' => $shape,
+            'style' => $style,
             'isImported' => $imported,
             'pages' => $pageTypes,
             'background' => $setBackground,
             'mobile' => $mobile,
             'replacesElements' => $replacesElements,
             'targetSelectors' => $targetSelectors,
-            'patchDir' => $api->getShapeDirUrl($shape),
+            'patchDir' => $api->getShapeDirUrl($style),
             'action_url' => esc_url(admin_url('admin-post.php')),
             'cssSelectors' => $this->getPossibleCssSelectors()
         ));

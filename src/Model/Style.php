@@ -10,8 +10,9 @@ namespace Polyshapes\Plugin\Model;
 
 
 use Polyshapes\Plugin\Api\Polyshapes;
+use Polyshapes\Plugin\Plugin;
 
-class Shape {
+class Style {
 
     private $title;
     private $id;
@@ -32,15 +33,16 @@ class Shape {
 
     /**
      * @param $jsonshape
-     * @return Shape
+     * @return Style
      */
-    public static function fromJson($jsonshape): Shape {
-        $shape = new Shape();
-        $shape->setTitle($jsonshape->title);
+    public static function fromJson($jsonshape): Style {
+        $shape = new Style();
+        $shape->setTitle($jsonshape->name);
         $shape->setId($jsonshape->id);
         $shape->setJson(json_encode($jsonshape));
         $shape->setPatchName('polyshapes');
-        $shape->setDownloadUrl($jsonshape->downloadUrl);
+        $downloadUrl = Plugin::getApiUrl() . '/styles/' . $jsonshape->id . '/archive';
+        $shape->setDownloadUrl($downloadUrl);
         return $shape;
     }
 

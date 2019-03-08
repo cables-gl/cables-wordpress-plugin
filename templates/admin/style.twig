@@ -11,8 +11,8 @@
                         <div class="inside">
                             <form method="POST" action="{{ action_url }}">
 
-                                <input type="hidden" name="action" value="polyshapes_set_shape_options"/>
-                                <input type="hidden" name="shape" value="{{ shape.id }}"/>
+                                <input type="hidden" name="action" value="polyshapes_set_style_options"/>
+                                <input type="hidden" name="style" value="{{ style.id }}"/>
 
                                 <p>
                                     {{ "page_style_block1_location_headline"|i18n }}<br/>
@@ -66,7 +66,7 @@
                             <p>
                             <div class="shortcode">
                                 {{ "page_style_block3_text"|i18n }}
-                                <pre>[polyshape id='{{ shape.id }}']</pre>
+                                <pre>[polyshape id='{{ style.id }}']</pre>
                             </div>
                             </p>
                         </div>
@@ -76,7 +76,7 @@
             <div id="postbox-container-1" class="postbox-container">
                 <div class="meta-box-sortables">
                     <div class="postbox">
-                        <h2 class="hndle"><span>{{ shape.title }}</span></h2>
+                        <h2 class="hndle"><span>{{ style.title }}</span></h2>
                         <div class="inside">
                             <img src="{{ patchDir }}/screenshot.png" style="width: 100%;"/>
                             <p>{{ "page_style_sidebar1_text"|i18n }}</p>

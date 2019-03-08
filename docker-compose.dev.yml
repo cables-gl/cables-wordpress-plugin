@@ -8,6 +8,10 @@ services:
     volumes:
       - ./:/var/www/html/wp-content/plugins/polyshapes-wpplugin
       - ./scripts/docker_php_config.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - polyshapesapi_polyshapes_api_network
+    external_links:
+      - polyshapesapi_api_1:api
   phpmyadmin:
     image: corbinu/docker-phpmyadmin
     links:
@@ -21,3 +25,7 @@ services:
       MYSQL_ROOT_PASSWORD: db4wp
     networks:
       - polyshapes_wordpress_network
+
+networks:
+  polyshapesapi_polyshapes_api_network:
+    external: true
