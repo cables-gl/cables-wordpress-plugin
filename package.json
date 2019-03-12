@@ -1,6 +1,6 @@
 {
   "name": "polyshapes-wpplugin",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "license": "MIT",
   "devDependencies": {
     "grunt": "1.0.2",

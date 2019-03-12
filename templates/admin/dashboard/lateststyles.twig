@@ -4,8 +4,8 @@
 
 
 {% for id, notIntegratedStyle in notIntegratedStyles %}
-    id: {{ id }} - name: {{ notIntegratedStyle.name }}
+    id: {{ id }} - name: {{ notIntegratedStyle.name }}<br/>
 {% endfor %}
-<br/><br/>
+<br/>
 <button class="button-primary">{{ "page_dashboard_lateststyles_button"|i18n }}</button>
 </p>
