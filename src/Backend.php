@@ -73,6 +73,7 @@ class Backend {
 
     public function polyshapes_dashboard() {
         $options = Plugin::getPluginOptions();
+        $api = new Api\Polyshapes();
         $params = array();
         if (!$options['api_key']) {
             $template = $this->twig->loadTemplate('admin/auth.twig');
@@ -80,16 +81,25 @@ class Backend {
         } else {
             $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
             $integratedStyles = array();
+            $notIntgratedStyles = array();
             foreach ($styles as $styleId => $styleConfig) {
+                $integrated = false;
                 if (array_key_exists('integrations', $styleConfig) && !empty($styleConfig['integrations'])) {
                     foreach ($styleConfig['integrations'] as $key => $value) {
                         if ($value === 'on') {
-                            $integratedStyles[$styleId] = $styleConfig;
+                            $integrated = true;
                         }
                     }
                 }
+                if($integrated) {
+                    $integratedStyles[$styleId] = $styleConfig;
+                }else{
+                    $notIntgratedStyles[$styleId] = $styleConfig;
+                }
             }
             $params['integratedStyles'] = $integratedStyles;
+            $params['notIntegratedStyles'] = $notIntgratedStyles;
+            $params['account'] = $api->getAccountInfo();
             $template = $this->twig->loadTemplate('admin/dashboard/dashboard.twig');
         }
         echo $this->twig->render($template, $params);
@@ -228,6 +238,7 @@ class Backend {
 
     public function settings_page() {
 
+        $api = new Api\Polyshapes();
         $vars = array();
 
         ob_start();
@@ -242,6 +253,8 @@ class Backend {
 
         $vars['save'] = esc_attr('Save Changes');
         $vars['action_url'] = esc_url(admin_url('admin-post.php'));
+        $vars['account'] = $api->getAccountInfo();
+        $vars['apikey'] = Plugin::getPluginOption(Plugin::OPTIONS_API_KEY);
 
         $template = $this->twig->loadTemplate('admin/settings.twig');
         echo $this->twig->render($template, $vars);

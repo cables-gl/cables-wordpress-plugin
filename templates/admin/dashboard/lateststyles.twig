@@ -1,5 +1,11 @@
 <p>
 <h3><span>{{ "page_dashboard_lateststyles_headline"|i18n }}</span></h3>
 <p>{{ "page_dashboard_lateststyles_text"|i18n }}</p>
+
+
+{% for id, notIntegratedStyle in notIntegratedStyles %}
+    id: {{ id }} - name: {{ notIntegratedStyle.name }}
+{% endfor %}
+<br/><br/>
 <button class="button-primary">{{ "page_dashboard_lateststyles_button"|i18n }}</button>
 </p>

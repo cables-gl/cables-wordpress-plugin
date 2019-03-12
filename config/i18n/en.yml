@@ -13,13 +13,15 @@ polyshapes:
         shape: "Shape"
     dashboard:
       mainheadline: "Polyshapes: Dashboard"
+      loginbox:
+        headline: "Logged in as"
       currentstyles:
         headline: "Currently integrated Styles"
         text: "Current website integrations:"
         button: "Settings"
       lateststyles:
         headline: "Your latest styles"
-        text: "These styles are not integrated into wordpress yet. Please visit the <a href=''>website integration tab</a> to integrate selected styles into your wordpress website."
+        text: "These styles are not integrated into wordpress yet. Please visit the <a href='?page=polyshapes_backend_imports'>website integration tab</a> to integrate selected styles into your wordpress website."
         button: "Load More"
       sidebar1:
         headline: "New to Polyshapes?"
@@ -125,6 +127,10 @@ polyshapes:
     settings:
       mainheadline: "Polyshapes: Settings"
       headline: "You are currently logged in to Polyshapes as"
+      apikey:
+        headline: "Your current login information"
+        login: "Login:"
+        key: "Api-Key:"
       block1:
         headline: "Change your name and password"
         text: "Please visit your <a href=''>Account Page</a> in Polyshapes to update any of your user information."

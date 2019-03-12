@@ -1,15 +1,21 @@
 <div class="wrap">
     <div class="icon32"></div>
     <h2>{{ "page_settings_mainheadline"|i18n }}</h2>
-    <h3>{{ "page_settings_headline"|i18n }} "Max Mustermann"</h3>
+    <h3>{{ "page_settings_headline"|i18n }} "{{ account.email }}"</h3>
     <div id="polyshapes_auth">
         <div class="metabox-holder columns-1">
             <div class="meta-box-sortables ui-sortable">
                 <div class="postbox">
-                    <button type="button" class="handlediv" aria-expanded="true">
-                        <span class="screen-reader-text">{{ "global_nav_toggle"|i18n }}</span>
-                        <span class="toggle-indicator" aria-hidden="true"></span>
-                    </button>
+                    <h2 class="hndle"><span>{{ "page_settings_apikey_headline"|i18n }}</span>
+                    </h2>
+                    <div class="inside">
+                        <p>
+                            {{ "page_settings_apikey_login"|i18n }} {{ account.email }}<br/>
+                            {{ "page_settings_apikey_key"|i18n }} {{ apikey }}
+                        </p>
+                    </div>
+                </div>
+                <div class="postbox">
                     <h2 class="hndle"><span>{{ "page_settings_block1_headline"|i18n }}</span>
                     </h2>
                     <div class="inside">
@@ -19,10 +25,6 @@
                     </div>
                 </div>
                 <div class="postbox">
-                    <button type="button" class="handlediv" aria-expanded="true">
-                        <span class="screen-reader-text">{{ "global_nav_toggle"|i18n }}</span>
-                        <span class="toggle-indicator" aria-hidden="true"></span>
-                    </button>
                     <h2 class="hndle"><span>{{ "page_settings_block2_headline"|i18n }}</span>
                     </h2>
                     <div class="inside">

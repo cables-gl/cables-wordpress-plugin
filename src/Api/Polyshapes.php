@@ -70,6 +70,13 @@ class Polyshapes {
         return json_decode($response['body']);
     }
 
+    public function getAccountInfo() {
+        $url = '/accounts/' . $this->getAccountId();
+        $response = $this->getRemote($url);
+        $accountJSON = json_decode($response['body']);
+        return $accountJSON;
+    }
+
     private function postRemote(string $method, $params = array()) {
         return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }
