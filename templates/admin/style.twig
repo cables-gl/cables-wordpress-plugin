@@ -5,60 +5,35 @@
         <div id="post-body" class="metabox-holder columns-2">
             <div id="post-body-content">
                 <div class="meta-box-sortables ui-sortable">
-                    <div class="postbox">
-                        <h2 class="hndle"><span>{{ "page_style_block1_headline"|i18n }}</span>
-                        </h2>
-                        <div class="inside">
-                            <form method="POST" action="{{ action_url }}">
+                    <form method="POST" action="{{ action_url }}">
+                        <div class="postbox">
+                            <h2 class="hndle"><span>{{ "page_style_block1_headline"|i18n }}</span>
+                            </h2>
+                            <div class="inside">
 
                                 <input type="hidden" name="action" value="polyshapes_set_style_options"/>
                                 <input type="hidden" name="style" value="{{ style.id }}"/>
 
-                                <p>
-                                    {{ "page_style_block1_location_headline"|i18n }}<br/>
-                                    <input type="checkbox" name="hero" id="polyshapes_hero"/>
-                                    <label for="polyshapes_hero">{{ "page_style_block1_location_hero"|i18n }}</label>
-                                    <input type="checkbox" name="background" id="polyshapes_background"/>
-                                    <label for="polyshapes_background">{{ "page_style_block1_location_background"|i18n }}</label>
-                                    <input type="checkbox" name="footer" id="polyshapes_footer"/>
-                                    <label for="polyshapes_footer">{{ "page_style_block1_location_footer"|i18n }}</label>
-                                    <input type="checkbox" name="custom" id="polyshapes_custom"/>
-                                    <label for="polyshapes_custom">{{ "page_style_block1_location_custom_field"|i18n }}</label>
-                                </p>
-                                <p>
-                                    {{ "page_style_block1_pagetype_headline"|i18n }}<br/>
-                                    <input type="checkbox" name="home" id="polyshapes_home"/>
-                                    <label for="polyshapes_home">{{ "page_style_block1_pagetype_home"|i18n }}</label>
-                                    <input type="checkbox" name="all" id="polyshapes_all"/>
-                                    <label for="polyshapes_all">{{ "page_style_block1_pagetype_all"|i18n }}</label>
-                                    <input type="checkbox" name="selected" id="polyshapes_selected"/>
-                                    <label for="polyshapes_selected">{{ "page_style_block1_pagetype_selected_field"|i18n }}</label>
-                                    <select id="page_type" name="polyshapes_page_type">
-                                        <option value="">{{ "page_style_block1_pagetype_selected_label"|i18n }}</option>
-                                    </select>
-                                </p>
+                                {% include 'admin/_partials/integration_formfields.twig' %}
 
+                            </div>
+                        </div>
+                        <div class="postbox">
+                            <h2 class="hndle"><span>{{ "page_style_block2_headline"|i18n }}</span>
+                            </h2>
+                            <div class="inside">
+
+                                <p>
+                                    <input name="mobile" id="mobile"
+                                           type="checkbox"{% if styleConfig.mobile %} checked="checked"{% endif %}>
+                                    <label for="element_replacement">{{ "page_style_block2_text"|i18n }}</label>
+                                </p>
                                 <p class="submit">
                                     <input name="Submit" type="submit" class="button-primary" value="Save Changes">
                                 </p>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                    <div class="postbox">
-                        <h2 class="hndle"><span>{{ "page_style_block2_headline"|i18n }}</span>
-                        </h2>
-                        <div class="inside">
-                            <p>
-                                <input name="mobile" id="mobile"
-                                       type="checkbox"{% if mobile == "on" %} checked="checked"{% endif %}>
-                                <label for="element_replacement">{{ "page_style_block2_text"|i18n }}</label>
-                            <p>
-                                <button class="button-primary"
-                                        name="Login">{{ "page_style_block2_button"|i18n }}</button>
-                            </p>
-                            </p>
-                        </div>
-                    </div>
+                    </form>
                     <div class="postbox">
                         <h2 class="hndle"><span>{{ "page_style_block3_headline"|i18n }}</span>
                         </h2>
@@ -78,7 +53,7 @@
                     <div class="postbox">
                         <h2 class="hndle"><span>{{ style.title }}</span></h2>
                         <div class="inside">
-                            <img src="{{ patchDir }}/screenshot.png" style="width: 100%;"/>
+                            <img src="{{ styleDir }}/screenshot.png" style="width: 100%;"/>
                             <p>{{ "page_style_sidebar1_text"|i18n }}</p>
                         </div>
                     </div>

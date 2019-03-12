@@ -10,7 +10,7 @@
                                 <div class="item screenshotSeries" data-id="{{ style.id }}" onclick="document.location.href='admin.php?page=polystyles_backend_style&style={{ style.id }}';">
 
                                     <div class="text">
-                                        <span class="title">{{ style.title }}</span>
+                                        <span class="title">{{ style.name }}</span>
                                         {% if style.downloadUrl %}
                                             <a class="imgcontainer" href="admin.php?page=polyshapes_backend_import&style={{ style.id }}">
                                                 import
@@ -26,7 +26,9 @@
                                 </div>
                             </article>
                         {% endfor %}
-                        <p><button class="button-primary" name="Login">{{ "page_integration_tab1_button"|i18n }}</button></p>
+                        <p>
+                            <button class="button-primary" name="Login">{{ "page_integration_tab1_button"|i18n }}</button>
+                        </p>
                     </div>
                 </div>
             </div>

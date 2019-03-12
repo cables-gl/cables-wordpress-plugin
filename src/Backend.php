@@ -31,7 +31,7 @@ class Backend {
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_post_polyshapes_login', array($this, 'polyshapes_login'));
         add_action('admin_post_polyshapes_logout', array($this, 'polyshapes_logout'));
-        add_action('admin_post_polyshapes_set_shape_options', array($this, 'polyshapes_set_shape_options'));
+        add_action('admin_post_polyshapes_set_style_options', array($this, 'polyshapes_set_style_options'));
 
     }
 
@@ -67,7 +67,7 @@ class Backend {
             add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'polyshapes_backend_imports', array($this, 'imports_page'));
             add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_settings'), Plugin::getTranslatedString('page_backend_menu_settings'), 'administrator', 'polyshapes_backend_settings', array($this, 'settings_page'));
             add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_import'), null, 'manage_options', 'polyshapes_backend_import', array($this, 'import_page'));
-            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_shape'), null, 'manage_options', 'polyshapes_backend_style', array($this, 'style_page'));
+            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_style'), null, 'manage_options', 'polyshapes_backend_style', array($this, 'style_page'));
         }
     }
 
@@ -78,6 +78,18 @@ class Backend {
             $template = $this->twig->loadTemplate('admin/auth.twig');
             $params['action_url'] = esc_url(admin_url('admin-post.php'));
         } else {
+            $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
+            $integratedStyles = array();
+            foreach ($styles as $styleId => $styleConfig) {
+                if (array_key_exists('integrations', $styleConfig) && !empty($styleConfig['integrations'])) {
+                    foreach ($styleConfig['integrations'] as $key => $value) {
+                        if ($value === 'on') {
+                            $integratedStyles[$styleId] = $styleConfig;
+                        }
+                    }
+                }
+            }
+            $params['integratedStyles'] = $integratedStyles;
             $template = $this->twig->loadTemplate('admin/dashboard/dashboard.twig');
         }
         echo $this->twig->render($template, $params);
@@ -132,13 +144,42 @@ class Backend {
         exit;
     }
 
-    public function polyshapes_set_shape_options() {
+    public function polyshapes_set_style_options() {
         status_header(200);
+
+        $integrations = $_REQUEST['polyshapes_integration'] ? $_REQUEST['polyshapes_integration'] : array();
+        $integrateHeader = array_key_exists('header', $integrations);
+        $integrateHero = array_key_exists('hero', $integrations);
+        $integrateBackground = array_key_exists('background', $integrations);
+        $integrateFooter = array_key_exists('footer', $integrations);
+        $integrateCustom = array_key_exists('custom', $integrations);
+        $customSelector = null;
+        if (array_key_exists('customSelector', $integrations)) {
+            $customSelector = $integrations['customSelector'];
+        }
+        $cssSelector = '';
+
+        if ($integrateHeader) {
+            $cssSelector .= 'header.site-header, ';
+        }
+
+        if ($integrateHero) {
+            $cssSelector .= '#wp-custom-header, ';
+        }
+
+        if ($integrateFooter) {
+            $cssSelector .= 'footer.site-footer, ';
+        }
+
+        if ($integrateCustom) {
+            $cssSelector .= $customSelector . ', ';
+        }
+
+        $cssSelector = preg_replace('/,\s$/', '', $cssSelector);
+
         $styleId = $_REQUEST['style'];
-        $elementReplacement = $_REQUEST['element_replacement'];
-        $targetSelectors = $_REQUEST['target_selectors'];
-        $pageTypes = $_REQUEST['page_types'];
-        $background = $_REQUEST['background'];
+
+        $pageTypes = $_REQUEST['polyshapes_integration_pagetype'];
         $mobile = $_REQUEST['mobile'];
 
         $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
@@ -146,11 +187,11 @@ class Backend {
             $styles = array();
         }
         $styles[$styleId] = array(
-            "element_replacement" => $elementReplacement,
-            "target_selectors" => $targetSelectors,
+            'background' => !!$integrateBackground,
+            'integrations' => $integrations,
+            'cssSelector' => $cssSelector,
             'page_types' => $pageTypes,
-            'background' => $background,
-            'mobile' => $mobile
+            'mobile' => !!$mobile
         );
         Plugin::setPluginOption(Plugin::OPTIONS_STYLES, $styles);
 
@@ -167,35 +208,22 @@ class Backend {
         $style = $api->getStyle($styleId);
         $imported = $api->isImported($style);
         $options = Plugin::getPluginOptions();
-        $replacesElements = false;
-        $targetSelectors = "";
-        $setBackground = false;
-        $mobile = true;
-        $pageTypes = array('home' => 'on', 'post' => 'on', 'page' => 'on');
-        if (is_array($options['shapes'])) {
-            if (is_array($options['shapes'][$styleId])) {
-                $shapeConfig = $options['shapes'][$styleId];
-                $replacesElements = $shapeConfig['element_replacement'];
-                $targetSelectors = $shapeConfig['target_selectors'];
-                $pageTypes = $shapeConfig['page_types'];
-                $setBackground = $shapeConfig['background'];
-                $mobile = $shapeConfig['mobile'];
+        if (is_array($options['styles'])) {
+            if (is_array($options['styles'][$styleId])) {
+                $styleConfig = $options['styles'][$styleId];
             }
         }
-
-
-        echo $this->twig->render($template, array(
+        $pageTemplates = wp_get_theme()->get_page_templates();
+        $context = array(
             'style' => $style,
             'isImported' => $imported,
-            'pages' => $pageTypes,
-            'background' => $setBackground,
-            'mobile' => $mobile,
-            'replacesElements' => $replacesElements,
-            'targetSelectors' => $targetSelectors,
-            'patchDir' => $api->getShapeDirUrl($style),
+            'styleConfig' => $styleConfig,
+            'styleDir' => $api->getStyleDirUrl($style),
             'action_url' => esc_url(admin_url('admin-post.php')),
-            'cssSelectors' => $this->getPossibleCssSelectors()
-        ));
+            'cssSelectors' => $this->getPossibleCssSelectors(),
+            'pageTemplates' => $pageTemplates
+        );
+        echo $this->twig->render($template, $context);
     }
 
     public function settings_page() {

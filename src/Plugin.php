@@ -40,7 +40,7 @@ class Plugin {
         static::$basePath = $basePath;
 
         $loader = new Twig_Loader_Filesystem($basePath . '/templates/');
-        $twig = new Twig_Environment($loader, array('debug' => false));
+        $twig = new Twig_Environment($loader, array('debug' => true));
         $polyshapes_url = static::getConfig()['polyshapes_url'];
         $polyshapes_api_url = static::getConfig()['polyshapes_api_url'];
         $twig->addGlobal('polyshapes_api_url', $polyshapes_api_url);

@@ -1,5 +1,15 @@
 <p>
-    <h3><span>{{ "page_dashboard_currentstyles_headline"|i18n }}</span></h3>
-    <p>{{ "page_dashboard_currentstyles_text"|i18n }}</p>
-    <button class="button-primary">{{ "page_dashboard_currentstyles_button"|i18n }}</button>
+<h3><span>{{ "page_dashboard_currentstyles_headline"|i18n }}</span></h3>
+<p>{{ "page_dashboard_currentstyles_text"|i18n }}</p>
+{% for id, integratedStyle in integratedStyles %}
+    id: {{ id }} - name: {{ integratedStyle.name }} - ort:
+    {% for integration, value in integratedStyle.integrations %}
+        {{ integration }},
+    {% endfor %}
+    - seiten:
+    {% for pagetype, value in integratedStyle.page_types %}
+        {{ pagetype }},
+    {% endfor %}
+    <a href="?page=polyshapes_backend_style&style={{ id }}" class="button-primary">{{ "page_dashboard_currentstyles_button"|i18n }}</a>
+{% endfor %}
 </p>

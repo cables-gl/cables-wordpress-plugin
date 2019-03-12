@@ -14,9 +14,9 @@ polyshapes:
     dashboard:
       mainheadline: "Polyshapes: Dashboard"
       currentstyles:
-        headline: "Currenty integrated Style"
-        text: "Current website integration:"
-        button: "Change Website Integration"
+        headline: "Currently integrated Styles"
+        text: "Current website integrations:"
+        button: "Settings"
       lateststyles:
         headline: "Your latest styles"
         text: "These styles are not integrated into wordpress yet. Please visit the <a href=''>website integration tab</a> to integrate selected styles into your wordpress website."
@@ -68,6 +68,7 @@ polyshapes:
         location:
           headline: "Where do you want your polyshape style to show?"
           hero: "Hero Image"
+          header: "Header"
           background: "Background"
           footer: "Footer"
           custom:
@@ -76,9 +77,11 @@ polyshapes:
         pagetype:
           headline: "Specify the pages you want to integrate the style to show:"
           home: "on starting page"
-          all: "on all pages"
+          all: "everywhere"
+          post: "on blog posts"
+          page: "on pages"
           selected:
-            field: "on selected page"
+            field: "on selected pages"
             label: "Select page"
         button_back: "< Previous"
         button: "Next Step >"
@@ -95,6 +98,7 @@ polyshapes:
         headline: "Location and pages"
         location:
           headline: "Where do you want your polyshape style to show?"
+          header: "Header"
           hero: "Hero Image"
           background: "Background"
           footer: "Footer"

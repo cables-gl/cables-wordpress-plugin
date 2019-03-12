@@ -1,0 +1,92 @@
+{% if styles|length > 0 %}
+    <script type="text/javascript">
+        function showError(err) {
+            alert(err);
+        }
+    </script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            CABLES.EMBED.replaceWithPatch = function (_element, options) {
+                var el = _element;
+                var id = CABLES.generateUUID();
+                if (typeof _element === "string") {
+                    id = _element;
+                    el = document.getElementById(id);
+                    if (!el) {
+                        console.error(id + ' Polyshape Container Element not found!');
+                        return;
+                    }
+                }
+                var canvEl = document.createElement("canvas");
+                canvEl.id = "glcanvas_" + id;
+                canvEl.width = el.clientWidth;
+                canvEl.height = el.clientHeight;
+
+                window.addEventListener('resize', function () {
+                    this.setAttribute("width", el.clientWidth);
+                    this.height = el.clientHeight;
+                }.bind(canvEl));
+
+                el.innerHTML = '';
+                el.appendChild(canvEl);
+
+                options = options || {};
+                options.glCanvasId = canvEl.id;
+
+                if (!options.onError) {
+                    options.onError = function (err) {
+                        console.log(err);
+                    };
+                }
+
+                CABLES.patch = new CABLES.Patch(options);
+                return canvEl;
+
+            };
+        });
+    </script>
+{% endif %}
+{% for style in styles %}
+    <script type="text/javascript" src="{{ style.styleDir }}js/libs.core.min.js"></script>
+    <script type="text/javascript" src="{{ style.styleDir }}js/cables.min.js"></script>
+    <script type="text/javascript" src="{{ style.styleDir }}js/ops.js"></script>
+
+    {% if style.cssSelector is not empty %}
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function (event) {
+                var nodeList = document.querySelectorAll('{{ style.cssSelector }}');
+                for (var i = 0; i < nodeList.length; i++) {
+                    CABLES.EMBED.replaceWithPatch(nodeList[i], {
+                        patchFile: '{{ style.styleDir }}js/polyshapes.json',
+                        prefixAssetPath: '{{ styles.styleDir }}/',
+                        onError: showError,
+                        glCanvasResizeToWindow: true
+                    });
+                }
+            });
+        </script>
+    {% endif %}
+    {% if style.background %}
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function (event) {
+                var canvEl = document.createElement("canvas");
+                canvEl.id = 'polyshapes_background';
+                canvEl.style = 'visibility: visible; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: -5711;';
+
+                var body = document.getElementsByTagName("body")[0];
+                body.insertBefore(canvEl, body.firstChild);
+
+                patchBackground = new CABLES.Patch(
+                    {
+                        patchFile: '{{ style.styleDir }}js/polyshapes.json',
+                        prefixAssetPath: '{{ styles.styleDir }}/',
+                        glCanvasId: 'polyshapes_background',
+                        glCanvasResizeToWindow: true,
+                        onError: showError
+                    });
+                patchBackground.resume();
+            });
+        </script>
+    {% endif %}
+
+{% endfor %}

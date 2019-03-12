@@ -25,18 +25,18 @@ class Shortcodes {
     }
 
     public function register() {
-        add_shortcode(static::$SHORTCODE_SINGLE_POLYSHAPE, array($this, 'singlePolyshapeCode'));
+        add_shortcode(static::$SHORTCODE_SINGLE_POLYSHAPE, array($this, 'singleStyleCode'));
     }
 
-    public function singlePolyshapeCode($atts, $content, $tag) {
-        $template = $this->twig->loadTemplate('frontend/shape.shortcode.twig');
+    public function singleStyleCode($atts, $content, $tag) {
+        $template = $this->twig->loadTemplate('frontend/style.shortcode.twig');
         $api = new Api\Polyshapes();
-        $shape = $api->getStyle($atts['id']);
+        $style = $api->getStyle($atts['id']);
         echo $this->twig->render($template, array(
-            'shape' => $shape,
+            'style' => $style,
             'targetSelector' => '#polypatch',
-            'isImported' => $api->isImported($shape),
-            'patchDir' => $api->getShapeDirUrl($shape)
+            'isImported' => $api->isImported($style),
+            'styleDir' => $api->getStyleDirUrl($style)
         ));
     }
 

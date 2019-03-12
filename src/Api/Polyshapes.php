@@ -8,21 +8,21 @@
 
 namespace Polyshapes\Plugin\Api;
 
-use Polyshapes\Plugin\Model\Style;
+use Polyshapes\Plugin\Model\ApiStyle;
 use Polyshapes\Plugin\Plugin;
 
 class Polyshapes {
 
     /**
-     * @return Style
+     * @return ApiStyle
      */
-    public function getStyle(string $id): Style {
+    public function getStyle(string $id): ApiStyle {
         $response = $this->getRemote('/styles/' . $id);
-        $jsonshape = json_decode($response['body']);
-        return Style::fromJson($jsonshape);
+        $styleJSON = json_decode($response['body']);
+        return ApiStyle::fromJson($styleJSON);
     }
 
-    private function getRemote(string $method, array $params = array()): array {
+    private function getRemote(string $method, array $params = array()) {
         $options = Plugin::getPluginOptions();
         $args = array(
             'headers' => array(
@@ -46,17 +46,17 @@ class Polyshapes {
     }
 
     /**
-     * @return Style[]
+     * @return ApiStyle[]
      */
     public function getMyStyles(): array {
         $url = '/accounts/' . $this->getAccountId() . '/styles';
         $response = $this->getRemote($url);
-        $jsonshapes = json_decode($response['body']);
-        $shapes = array();
-        foreach ($jsonshapes as $jsonshape) {
-            $shapes[] = Style::fromJson($jsonshape);
+        $stylesJSON = json_decode($response['body']);
+        $styles = array();
+        foreach ($stylesJSON as $styleJSON) {
+            $styles[] = ApiStyle::fromJson($styleJSON);
         }
-        return $shapes;
+        return $styles;
     }
 
     public function login($email, $password) {
@@ -74,24 +74,24 @@ class Polyshapes {
         return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }
 
-    public function isImported(Style $shape): bool {
-        $filename = Plugin::getBasePath() . 'public/patches/' . $shape->getId() . '/cables.txt';
+    public function isImported(ApiStyle $style): bool {
+        $filename = Plugin::getBasePath() . 'public/styles/' . $style->getId() . '/cables.txt';
         return file_exists($filename);
     }
 
-    public function getShapeDirUrl(Style $shape) {
-        $filename = Plugin::getBaseUrl() . 'public/patches/' . $shape->getId() . '/';
+    public function getStyleDirUrl(ApiStyle $style) {
+        $filename = Plugin::getBaseUrl() . 'public/styles/' . $style->getId() . '/';
         return $filename;
     }
 
-    public function importStyle(Style $shape) {
+    public function importStyle(ApiStyle $style) {
 
-        $method = '/styles/' . $shape->getId() . '/archive';
+        $method = '/styles/' . $style->getId() . '/archive';
         $response = $this->getRemote($method);
 
         WP_Filesystem();
         $upload_dir = wp_upload_dir();
-        $filename = trailingslashit($upload_dir['path']) . $shape->getId() . '.zip';
+        $filename = trailingslashit($upload_dir['path']) . $style->getId() . '.zip';
 
 
         // by this point, the $wp_filesystem global should be working, so let's use it to create a file
@@ -100,7 +100,7 @@ class Polyshapes {
             echo 'error saving file!';
         }
 
-        $destination_path = Plugin::getBasePath() . 'public/patches/' . $shape->getId() . '/';
+        $destination_path = Plugin::getBasePath() . 'public/styles/' . $style->getId() . '/';
         $unzipfile = unzip_file($filename, $destination_path);
         if (is_wp_error($unzipfile)) {
             print_r($unzipfile);

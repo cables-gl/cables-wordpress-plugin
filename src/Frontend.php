@@ -25,59 +25,63 @@ class Frontend {
     }
 
     public function display() {
-        add_action('wp_footer', array($this, 'shape_footer'));
+        add_action('wp_footer', array($this, 'polyshape_footer'));
     }
 
-    public function shape_footer() {
+    public function polyshape_footer() {
 
         $options = Plugin::getPluginOptions();
-        $template = $this->twig->loadTemplate('frontend/shape.footer.twig');
-        $shapes = array();
-        foreach ($this->getElementReplacingShapeIds() as $shapeId) {
+        $styles = array();
+        foreach ($this->getElementReplacingStyleIds() as $styleId) {
             $api = new Api\Polyshapes();
-            $shape = $api->getStyle($shapeId);
-            $shapeOptions = $options['shapes'][$shapeId];
-            if (!$this->isActiveByPageType($shapeOptions)) {
+            $style = $api->getStyle($styleId);
+            $styleOptions = $options['styles'][$styleId];
+            if (!$this->isActiveByPageType($styleOptions)) {
                 continue;
             }
-            if (!$this->isActiveByMobileSetting($shapeOptions)) {
+            if (!$this->isActiveByMobileSetting($styleOptions)) {
                 continue;
             }
-            $selectorsSetting = explode(',', $shapeOptions['target_selectors']);
-            foreach ($selectorsSetting as $selector) {
-                $splittedSelectors[] = trim($selector);
-            }
-            $shapeConfig = array(
-                'shape' => $shape,
-                'background' => ($shapeOptions['background'] == "on"),
-                'element_replacement' => $this->isThemeHookActivated($shapeOptions),
-                'patchDir' => $api->getShapeDirUrl($shape),
-                'targetSelectors' => $splittedSelectors
+
+            $styleOptions = array(
+                'style' => $style,
+                'styleConfig' => $styleOptions,
+                'background' => !!$styleOptions['background'],
+                'cssSelector' => $styleOptions['cssSelector'],
+                'styleDir' => $api->getStyleDirUrl($style)
             );
 
-            $shapes[] = $shapeConfig;
+            $styles[] = $styleOptions;
         }
 
-        echo $this->twig->render($template, array('shapes' => $shapes));
+        $content = "";
+        if (!empty($styles)) {
+            $template = $this->twig->loadTemplate('frontend/style.footer.twig');
+            $content = $this->twig->render($template, array('styles' => $styles));
+        }
+
+        echo $content;
+
     }
 
-    private function getElementReplacingShapeIds() {
+    private function getElementReplacingStyleIds() {
         $ids = array();
         $options = Plugin::getPluginOptions();
-        if (is_array($options['shapes'])) {
-            foreach ($options['shapes'] as $id => $shape) {
-                if ($shape['element_replacement'] === "on") {
-                    $ids[] = $id;
-                } else if ($shape['background'] === "on") {
-                    $ids[] = $id;
+        if (is_array($options['styles'])) {
+            foreach ($options['styles'] as $id => $style) {
+                foreach ($style['integrations'] as $key => $value) {
+                    if ($value === 'on') {
+                        $ids[] = $id;
+                    }
                 }
             }
         }
         return $ids;
     }
 
-    private function isActiveByPageType($shapeOptions) {
-        $pageOptions = $shapeOptions['page_types'];
+    private function isActiveByPageType($styleOptions) {
+        $pageOptions = $styleOptions['page_types'];
+        print_r($styleOptions);
         $isHome = (is_home() || is_front_page());
         if (!is_array($pageOptions)) {
             return false;
@@ -87,27 +91,20 @@ class Frontend {
             return true;
         } else if (is_single() && $pageOptions['post'] == 'on') {
             return true;
+        } else if ($pageOptions['all'] == 'on') {
+            return true;
         } else {
             return false;
         }
     }
 
-    private function isActiveByMobileSetting($shapeOptions) {
+    private function isActiveByMobileSetting($styleOptions) {
         if (wp_is_mobile()) {
-            if (array_key_exists('mobile', $shapeOptions)) {
-                return ($shapeOptions['mobile'] == "on");
+            if (array_key_exists('mobile', $styleOptions)) {
+                return ($styleOptions['mobile'] == "on");
             }
         }
         return true;
-    }
-
-    private function isThemeHookActivated($shapeOptions) {
-        if (is_array($shapeOptions)) {
-            if ($shapeOptions['element_replacement'] === "on") {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
