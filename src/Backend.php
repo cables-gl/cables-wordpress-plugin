@@ -91,9 +91,9 @@ class Backend {
                         }
                     }
                 }
-                if($integrated) {
+                if ($integrated) {
                     $integratedStyles[$styleId] = $styleConfig;
-                }else{
+                } else {
                     $notIntgratedStyles[$styleId] = $styleConfig;
                 }
             }
@@ -117,14 +117,70 @@ class Backend {
     }
 
     public function imports_page() {
-        $active_tab = 'tab1';
-        if (isset($_GET['tab'])) {
-            $active_tab = $_GET['tab'];
-        }
-        $template = $this->twig->loadTemplate('admin/integration/integration.twig');
         $params = array();
         $api = new Api\Polyshapes();
-        $params['styles'] = $api->getMyStyles();
+
+        $active_tab = 'tab1';
+        if (isset($_GET['tab']) && (isset($_GET['style']) && !empty($_GET['style']))) {
+            $active_tab = $_GET['tab'];
+            $styleId = $_GET['style'];
+        }
+
+        switch ($active_tab) {
+            case 'tab2':
+                $style = $api->getStyle($styleId);
+                $styleConfig = array();
+                if (!$style->isImported()) {
+                    $api->importStyle($style);
+                }
+                $options = Plugin::getPluginOptions();
+                if (is_array($options['styles'])) {
+                    if (is_array($options['styles'][$styleId])) {
+                        $styleConfig = $options['styles'][$styleId];
+                    }
+                }
+                $pageTemplates = wp_get_theme()->get_page_templates();
+                $params = array(
+                    'style' => $styleId,
+                    'isImported' => $style->isImported(),
+                    'styleConfig' => $styleConfig,
+                    'styleDir' => $api->getStyleDirUrl($style),
+                    'action_url' => esc_url(admin_url('admin-post.php')),
+                    'cssSelectors' => $this->getPossibleCssSelectors(),
+                    'pageTemplates' => $pageTemplates
+                );
+                break;
+            case 'tab3':
+                $style = $api->getStyle($styleId);
+                $styleConfig = array();
+                if (!$style->isImported()) {
+                    $api->importStyle($style);
+                }
+                $options = Plugin::getPluginOptions();
+                if (is_array($options['styles'])) {
+                    if (is_array($options['styles'][$styleId])) {
+                        $styleConfig = $options['styles'][$styleId];
+                    }
+                }
+                $pageTemplates = wp_get_theme()->get_page_templates();
+                $params = array(
+                    'style' => $styleId,
+                    'isImported' => $style->isImported(),
+                    'styleConfig' => $styleConfig,
+                    'styleDir' => $api->getStyleDirUrl($style),
+                    'action_url' => esc_url(admin_url('admin-post.php')),
+                    'cssSelectors' => $this->getPossibleCssSelectors(),
+                    'pageTemplates' => $pageTemplates
+                );
+                break;
+            default:
+            case 'tab1':
+                $params['styles'] = $api->getMyStyles();
+                break;
+
+        }
+        $template = $this->twig->loadTemplate('admin/integration/integration.twig');
+        $params['style'] = $style;
         $params['active_tab'] = $active_tab;
         echo $this->twig->render($template, $params);
     }
@@ -156,6 +212,8 @@ class Backend {
 
     public function polyshapes_set_style_options() {
         status_header(200);
+
+        $redirect = $_REQUEST['redirect'];
 
         $integrations = $_REQUEST['polyshapes_integration'] ? $_REQUEST['polyshapes_integration'] : array();
         $integrateHeader = array_key_exists('header', $integrations);
@@ -205,8 +263,12 @@ class Backend {
         );
         Plugin::setPluginOption(Plugin::OPTIONS_STYLES, $styles);
 
-        $admin_url = admin_url('admin.php?page=polyshapes_backend_style&style=' . $styleId);
-        wp_redirect($admin_url);
+        if (!$redirect) {
+            $redirect = admin_url('admin.php?page=polyshapes_backend_style&style=' . $styleId);
+        } else {
+            $redirect = admin_url($redirect . '&style=' . $styleId);
+        }
+        wp_redirect($redirect);
         exit;
     }
 

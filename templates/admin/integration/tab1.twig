@@ -5,30 +5,25 @@
                 <div class="postbox">
                     <h2><span>{{ "page_integration_tab1_headline"|i18n }}</span></h2>
                     <div class="inside">
-                        {% for style in styles %}
-                            <article class="cute-4-tablet left">
-                                <div class="item screenshotSeries" data-id="{{ style.id }}" onclick="document.location.href='admin.php?page=polystyles_backend_style&style={{ style.id }}';">
-
-                                    <div class="text">
-                                        <span class="title">{{ style.name }}</span>
-                                        {% if style.downloadUrl %}
-                                            <a class="imgcontainer" href="admin.php?page=polyshapes_backend_import&style={{ style.id }}">
-                                                import
-                                            </a>
-                                            {% if style.imported %}
-                                                &nbsp;
-                                                <a class="imgcontainer" href="admin.php?page=polyshapes_backend_style&style={{ style.id }}">
-                                                    edit
-                                                </a>
-                                            {% endif %}
-                                        {% endif %}
+                        <div id="col-container">
+                            {% for style in styles %}
+                                <a href="?page=polyshapes_backend_imports&tab=tab2&style={{ style.id }}">
+                                    <div class="ps-col-left">
+                                        <div class="ps-screenshot-container">
+                                            <img alt="{{ style.name }}" src="{{ polyshapes_style_screenshot_url(style.id) }}"/>
+                                        </div>
                                     </div>
-                                </div>
-                            </article>
-                        {% endfor %}
-                        <p>
+                                    <div class="ps-col-right">
+                                        <div class="text">
+                                            <span class="title">{{ style.name }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div style="clear: both"></div>
+                                <hr/>
+                            {% endfor %}
                             <button class="button-primary" name="Login">{{ "page_integration_tab1_button"|i18n }}</button>
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -4,9 +4,19 @@
             <div class="meta-box-sortables ui-sortable">
                 <div class="postbox">
                     <div class="inside">
-                        {% include 'admin/_partials/integration_formfields.twig' %}
-                        <span><button class="button-primary" name="Login">{{ "page_integration_tab2_button_back"|i18n }}</button></span>
-                        <span><button class="button-primary" name="Login">{{ "page_integration_tab2_button"|i18n }}</button></span>
+                        <form method="POST" action="{{ action_url }}">
+
+                            <input type="hidden" name="action" value="polyshapes_set_style_options"/>
+                            <input type="hidden" name="style" value="{{ style.id }}"/>
+                            <input type="hidden" name="redirect" value="admin.php?page=polyshapes_backend_imports&tab=tab3"/>
+
+                            {% include 'admin/_partials/integration_formfields.twig' %}
+                            <input name="mobile" id="mobile" type="checkbox"{% if styleConfig.mobile %} checked="checked"{% endif %}>
+                            <label for="mobile">{{ "page_style_block2_text"|i18n }}</label><br/><br/>
+
+                            <span><a href="?page=polyshapes_backend_imports&tab=tab1" class="button-primary" name="Login">{{ "page_integration_tab2_button_back"|i18n }}</a></span>
+                            <span><input name="Submit" type="submit" class="button-primary" value="{{ "page_integration_tab2_button"|i18n }}"/></span>
+                        </form>
                     </div>
                 </div>
             </div>

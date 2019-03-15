@@ -19,6 +19,12 @@ polyshapes:
         headline: "Currently integrated Styles"
         text: "Current website integrations:"
         button: "Settings"
+        style: "Style:"
+        style_created: "Style created:"
+        original_polyshape: "Original Polyshape:"
+        current_pages_integration: "Current page type integration"
+        current_website_integration: "Current website integration"
+        change_website_integration: "Change Website integration"
       lateststyles:
         headline: "Your latest styles"
         text: "These styles are not integrated into wordpress yet. Please visit the <a href='?page=polyshapes_backend_imports'>website integration tab</a> to integrate selected styles into your wordpress website."

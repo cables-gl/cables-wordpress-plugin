@@ -1,11 +1,19 @@
-<p>
-<h3><span>{{ "page_dashboard_lateststyles_headline"|i18n }}</span></h3>
-<p>{{ "page_dashboard_lateststyles_text"|i18n }}</p>
-
-
-{% for id, notIntegratedStyle in notIntegratedStyles %}
-    id: {{ id }} - name: {{ notIntegratedStyle.name }}<br/>
-{% endfor %}
-<br/>
-<button class="button-primary">{{ "page_dashboard_lateststyles_button"|i18n }}</button>
-</p>
+<div class="wrap">
+    <h3><span>{{ "page_dashboard_lateststyles_headline"|i18n }}</span></h3>
+    <div id="col-container">
+        <p>{{ "page_dashboard_lateststyles_text"|i18n }}</p>
+        {% for id, notIntegratedStyle in notIntegratedStyles %}
+            <div class="ps-screenshot-container">
+                <img alt="{{ integratedStyle.name }}" src="{{ polyshapes_style_screenshot_url(id) }}"/>
+            </div>
+            <div>
+                {{ "page_dashboard_currentstyles_style"|i18n }} <a href="c">{{ integratedStyle.name }}</a><br/>
+                {{ "page_dashboard_currentstyles_style_created"|i18n }} {{ integratedStyle.createdAt }}<br/>
+                {{ "page_dashboard_currentstyles_original_polyshape"|i18n }} {{ integratedStyle.shapeName }}
+            </div>
+        {% endfor %}
+        <br/>
+        <button class="button-primary">{{ "page_dashboard_lateststyles_button"|i18n }}</button>
+    </div>
+    <div style="clear:both;"></div>
+</div>

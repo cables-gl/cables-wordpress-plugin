@@ -77,6 +77,12 @@ class Polyshapes {
         return $accountJSON;
     }
 
+    public function getStyleScreenshot($styleId) {
+        $url = '/styles/' . $styleId . '/screenshot';
+        $response = $this->getRemote($url);
+        return $response['body'];
+    }
+
     private function postRemote(string $method, $params = array()) {
         return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }

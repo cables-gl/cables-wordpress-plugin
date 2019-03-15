@@ -4,10 +4,37 @@
             <div class="meta-box-sortables ui-sortable">
                 <div class="postbox">
                     <h2><span>{{ "page_integration_tab3_headline"|i18n }}</span></h2>
-                    <div class="inside">
-                        <span><button class="button-primary" name="Login">{{ "page_integration_tab3_button_back"|i18n }}</button></span>
-                        <span><button class="button-primary" name="Login">{{ "page_integration_tab3_button"|i18n }}</button></span>
+                    <div id="col-container">
+                        <div class="ps-col-left">
+                            <div class="ps-screenshot-container">
+                                <img alt="{{ style.name }}" src="{{ polyshapes_style_screenshot_url(style.id) }}"/>
+                            </div>
+                            <div>
+                                {{ "page_dashboard_currentstyles_style"|i18n }} <a href="c">{{ style.name }}</a><br/>
+                                {{ "page_dashboard_currentstyles_style_created"|i18n }} {{ style.createdAt }}<br/>
+                                {{ "page_dashboard_currentstyles_original_polyshape"|i18n }} {{ style.shapeName }}
+                            </div>
+                        </div>
+                        <div class="ps-col-right">
+                            {{ "page_dashboard_currentstyles_current_pages_integration"|i18n }}
+                            <ul>
+                                {% for pagetype, value in styleConfig.page_types %}
+                                    <li>{{ pagetype }}</li>
+                                {% endfor %}
+                            </ul>
+                            {{ "page_dashboard_currentstyles_current_website_integration"|i18n }}
+                            <ul>
+                                {% for integration, value in styleConfig.integrations %}
+                                    <li>{{ integration }}</li>
+                                {% endfor %}
+                            </ul>
+                            <br/>
+                            <span><a href="?page=polyshapes_backend_style&style={{ id }}" class="button-primary" name="Login">{{ "page_integration_tab3_preview"|i18n }}</a></span>
+                        </div>
                     </div>
+                    <div style="clear:both;"><br/><br/></div>
+                    <span><a href="?page=polyshapes_backend_imports&tab=tab2&style={{ style.id }}" class="button-primary" name="Login">{{ "page_integration_tab3_button_back"|i18n }}</a></span>
+                    <span><a href="?page=polyshapes_backend_style&style={{ style.id }}" class="button-primary" name="Login">{{ "page_integration_tab3_button"|i18n }}</a></span>
                 </div>
             </div>
         </div>

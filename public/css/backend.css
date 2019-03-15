@@ -1,0 +1,15 @@
+.wp-admin .ps-screenshot-container img {
+    width: 100%;
+    max-width: 300px;
+}
+
+.wp-admin .ps-col-left {
+    float: left;
+    width: 30%;
+    padding-right: 20px;
+}
+
+.wp-admin .ps-col-right {
+    float: right;
+    width: 65%;
+}

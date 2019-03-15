@@ -1,15 +1,35 @@
-<p>
-<h3><span>{{ "page_dashboard_currentstyles_headline"|i18n }}</span></h3>
-<p>{{ "page_dashboard_currentstyles_text"|i18n }}</p>
-{% for id, integratedStyle in integratedStyles %}
-    id: {{ id }} - name: {{ integratedStyle.name }} - ort:
-    {% for integration, value in integratedStyle.integrations %}
-        {{ integration }},
+<div class="wrap">
+    <h3><span>{{ "page_dashboard_currentstyles_headline"|i18n }}</span></h3>
+    <p>{{ "page_dashboard_currentstyles_text"|i18n }}</p>
+
+    {% for id, integratedStyle in integratedStyles %}
+        <div id="col-container">
+            <div class="ps-col-left">
+                <div class="ps-screenshot-container">
+                    <img alt="{{ integratedStyle.name }}" src="{{ polyshapes_style_screenshot_url(id) }}"/>
+                </div>
+                <div>
+                    {{ "page_dashboard_currentstyles_style"|i18n }} <a href="c">{{ integratedStyle.name }}</a><br/>
+                    {{ "page_dashboard_currentstyles_style_created"|i18n }} {{ integratedStyle.createdAt }}<br/>
+                    {{ "page_dashboard_currentstyles_original_polyshape"|i18n }} {{ integratedStyle.shapeName }}
+                </div>
+            </div>
+            <div class="ps-col-right">
+                {{ "page_dashboard_currentstyles_current_pages_integration"|i18n }}
+                <ul>
+                    {% for pagetype, value in integratedStyle.page_types %}
+                        <li>{{ pagetype }}</li>
+                    {% endfor %}
+                </ul>
+                {{ "page_dashboard_currentstyles_current_website_integration"|i18n }}
+                <ul>
+                    {% for integration, value in integratedStyle.integrations %}
+                        <li>{{ integration }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="?page=polyshapes_backend_style&style={{ id }}" class="button-primary">{{ "page_dashboard_currentstyles_change_website_integration"|i18n }}</a>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
     {% endfor %}
-    - seiten:
-    {% for pagetype, value in integratedStyle.page_types %}
-        {{ pagetype }},
-    {% endfor %}
-    <a href="?page=polyshapes_backend_style&style={{ id }}" class="button-primary">{{ "page_dashboard_currentstyles_button"|i18n }}</a><br/>
-{% endfor %}
-</p>
+</div>

@@ -17,7 +17,7 @@ class Plugin {
 
     const OPTIONS_API_KEY = 'api_key';
     const OPTIONS_STYLES = 'styles';
-    const OPTIONS_ACCOUNT_ID  = 'account_id';
+    const OPTIONS_ACCOUNT_ID = 'account_id';
 
     private static $baseUrl;
     private static $basePath;
@@ -45,14 +45,53 @@ class Plugin {
         $polyshapes_api_url = static::getConfig()['polyshapes_api_url'];
         $twig->addGlobal('polyshapes_api_url', $polyshapes_api_url);
         $twig->addGlobal('polyshapes_url', $polyshapes_url);
+        $twig->addGlobal('polyshapes_screenshot_baseurl', static::getScreenshotBaseUrl());
         $twig->addFilter(new \Twig\TwigFilter('i18n', array(static::class, 'getTranslatedString'), ['is_safe' => ['html']]));
+        $twig->addFunction('polyshapes_style_screenshot_url', new \Twig\TwigFunction('polyshapes_style_screenshot_url', array($this, 'getStyleScreenshotUrl')));
         $twig->addExtension(new Twig_Extension_Debug());
         $this->twig = $twig;
 
         $shortcodes = new Shortcodes($twig);
         $shortcodes->register();
+
     }
 
+    public function setup() {
+        add_filter('query_vars', array($this, 'query_vars'), 10, 1);
+        add_action('parse_request', array($this, 'parse_request'), 10, 1);
+    }
+
+    public function query_vars($vars) {
+        $vars[] = 'polyshapes_action';
+        $vars[] = 'style_screenshot';
+        $vars[] = 'style';
+        return $vars;
+    }
+
+    public function parse_request($wp) {
+        if (array_key_exists('polyshapes_action', $wp->query_vars)) {
+            $action = $wp->query_vars['polyshapes_action'];
+            switch ($action) {
+                case 'style_screenshot':
+                    header('Content-Type: image/png', true);
+                    $styleId = $wp->query_vars['style'];
+                    $api = new Api\Polyshapes();
+                    echo $api->getStyleScreenshot($styleId);
+                    break;
+                default:
+                    break;
+            }
+            exit();
+        }
+    }
+
+    public function getStyleScreenshotUrl($styleId) {
+        return static::getScreenshotBaseUrl() . $styleId;
+    }
+
+    public static function getScreenshotBaseUrl() {
+        return get_site_url() . '?polyshapes_action=style_screenshot&style=';
+    }
 
     public function display() {
         if (is_admin()) {
