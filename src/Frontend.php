@@ -27,51 +27,51 @@ class Frontend {
     }
 
     public function display() {
-        add_action('wp_footer', array($this, 'polyshape_footer'));
+        add_action('wp_footer', array($this, 'cables_patch_footer'));
     }
 
-    public function polyshape_footer() {
+    public function cables_patch_footer() {
 
         $options = Plugin::getPluginOptions();
-        $styles = array();
-        foreach ($this->getElementReplacingStyleIds() as $styleId) {
+        $patches = array();
+        foreach ($this->getElementReplacingPatchIds() as $patchId) {
             $api = new Api\Cables();
-            $style = $api->getStyle($styleId);
-            $styleOptions = $options['styles'][$styleId];
-            if (!$this->isActiveByPageType($styleOptions)) {
+            $patch = $api->getPatch($patchId);
+            $patchOptions = $options['patches'][$patchId];
+            if (!$this->isActiveByPageType($patchOptions)) {
                 continue;
             }
-            if (!$this->isActiveByMobileSetting($styleOptions)) {
+            if (!$this->isActiveByMobileSetting($patchOptions)) {
                 continue;
             }
 
-            $styleOptions = array(
-                'style' => $style,
-                'styleConfig' => $styleOptions,
-                'background' => !!$styleOptions['background'],
-                'cssSelector' => $styleOptions['cssSelector'],
-                'styleDir' => $api->getStyleDirUrl($style)
+            $patchOptions = array(
+                'patch' => $patch,
+                'patchConfig' => $patchOptions,
+                'background' => !!$patchOptions['background'],
+                'cssSelector' => $patchOptions['cssSelector'],
+                'patchDir' => $api->getPatchDirUrl($patch)
             );
 
-            $styles[] = $styleOptions;
+            $patches[] = $patchOptions;
         }
 
         $content = "";
-        if (!empty($styles)) {
-            $template = $this->template->loadTemplate('frontend/style.footer');
-            $content = $this->template->render($template, array('styles' => $styles));
+        if (!empty($patches)) {
+            $template = $this->template->loadTemplate('frontend/patch.footer');
+            $content = $this->template->render($template, array('patches' => $patches));
         }
 
         echo $content;
 
     }
 
-    private function getElementReplacingStyleIds() {
+    private function getElementReplacingPatchIds() {
         $ids = array();
         $options = Plugin::getPluginOptions();
-        if (is_array($options['styles'])) {
-            foreach ($options['styles'] as $id => $style) {
-                foreach ($style['integrations'] as $key => $value) {
+        if (is_array($options['patches'])) {
+            foreach ($options['patches'] as $id => $patch) {
+                foreach ($patch['integrations'] as $key => $value) {
                     if ($value === 'on') {
                         $ids[] = $id;
                     }
@@ -81,8 +81,8 @@ class Frontend {
         return $ids;
     }
 
-    private function isActiveByPageType($styleOptions) {
-        $pageOptions = $styleOptions['page_types'];
+    private function isActiveByPageType($patchOptions) {
+        $pageOptions = $patchOptions['page_types'];
         $isHome = (is_home() || is_front_page());
         if (!is_array($pageOptions)) {
             return false;
@@ -99,10 +99,10 @@ class Frontend {
         }
     }
 
-    private function isActiveByMobileSetting($styleOptions) {
+    private function isActiveByMobileSetting($patchOptions) {
         if (wp_is_mobile()) {
-            if (array_key_exists('mobile', $styleOptions)) {
-                return ($styleOptions['mobile'] == "on");
+            if (array_key_exists('mobile', $patchOptions)) {
+                return ($patchOptions['mobile'] == "on");
             }
         }
         return true;

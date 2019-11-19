@@ -30,8 +30,8 @@ function i18n($text) {
   return Plugin::getTranslatedString($text);
 }
 
-function cables_patch_screenshot_url($styleId) {
-  return Plugin::getPatchScreenshotUrl($styleId);
+function cables_patch_screenshot_url($patchId) {
+  return Plugin::getPatchScreenshotUrl($patchId);
 }
 $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
     'https://ci.undev.de/releases/undev-studio/polyshapes_api_wpclient/master/release.json',

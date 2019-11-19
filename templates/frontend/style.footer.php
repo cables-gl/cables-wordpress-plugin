@@ -1,4 +1,4 @@
-<?php if(count($context['styles']) > 0): ?>
+<?php if(count($context['patch']) > 0): ?>
     <script type="text/javascript">
         function showError(err) {
             alert(err);
@@ -13,7 +13,7 @@
                     id = _element;
                     el = document.getElementById(id);
                     if (!el) {
-                        console.error(id + ' Polyshape Container Element not found!');
+                        console.error(id + ' Patch Container Element not found!');
                         return;
                     }
                 }
@@ -46,11 +46,11 @@
         });
     </script>
 <?php endif; ?>
-<?php if($context['styles']): foreach($context['styles'] as $config): ?>
+<?php if($context['patches']): foreach($context['patches'] as $config): ?>
 
-    <script type="text/javascript" src="<?php echo $config['styleDir']; ?>js/libs.core.min.js"></script>
-    <script type="text/javascript" src="<?php echo $config['styleDir']; ?>js/cables.min.js"></script>
-    <script type="text/javascript" src="<?php echo $config['styleDir']; ?>js/ops.js"></script>
+    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/libs.core.min.js"></script>
+    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/cables.min.js"></script>
+    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/ops.js"></script>
 
     <?php if(!empty($config['cssSelector'])): ?>
         <script type="text/javascript">
@@ -58,8 +58,8 @@
                 var nodeList = document.querySelectorAll('<?php echo $config['cssSelector']; ?>');
                 for (var i = 0; i < nodeList.length; i++) {
                     CABLES.EMBED.replaceWithPatch(nodeList[i], {
-                        patchFile: '<?php echo $config['styleDir']; ?>js/patch.json',
-                        prefixAssetPath: '<?php echo $config['styleDir']; ?>/',
+                        patchFile: '<?php echo $config['patchDir']; ?>js/patch.json',
+                        prefixAssetPath: '<?php echo $config['patchDir']; ?>/',
                         onError: showError,
                         glCanvasResizeToWindow: true
                     });
@@ -77,8 +77,8 @@
                 body.insertBefore(canvEl, body.firstChild);
                 patchBackground = new CABLES.Patch(
                     {
-                        patchFile: '<?php echo $config['styleDir']; ?>js/patch.json',
-                        prefixAssetPath: '<?php echo $config['styleDir']; ?>/',
+                        patchFile: '<?php echo $config['patchDir']; ?>js/patch.json',
+                        prefixAssetPath: '<?php echo $config['patchDir']; ?>/',
                         glCanvasId: 'cables_background',
                         glCanvasResizeToWindow: true,
                         onError: showError

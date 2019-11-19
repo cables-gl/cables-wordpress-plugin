@@ -17,7 +17,7 @@ use Twig_Loader_Filesystem;
 class Plugin {
 
     const OPTIONS_API_KEY = 'api_key';
-    const OPTIONS_STYLES = 'styles';
+    const OPTIONS_PATCHES = 'patches';
     const OPTIONS_ACCOUNT_ID = 'account_id';
 
     private static $baseUrl;
@@ -54,8 +54,8 @@ class Plugin {
 
     public function query_vars($vars) {
         $vars[] = 'cables_action';
-        $vars[] = 'style_screenshot';
-        $vars[] = 'style';
+        $vars[] = 'patch_screenshot';
+        $vars[] = 'patch';
         return $vars;
     }
 
@@ -63,11 +63,11 @@ class Plugin {
         if (array_key_exists('cables_action', $wp->query_vars)) {
             $action = $wp->query_vars['cables_action'];
             switch ($action) {
-                case 'style_screenshot':
+                case 'patch_screenshot':
                     header('Content-Type: image/png', true);
-                    $styleId = $wp->query_vars['style'];
+                    $patchId = $wp->query_vars['patch'];
                     $api = new Api\Cables();
-                    echo $api->getStyleScreenshot($styleId);
+                    echo $api->getPatchScreenshot($patchId);
                     break;
                 default:
                     break;

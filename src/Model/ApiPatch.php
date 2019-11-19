@@ -16,7 +16,7 @@ class ApiPatch {
 
     public $id;
     public $name;
-    public $shapeId;
+    public $patchId;
     public $accountId;
     public $downloadUrl;
     public $isPreset;
@@ -51,8 +51,8 @@ class ApiPatch {
     /**
      * @return mixed
      */
-    public function getShapeId() {
-        return $this->shapeId;
+    public function getPatchId() {
+        return $this->patchId;
     }
 
     /**

@@ -32,7 +32,7 @@ class Backend {
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_post_cables_login', array($this, 'cables_login'));
         add_action('admin_post_cables_logout', array($this, 'cables_logout'));
-        add_action('admin_post_cables_set_style_options', array($this, 'cables_set_style_options'));
+        add_action('admin_post_cables_set_patch_options', array($this, 'cables_set_patch_options'));
 
     }
 
@@ -43,7 +43,7 @@ class Backend {
 
     public function register_settings() {
         register_setting('cables_backend', 'cables_backend', array($this, 'validate_setting'));
-        add_settings_section('cables_backend_theme', 'Polyshapes Settings', array($this, 'section_cb'), __FILE__);
+        add_settings_section('cables_backend_theme', 'Cables Settings', array($this, 'section_cb'), __FILE__);
         add_settings_field('api_key', 'Api-Key:', array($this, 'api_key_setting'), __FILE__, 'cables_backend_theme');
     }
 
@@ -82,7 +82,7 @@ class Backend {
             add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'cables_backend_imports', array($this, 'imports_page'));
             add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_settings'), Plugin::getTranslatedString('page_backend_menu_settings'), 'administrator', 'cables_backend_settings', array($this, 'settings_page'));
             add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_import'), null, 'manage_options', 'cables_backend_import', array($this, 'import_page'));
-            add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_style'), null, 'manage_options', 'cables_backend_style', array($this, 'style_page'));
+            add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_patch'), null, 'manage_options', 'cables_backend_patch', array($this, 'patch_page'));
         }
     }
 
@@ -94,26 +94,28 @@ class Backend {
             $template = $this->template->loadTemplate('admin/auth');
             $params['action_url'] = esc_url(admin_url('admin-post.php'));
         } else {
-            $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
-            $integratedStyles = array();
-            $notIntgratedStyles = array();
-            foreach ($styles as $styleId => $styleConfig) {
+            $patches = Plugin::getPluginOption(Plugin::OPTIONS_PATCHES);
+            $integratedPatches = array();
+            $notIntgratedPatches = array();
+            if($patches) {
+              foreach ($patches as $patchId => $patchConfig) {
                 $integrated = false;
-                if (array_key_exists('integrations', $styleConfig) && !empty($styleConfig['integrations'])) {
-                    foreach ($styleConfig['integrations'] as $key => $value) {
-                        if ($value === 'on') {
-                            $integrated = true;
-                        }
+                if (array_key_exists('integrations', $patchConfig) && !empty($patchConfig['integrations'])) {
+                  foreach ($patchConfig['integrations'] as $key => $value) {
+                    if ($value === 'on') {
+                      $integrated = true;
                     }
+                  }
                 }
                 if ($integrated) {
-                    $integratedStyles[$styleId] = $styleConfig;
+                  $integratedPatches[$patchId] = $patchConfig;
                 } else {
-                    $notIntgratedStyles[$styleId] = $styleConfig;
+                  $notIntgratedPatches[$patchId] = $patchConfig;
                 }
+              }
             }
-            $params['integratedStyles'] = $integratedStyles;
-            $params['notIntegratedStyles'] = $notIntgratedStyles;
+            $params['integratedPatches'] = $integratedPatches;
+            $params['notIntgratedPatches'] = $notIntgratedPatches;
             $params['account'] = $api->getAccountInfo();
             $template = $this->template->loadTemplate('admin/dashboard/dashboard');
         }
@@ -121,13 +123,13 @@ class Backend {
     }
 
     public function import_page() {
-        $styleId = $_GET['style'];
+        $patchId = $_GET['patch'];
         $api = new Api\Cables();
-        $style = $api->getStyle($styleId);
-        $api->importPatch($style);
-        $admin_url = admin_url('admin.php?page=cables_backend_style&style=' . $styleId);
+        $patch = $api->getPatch($patchId);
+        $api->importPatch($patch);
+        $admin_url = admin_url('admin.php?page=cables_backend_patch&patch=' . $patchId);
         wp_redirect($admin_url);
-        print "<a href='" . $admin_url . "'>go to style</a>";
+        print "<a href='" . $admin_url . "'>go to patch</a>";
         exit;
     }
 
@@ -136,53 +138,53 @@ class Backend {
         $api = new Api\Cables();
 
         $active_tab = 'tab1';
-        if (isset($_GET['tab']) && (isset($_GET['style']) && !empty($_GET['style']))) {
+        if (isset($_GET['tab']) && (isset($_GET['patch']) && !empty($_GET['patch']))) {
             $active_tab = $_GET['tab'];
-            $styleId = $_GET['style'];
+            $patchId = $_GET['patch'];
         }
 
         switch ($active_tab) {
             case 'tab2':
-                $style = $api->getStyle($styleId);
-                $styleConfig = array();
-                if (!$style->isImported()) {
-                    $api->importPatch($style);
+                $patch = $api->getPatch($patchId);
+                $patchConfig = array();
+                if (!$patch->isImported()) {
+                    $api->importPatch($patch);
                 }
                 $options = Plugin::getPluginOptions();
-                if (is_array($options['styles'])) {
-                    if (is_array($options['styles'][$styleId])) {
-                        $styleConfig = $options['styles'][$styleId];
+                if (is_array($options['patches'])) {
+                    if (is_array($options['patches'][$patchId])) {
+                        $patchConfig = $options['patches'][$patchId];
                     }
                 }
                 $pageTemplates = wp_get_theme()->get_page_templates();
                 $params = array(
-                    'style' => $styleId,
-                    'isImported' => $style->isImported(),
-                    'styleConfig' => $styleConfig,
-                    'styleDir' => $api->getStyleDirUrl($style),
+                    'patch' => $patchId,
+                    'isImported' => $patch->isImported(),
+                    'patchConfig' => $patchConfig,
+                    'patchDir' => $api->getPatchDirUrl($patch),
                     'action_url' => esc_url(admin_url('admin-post.php')),
                     'cssSelectors' => $this->getPossibleCssSelectors(),
                     'pageTemplates' => $pageTemplates
                 );
                 break;
             case 'tab3':
-                $style = $api->getStyle($styleId);
-                $styleConfig = array();
-                if (!$style->isImported()) {
-                    $api->importPatch($style);
+                $patch = $api->getPatch($patchId);
+                $patchConfig = array();
+                if (!$patch->isImported()) {
+                    $api->importPatch($patch);
                 }
                 $options = Plugin::getPluginOptions();
-                if (is_array($options['styles'])) {
-                    if (is_array($options['styles'][$styleId])) {
-                        $styleConfig = $options['styles'][$styleId];
+                if (is_array($options['patches'])) {
+                    if (is_array($options['patches'][$patchId])) {
+                        $patchConfig = $options['patches'][$patchId];
                     }
                 }
                 $pageTemplates = wp_get_theme()->get_page_templates();
                 $params = array(
-                    'style' => $styleId,
-                    'isImported' => $style->isImported(),
-                    'styleConfig' => $styleConfig,
-                    'styleDir' => $api->getStyleDirUrl($style),
+                    'patch' => $patchId,
+                    'isImported' => $patch->isImported(),
+                    'patchConfig' => $patchConfig,
+                    'patchDir' => $api->getPatchDirUrl($patch),
                     'action_url' => esc_url(admin_url('admin-post.php')),
                     'cssSelectors' => $this->getPossibleCssSelectors(),
                     'pageTemplates' => $pageTemplates
@@ -195,7 +197,7 @@ class Backend {
 
         }
         $template = $this->template->loadTemplate('admin/integration/integration');
-        $params['style'] = $style;
+        $params['patch'] = $patch;
         $params['active_tab'] = $active_tab;
         echo $this->template->render($template, $params);
     }
@@ -222,7 +224,7 @@ class Backend {
         exit;
     }
 
-    public function cables_set_style_options() {
+    public function cables_set_patch_options() {
         status_header(200);
 
         $redirect = $_REQUEST['redirect'];
@@ -257,52 +259,52 @@ class Backend {
 
         $cssSelector = preg_replace('/,\s$/', '', $cssSelector);
 
-        $styleId = $_REQUEST['style'];
+        $patchId = $_REQUEST['patch'];
 
         $pageTypes = $_REQUEST['cables_integration_pagetype'];
         $mobile = $_REQUEST['mobile'];
 
-        $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
-        if (!is_array($styles)) {
-            $styles = array();
+        $patches = Plugin::getPluginOption(Plugin::OPTIONS_PATCHES);
+        if (!is_array($patches)) {
+            $patches = array();
         }
-        $styles[$styleId] = array(
+        $patches[$patchId] = array(
             'background' => !!$integrateBackground,
             'integrations' => $integrations,
             'cssSelector' => $cssSelector,
             'page_types' => $pageTypes,
             'mobile' => !!$mobile
         );
-        Plugin::setPluginOption(Plugin::OPTIONS_STYLES, $styles);
+        Plugin::setPluginOption(Plugin::OPTIONS_PATCHES, $patches);
 
         if (!$redirect) {
-            $redirect = admin_url('admin.php?page=cables_backend_style&style=' . $styleId);
+            $redirect = admin_url('admin.php?page=cables_backend_patch&patch=' . $patchId);
         } else {
-            $redirect = admin_url($redirect . '&style=' . $styleId);
+            $redirect = admin_url($redirect . '&patch=' . $patchId);
         }
         wp_redirect($redirect);
         exit;
     }
 
-    public function style_page() {
+    public function patch_page() {
 
-        $template = $this->template->loadTemplate('admin/style');
+        $template = $this->template->loadTemplate('admin/patch');
         $api = new Api\Cables();
-        $styleId = $_GET['style'];
-        $style = $api->getStyle($styleId);
-        $imported = $api->isImported($style);
+        $patchId = $_GET['patch'];
+        $patch = $api->getPatch($patchId);
+        $imported = $api->isImported($patch);
         $options = Plugin::getPluginOptions();
-        if (is_array($options['styles'])) {
-            if (is_array($options['styles'][$styleId])) {
-                $styleConfig = $options['styles'][$styleId];
+        if (is_array($options['patches'])) {
+            if (is_array($options['patches'][$patchId])) {
+                $patchConfig = $options['patches'][$patchId];
             }
         }
         $pageTemplates = wp_get_theme()->get_page_templates();
         $context = array(
-            'style' => $style,
+            'patch' => $patch,
             'isImported' => $imported,
-            'styleConfig' => $styleConfig,
-            'styleDir' => $api->getStyleDirUrl($style),
+            'patchConfig' => $patchConfig,
+            'patchDir' => $api->getPatchDirUrl($patch),
             'action_url' => esc_url(admin_url('admin-post.php')),
             'cssSelectors' => $this->getPossibleCssSelectors(),
             'pageTemplates' => $pageTemplates

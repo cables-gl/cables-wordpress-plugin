@@ -29,18 +29,18 @@ class Shortcodes {
     }
 
     public function register() {
-        add_shortcode(static::$SHORTCODE_SINGLE_PATCH, array($this, 'singleStyleCode'));
+        add_shortcode(static::$SHORTCODE_SINGLE_PATCH, array($this, 'singlePatchCode'));
     }
 
-    public function singleStyleCode($atts, $content, $tag) {
-        $template = $this->template->loadTemplate('frontend/style.shortcode');
+    public function singlePatchCode($atts, $content, $tag) {
+        $template = $this->template->loadTemplate('frontend/patch.shortcode');
         $api = new Api\Cables();
-        $style = $api->getStyle($atts['id']);
+        $patch = $api->getPatch($atts['id']);
         echo $this->template->render($template, array(
-            'style' => $style,
+            'patch' => $patch,
             'targetSelector' => '#cablespatch',
-            'isImported' => $api->isImported($style),
-            'styleDir' => $api->getStyleDirUrl($style)
+            'isImported' => $api->isImported($patch),
+            'patchDir' => $api->getPatchDirUrl($patch)
         ));
     }
 

@@ -7,7 +7,7 @@
                     <div class="inside">
                         <div id="col-container">
                             <?php foreach ($context['patches'] as $patch): ?>
-                                <a href="?page=cables_backend_imports&tab=tab2&style=<?php echo $patch->id; ?>">
+                                <a href="?page=cables_backend_imports&tab=tab2&patch=<?php echo $patch->id; ?>">
                                     <div class="ps-col-left">
                                         <div class="ps-screenshot-container">
                                             <img alt="<?php echo $patch->name; ?>" src="<?php echo cables_patch_screenshot_url($patch->id) ?>"/>

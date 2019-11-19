@@ -16,12 +16,12 @@ class Cables {
     /**
      * @return ApiPatch
      */
-    public function getStyle(string $id): ApiPatch {
+    public function getPatch(string $patchId): ApiPatch {
         $response = $this->getRemote('/mypatches/');
         $patchesJSON = json_decode($response['body'])->patches;
         $patchJSON = "{}";
         foreach ($patchesJSON as $patch) {
-          if($patch->_id == $id) {
+          if($patch->_id == $patchId) {
             $patchJSON = $patch;
             break;
           }
@@ -87,8 +87,8 @@ class Cables {
         return $accountJSON;
     }
 
-    public function getStyleScreenshot($styleId) {
-        $url = '/styles/' . $styleId . '/screenshot';
+    public function getPatchScreenshot($patchId) {
+        $url = '/patches/' . $patchId . '/screenshot';
         $response = $this->getRemote($url);
         return $response['body'];
     }
@@ -97,13 +97,13 @@ class Cables {
         return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }
 
-    public function isImported(ApiPatch $style): bool {
-        $filename = Plugin::getBasePath() . 'public/patches/' . $style->getId() . '/cables.txt';
+    public function isImported(ApiPatch $patch): bool {
+        $filename = Plugin::getBasePath() . 'public/patches/' . $patch->getId() . '/cables.txt';
         return file_exists($filename);
     }
 
-    public function getStyleDirUrl(ApiPatch $style) {
-        $filename = Plugin::getBaseUrl() . 'public/patches/' . $style->getId() . '/';
+    public function getPatchDirUrl(ApiPatch $patch) {
+        $filename = Plugin::getBaseUrl() . 'public/patches/' . $patch->getId() . '/';
         return $filename;
     }
 

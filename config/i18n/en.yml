@@ -10,8 +10,7 @@ cables:
         imports: "Website Integration"
         settings: "Settings"
         import: "Import"
-        shape: "Patch"
-        style: "Patch"
+        patch: "Patch"
     dashboard:
       mainheadline: "Cables: Dashboard"
       loginbox:
@@ -20,8 +19,8 @@ cables:
         headline: "Currently integrated patches"
         text: "Current website integrations:"
         button: "Settings"
-        style: "Patch:"
-        style_created: "Patch created:"
+        patch: "Patch:"
+        patch_created: "Patch created:"
         original_patch: "Original Patch:"
         current_pages_integration: "Current page type integration"
         current_website_integration: "Current website integration"
@@ -103,7 +102,7 @@ cables:
         preview: "Check Preview now"
         button_back: "< Previous"
         button: "Save & Publish"
-    style:
+    patch:
       mainheadline: "Cables: Patch"
       block1:
         headline: "Location and pages"
@@ -129,9 +128,9 @@ cables:
         button: "Save Changes"
       block3:
         headline: "Advanced integration"
-        text: "Use this shortcode anywhere in the Wordpress-Editor to display your Shape in-place:"
+        text: "Use this shortcode anywhere in the Wordpress-Editor to display your patch in-place:"
       sidebar1:
-        headline: "Your Shape"
+        headline: "Your patch"
         text: "Configure the places the patch is integrated on the left side"
     settings:
       mainheadline: "Cables: Settings"
