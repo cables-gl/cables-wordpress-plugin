@@ -1,10 +1,9 @@
-{% if isImported %}
-    <canvas id="glcanvas" width="100px" height="100px"></canvas>
+<?php if($context['isImported']): ?>
+    <canvas id="glcanvas"/>
 
     <script type="text/javascript" src="<?php echo $context['styleDir']; ?>js/libs.core.min.js"></script>
-    <script type="text/javascript" src="<?php $context['styleDir']; ?>js/cables.min.js"></script>
-
-    <script type="text/javascript" src="<?php $context['styleDir']; ?>js/ops.js"></script>
+    <script type="text/javascript" src="<?php echo $context['styleDir']; ?>js/cables.min.js"></script>
+    <script type="text/javascript" src="<?php echo $context['styleDir']; ?>js/ops.js"></script>
 
     <script>
 
@@ -12,10 +11,10 @@
             alert(err);
         }
 
-        document.addEventListener("DOMContentLoaded", function (event) {
+        window.addEventListener("load", function (event) {
             CABLES.patch = new CABLES.Patch(
                 {
-                    patchFile: '<?php echo $context['styleDir']; ?>js/polyshapes.json',
+                    patchFile: '<?php echo $context['styleDir']; ?>js/patch.json',
                     prefixAssetPath: '<?php echo $context['styleDir']; ?>/',
                     glCanvasId: 'glcanvas',
                     glCanvasResizeToWindow: false,
@@ -24,4 +23,4 @@
         });
 
     </script>
-{% endif %}
+<?php endif; ?>

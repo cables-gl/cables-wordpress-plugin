@@ -109,7 +109,7 @@ class Cables {
 
     public function importPatch(ApiPatch $patch) {
 
-        $method = '/project/' . $patch->getId() . '/export?removeIndexHtml=1&combineJS=true&compatibility=old';
+        $method = '/project/' . $patch->getId() . '/export?removeIndexHtml=1&compatibility=old&jsonName=patch';
         $response = $this->getRemote($method, array('timeout' => 120));
 
         $body = $response['body'];

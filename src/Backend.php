@@ -61,8 +61,22 @@ class Backend {
     }
 
     public function admin_menu() {
-        add_menu_page(Plugin::getTranslatedString('page_backend_menu_main'), Plugin::getTranslatedString('page_backend_menu_main'), 'manage_options', 'cables_backend', array($this, 'cables_dashboard'), 'dashicons-admin-appearance');
-        add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_dashboard'), 'Dashboard', 'manage_options', 'cables_backend', array($this, 'cables_dashboard'));
+        add_menu_page(
+          Plugin::getTranslatedString('page_backend_menu_main'),
+          Plugin::getTranslatedString('page_backend_menu_main'),
+          'manage_options',
+          'cables_backend',
+          array($this, 'cables_dashboard'),
+          'dashicons-admin-appearance'
+        );
+        add_submenu_page(
+          'cables_backend',
+          Plugin::getTranslatedString('page_backend_menu_dashboard'),
+          'Dashboard',
+          'manage_options',
+          'cables_backend',
+          array($this, 'cables_dashboard')
+        );
 
         if (Plugin::getPluginOption(Plugin::OPTIONS_API_KEY)) {
             add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'cables_backend_imports', array($this, 'imports_page'));

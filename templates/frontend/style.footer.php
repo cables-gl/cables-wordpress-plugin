@@ -5,7 +5,7 @@
         }
     </script>
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function (event) {
+        window.addEventListener("load", function (event) {
             CABLES.EMBED.replaceWithPatch = function (_element, options) {
                 var el = _element;
                 var id = CABLES.generateUUID();
@@ -46,20 +46,20 @@
         });
     </script>
 <?php endif; ?>
-<?php if($styles): foreach($styles as $style): ?>
+<?php if($context['styles']): foreach($context['styles'] as $config): ?>
 
-    <script type="text/javascript" src="<?php echo $context['style']->styleDir; ?>js/libs.core.min.js"></script>
-    <script type="text/javascript" src="<?php echo $context['style']->styleDir; ?>js/cables.min.js"></script>
-    <script type="text/javascript" src="<?php echo $context['style']->styleDir; ?>js/ops.js"></script>
+    <script type="text/javascript" src="<?php echo $config['styleDir']; ?>js/libs.core.min.js"></script>
+    <script type="text/javascript" src="<?php echo $config['styleDir']; ?>js/cables.min.js"></script>
+    <script type="text/javascript" src="<?php echo $config['styleDir']; ?>js/ops.js"></script>
 
-    <?php if(!empty($context['style']->cssSelector)): ?>
+    <?php if(!empty($config['cssSelector'])): ?>
         <script type="text/javascript">
-            document.addEventListener("DOMContentLoaded", function (event) {
-                var nodeList = document.querySelectorAll('<?php echo $context['style']->cssSelector; ?>');
+            window.addEventListener("load", function (event) {
+                var nodeList = document.querySelectorAll('<?php echo $config['cssSelector']; ?>');
                 for (var i = 0; i < nodeList.length; i++) {
                     CABLES.EMBED.replaceWithPatch(nodeList[i], {
-                        patchFile: '<?php echo $context['style']->styleDir; ?>js/cables.json',
-                        prefixAssetPath: '<?php echo $context['styles']->styleDir; ?>/',
+                        patchFile: '<?php echo $config['styleDir']; ?>js/patch.json',
+                        prefixAssetPath: '<?php echo $config['styleDir']; ?>/',
                         onError: showError,
                         glCanvasResizeToWindow: true
                     });
@@ -67,9 +67,9 @@
             });
         </script>
     <?php endif; ?>
-    <?php if($context['style']->background): ?>
+    <?php if($config['background']): ?>
         <script type="text/javascript">
-            document.addEventListener("DOMContentLoaded", function (event) {
+            window.addEventListener("load", function (event) {
                 var canvEl = document.createElement("canvas");
                 canvEl.id = 'cables_background';
                 canvEl.style = 'visibility: visible; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: -5711;';
@@ -77,8 +77,8 @@
                 body.insertBefore(canvEl, body.firstChild);
                 patchBackground = new CABLES.Patch(
                     {
-                        patchFile: '<?php echo $context['style']->styleDir; ?>js/cables.json',
-                        prefixAssetPath: '<?php echo $context['styles']->styleDir; ?>/',
+                        patchFile: '<?php echo $config['styleDir']; ?>js/patch.json',
+                        prefixAssetPath: '<?php echo $config['styleDir']; ?>/',
                         glCanvasId: 'cables_background',
                         glCanvasResizeToWindow: true,
                         onError: showError

@@ -33,7 +33,7 @@ class Shortcodes {
     }
 
     public function singleStyleCode($atts, $content, $tag) {
-        $template = $this->template->loadTemplate('frontend/style.shortcode.twig');
+        $template = $this->template->loadTemplate('frontend/style.shortcode');
         $api = new Api\Cables();
         $style = $api->getStyle($atts['id']);
         echo $this->template->render($template, array(

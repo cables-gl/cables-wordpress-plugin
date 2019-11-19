@@ -1,5 +1,5 @@
 <p>
-    <?php print_r($context['styleConfig']); echo i18n("page_integration_tab2_location_headline"); ?><br/>
+    <?php echo i18n("page_integration_tab2_location_headline"); ?><br/>
     <input type="checkbox" name="cables_integration[header]" id="cables_integration_header"<?php echo $context['styleConfig']['integrations']['header'] ? ' checked="checked"' : '' ?>/>
     <label for="cables_integration_header"><?php echo i18n("page_integration_tab2_location_header"); ?></label>
     <input type="checkbox" name="cables_integration[hero]" id="cables_integration_hero"<?php echo $context['styleConfig']['integrations']['hero'] ? ' checked="checked"' : '' ?>/>
@@ -25,7 +25,7 @@
     <input type="checkbox" name="cables_integration_pagetype[page]" id="cables_integration_pagetype_page"<?php echo $context['styleConfig']['page_types']['page'] ? ' checked="checked"' : '' ?>/>
     <label for="cables_integration_pagetype_page"><?php echo i18n("page_integration_tab2_pagetype_page"); ?></label>
 
-    <?php if(!empty($context['pageTemplates '])): ?>
+    <?php if(!empty($context['pageTemplates'])): ?>
     <input type="checkbox" name="cables_integration_pagetype[custom]" id="cables_integration_pagetype_custom"<?php echo $context['styleConfig']['page_types']['custom'] ? ' checked="checked"' : '' ?>/>
     <label for="cables_integration_pagetype_custom"><?php echo i18n("page_integration_tab2_pagetype_selected_field"); ?></label>
     <select id="cables_integration_pagetype_customtypes" name="cables_integration_pagetype[customtypes]" multiple="multiple">

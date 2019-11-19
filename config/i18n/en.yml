@@ -11,6 +11,7 @@ cables:
         settings: "Settings"
         import: "Import"
         shape: "Patch"
+        style: "Patch"
     dashboard:
       mainheadline: "Cables: Dashboard"
       loginbox:
