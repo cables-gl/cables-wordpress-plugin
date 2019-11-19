@@ -1,65 +1,67 @@
-polyshapes:
+cables:
   global:
     nav:
       toggle: "toggle"
   page:
     backend:
       menu:
-        main: "Polyshapes"
+        main: "Cables"
         dashboard: "Dashboard"
         imports: "Website Integration"
         settings: "Settings"
         import: "Import"
-        shape: "Shape"
+        shape: "Patch"
     dashboard:
-      mainheadline: "Polyshapes: Dashboard"
+      mainheadline: "Cables: Dashboard"
       loginbox:
         headline: "Logged in as"
-      currentstyles:
-        headline: "Currently integrated Styles"
+      currentpatches:
+        headline: "Currently integrated patches"
         text: "Current website integrations:"
         button: "Settings"
-        style: "Style:"
-        style_created: "Style created:"
-        original_polyshape: "Original Polyshape:"
+        style: "Patch:"
+        style_created: "Patch created:"
+        original_patch: "Original Patch:"
         current_pages_integration: "Current page type integration"
         current_website_integration: "Current website integration"
         change_website_integration: "Change Website integration"
-      lateststyles:
-        headline: "Your latest styles"
-        text: "These styles are not integrated into wordpress yet. Please visit the <a href='?page=polyshapes_backend_imports'>website integration tab</a> to integrate selected styles into your wordpress website."
+      latestpatches:
+        headline: "Your latest patches"
+        text: "These patches are not integrated into wordpress yet. Please visit the <a href='?page=cables_backend_imports'>website integration tab</a> to integrate selected patches into your wordpress website."
         button: "Load More"
       sidebar1:
-        headline: "New to Polyshapes?"
+        headline: "New to cables?"
         image:
-        text: "Watch the video to get you started on creating beautiful website backgrounds with polyshapes."
+        text: "Watch the video to get you started on creating beautiful website backgrounds with cables.gl."
       sidebar2:
         image:
-        text: "Or visit our website to find out more about polyshapes"
+        text: "Or visit our website to find out more about cables"
         button: "Visit website"
       sidebar3:
-        headline: "Gallery: New Polyshapes available!"
+        headline: "Gallery: New patches available!"
         image:
-        text: "Polyshape:"
-        button: "Browse polyshapes gallery"
+        text: "Patch:"
+        button: "Browse patch-gallery"
     auth:
-      mainheadline: "Polyshapes: Welcome!"
+      mainheadline: "cables: Welcome!"
       block1:
         headline: "Login or create an account!"
-        text: "You must be registered and logged in to polyshapes in order to use our service."
-        button: "Log in / Register now"
+        text: "You must be registered at cables.gl and obtain an API-key in order to use our service."
+        button: "Get API-Key"
+        apikey:
+          label: "API-Key:"
         email:
           label: "E-Mail:"
         password:
           label: "Password:"
         submit:
-          label: "Log in"
+          label: "Save"
       block2:
-        headline: "New to Polyshapes?"
+        headline: "New to cables?"
         image1:
-        imagetext1: "Watch the video to get you started on creating beautiful website backgrounds with polyshapes."
+        imagetext1: "Watch the video to get you started on creating beautiful website backgrounds with cables.gl."
         image2:
-        imagetext2: "Or visit our website to find out more about polyshapes"
+        imagetext2: "Or visit our website to find out more about cables"
         button: "Visit Website"
       block3:
         headline: "Extensive Help Center"
@@ -69,12 +71,12 @@ polyshapes:
       mainheadline: "Integrate patch into website"
       tab1:
         tabtitle: "1. Choose Patch"
-        headline: "Please select one of your styles"
+        headline: "Please select one of your patches"
         button: "Next Step >"
       tab2:
         tabtitle: "2. Define Position"
         location:
-          headline: "Where do you want your polyshape style to show?"
+          headline: "Where do you want your patch to show?"
           hero: "Hero Image"
           header: "Header"
           background: "Background"
@@ -83,7 +85,7 @@ polyshapes:
             field: "Custom Integration"
             label:
         pagetype:
-          headline: "Specify the pages you want to integrate the style to show:"
+          headline: "Specify the pages you want to integrate the patches to show:"
           home: "on starting page"
           all: "everywhere"
           post: "on blog posts"
@@ -95,17 +97,17 @@ polyshapes:
         button: "Next Step >"
       tab3:
         tabtitle: "3. Finish"
-        headline: "Selected Style"
+        headline: "Selected Patch"
         integration: "Website integration"
         preview: "Check Preview now"
         button_back: "< Previous"
         button: "Save & Publish"
     style:
-      mainheadline: "Polyshapes: Style"
+      mainheadline: "Cables: Patch"
       block1:
         headline: "Location and pages"
         location:
-          headline: "Where do you want your polyshape style to show?"
+          headline: "Where do you want your patch to show?"
           header: "Header"
           hero: "Hero Image"
           background: "Background"
@@ -114,7 +116,7 @@ polyshapes:
             field: "Custom Integration"
             label:
         pagetype:
-          headline: "Specify the pages you want to integrate the style to show:"
+          headline: "Specify the pages you want to integrate the patch to show:"
           home: "on starting page"
           all: "on all pages"
           selected:
@@ -129,19 +131,19 @@ polyshapes:
         text: "Use this shortcode anywhere in the Wordpress-Editor to display your Shape in-place:"
       sidebar1:
         headline: "Your Shape"
-        text: "Configure the places the shape is integrated on the left side"
+        text: "Configure the places the patch is integrated on the left side"
     settings:
-      mainheadline: "Polyshapes: Settings"
-      headline: "You are currently logged in to Polyshapes as"
+      mainheadline: "Cables: Settings"
+      headline: "You are currently logged in to cables.gl as"
       apikey:
         headline: "Your current login information"
         login: "Login:"
         key: "Api-Key:"
       block1:
         headline: "Change your name and password"
-        text: "Please visit your <a href=''>Account Page</a> in Polyshapes to update any of your user information."
+        text: "Please visit your <a href=''>Account Page</a> in cables.gl to update any of your user information."
       block2:
-        headline: "Log out of Polyshapes"
+        headline: "Log out of cables.gl"
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         button: "Log out now"
 

@@ -3,26 +3,26 @@
         <div id="post-body-content">
             <div class="meta-box-sortables ui-sortable">
                 <div class="postbox">
-                    <h2><span>{{ "page_integration_tab1_headline"|i18n }}</span></h2>
+                    <h2><span><?php echo i18n("page_integration_tab1_headline"); ?></span></h2>
                     <div class="inside">
                         <div id="col-container">
-                            {% for style in styles %}
-                                <a href="?page=polyshapes_backend_imports&tab=tab2&style={{ style.id }}">
+                            <?php foreach ($context['patches'] as $patch): ?>
+                                <a href="?page=cables_backend_imports&tab=tab2&style=<?php echo $patch->id; ?>">
                                     <div class="ps-col-left">
                                         <div class="ps-screenshot-container">
-                                            <img alt="{{ style.name }}" src="{{ polyshapes_style_screenshot_url(style.id) }}"/>
+                                            <img alt="<?php echo $patch->name; ?>" src="<?php echo cables_patch_screenshot_url($patch->id) ?>"/>
                                         </div>
                                     </div>
                                     <div class="ps-col-right">
                                         <div class="text">
-                                            <span class="title">{{ style.name }}</span>
+                                            <span class="title"><?php echo $patch->name; ?></span>
                                         </div>
                                     </div>
                                 </a>
                                 <div style="clear: both"></div>
                                 <hr/>
-                            {% endfor %}
-                            <button class="button-primary" name="Login">{{ "page_integration_tab1_button"|i18n }}</button>
+                            <?php endforeach; ?>
+                            <button class="button-primary" name="Login"><?php echo i18n("page_integration_tab1_button"); ?></button>
                         </div>
                     </div>
                 </div>

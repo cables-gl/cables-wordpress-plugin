@@ -31,13 +31,13 @@ module.exports = function (grunt) {
                               'public/css/**',
                               'public/images/**',
                               'public/js/**',
-                              'public/styles/',
+                              'public/patches/',
                               'sql/**',
                               'src/**',
                               'vendor/**',
                               'templates/**',
                               'config/**',
-                              'polyshapes-wpplugin.php',
+                              'cables-wpplugin.php',
                               'README.md'
                           ],
                           dest: '<%= cmp.name %>/'
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
             compress: {
                 main: {
                     options: {
-                        archive: 'target/polyshapes-wpplugin.zip',
+                        archive: 'target/cables-wpplugin.zip',
                         mode: 'zip'
                     },
                     expand: true,
@@ -56,19 +56,19 @@ module.exports = function (grunt) {
                         'public/css/**',
                         'public/images/**',
                         'public/js/**',
-                        'public/styles/',
+                        'public/patches/',
                         'sql/**',
                         'src/**',
                         'vendor/**',
                         'templates/**',
                         'config/**',
-                        'polyshapes-wpplugin.php',
+                        'cables-wpplugin.php',
                         'README.md'
                     ]
                 },
                 update: {
                     options: {
-                        archive: 'target/update/polyshapes-wpplugin.zip',
+                        archive: 'target/update/cables-wpplugin.zip',
                         mode: 'zip'
                     },
                     src: [
@@ -90,7 +90,7 @@ module.exports = function (grunt) {
                         {
                             expand: true,
                             flatten: true,
-                            src: ['README.md', 'polyshapes-wpplugin.php']
+                            src: ['README.md', 'cables-wpplugin.php']
                         }
                     ]
                 }

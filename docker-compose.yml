@@ -12,13 +12,14 @@ services:
     environment:
       WORDPRESS_DB_PASSWORD: db4wp
     networks:
-      - polyshapes_wordpress_network
+      - cables_wordpress_network
   wordpress_db:
     image: mysql:5.6
     environment:
       MYSQL_ROOT_PASSWORD: db4wp
     networks:
-      - polyshapes_wordpress_network
+      - cables_wordpress_network
+
 networks:
-  polyshapes_wordpress_network:
+ cables_wordpress_network:
     driver: "bridge"

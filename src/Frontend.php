@@ -6,22 +6,24 @@
  * Time: 17:54
  */
 
-namespace Polyshapes\Plugin;
+namespace Cables\Plugin;
 
-use Twig_Environment;
+
+use Cables\Plugin\TemplateEngine\TemplateEngine;
 
 class Frontend {
 
     /**
-     * @var Twig_Environment
+     * @var TemplateEngine
      */
-    private $twig;
+    private $template;
 
-    /**
-     * Frontend constructor.
-     */
-    public function __construct(Twig_Environment $twig) {
-        $this->twig = $twig;
+  /**
+   * Frontend constructor.
+   * @param TemplateEngine $template
+   */
+    public function __construct(TemplateEngine $template) {
+        $this->template = $template;
     }
 
     public function display() {
@@ -33,7 +35,7 @@ class Frontend {
         $options = Plugin::getPluginOptions();
         $styles = array();
         foreach ($this->getElementReplacingStyleIds() as $styleId) {
-            $api = new Api\Polyshapes();
+            $api = new Api\Cables();
             $style = $api->getStyle($styleId);
             $styleOptions = $options['styles'][$styleId];
             if (!$this->isActiveByPageType($styleOptions)) {
@@ -56,8 +58,8 @@ class Frontend {
 
         $content = "";
         if (!empty($styles)) {
-            $template = $this->twig->loadTemplate('frontend/style.footer.twig');
-            $content = $this->twig->render($template, array('styles' => $styles));
+            $template = $this->template->loadTemplate('frontend/style.footer');
+            $content = $this->template->render($template, array('styles' => $styles));
         }
 
         echo $content;
@@ -81,7 +83,6 @@ class Frontend {
 
     private function isActiveByPageType($styleOptions) {
         $pageOptions = $styleOptions['page_types'];
-        print_r($styleOptions);
         $isHome = (is_home() || is_front_page());
         if (!is_array($pageOptions)) {
             return false;

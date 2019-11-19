@@ -6,60 +6,47 @@
  * Time: 10:18
  */
 
-namespace Polyshapes\Plugin\Model;
+namespace Cables\Plugin\Model;
 
 
-use Polyshapes\Plugin\Api\Polyshapes;
-use Polyshapes\Plugin\Plugin;
+use Cables\Plugin\Api\Cables;
+use Cables\Plugin\Plugin;
 
-class ApiStyle {
+class ApiPatch {
 
-    private $id;
-    private $name;
-    private $ops;
-    private $shapeId;
-    private $accountId;
-    private $downloadUrl;
-    private $isPreset;
-    private $imported;
+    public $id;
+    public $name;
+    public $shapeId;
+    public $accountId;
+    public $downloadUrl;
+    public $isPreset;
+    public $imported;
 
     /**
-     * ApiStyle constructor. Private, use factory-method
+     * ApiPatch constructor. Private, use factory-method
      */
     private function __construct() {
     }
 
     /**
-     * @param $styleJSON
-     * @return ApiStyle
+     * @param $patchJSON
+     * @return ApiPatch
      */
-    public static function fromJson($styleJSON): ApiStyle {
-        $style = new ApiStyle();
-        $style->name = $styleJSON->name;
-        $style->id = $styleJSON->id;
-        $style->ops = $styleJSON->ops;
-        $downloadUrl = Plugin::getApiUrl() . '/styles/' . $styleJSON->id . '/archive';
-        $style->downloadUrl = $downloadUrl;
-        return $style;
+    public static function fromJson($patchJSON): ApiPatch {
+        $patch = new ApiPatch();
+        $patch->name = $patchJSON->name;
+        $patch->id = $patchJSON->_id;
+        return $patch;
     }
 
 
     public function isImported() {
         if ($this->imported === null) {
-            $api = new Polyshapes();
+            $api = new Cables();
             $this->imported = $api->isImported($this);
         }
         return $this->imported;
     }
-
-
-    /**
-     * @return mixed
-     */
-    public function getOps() {
-        return $this->ops;
-    }
-
 
     /**
      * @return mixed

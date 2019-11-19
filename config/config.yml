@@ -1,11 +1,11 @@
 environment: dev
 global:
-  polyshapes_url: https://polyshapes.io
-  polyshapes_api_url: https://api.polyshapes.io/api/v1
+  cables_url: https://cables.gl
+  cables_api_url: https://cables.gl/api
   default_language: en
 dev:
-  polyshapes_url: https://dev.polyshapes.io
-  polyshapes_api_url: https://api.dev.polyshapes.io/api/v1
+  cables_url: https://dev.cables.gl
+  cables_api_url: https://dev.cables.gl/api
 local:
-  polyshapes_url: http://frontend:3000
-  polyshapes_api_url: http://api:3000/api/v1
+  cables_url: http://frontend:3000
+  cables_api_url: http://api:3000/api/v1

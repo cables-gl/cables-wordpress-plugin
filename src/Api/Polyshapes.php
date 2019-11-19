@@ -6,20 +6,20 @@
  * Time: 10:17
  */
 
-namespace Polyshapes\Plugin\Api;
+namespace Cables\Plugin\Api;
 
-use Polyshapes\Plugin\Model\ApiStyle;
-use Polyshapes\Plugin\Plugin;
+use Cables\Plugin\Model\ApiPatch;
+use Cables\Plugin\Plugin;
 
 class Polyshapes {
 
     /**
-     * @return ApiStyle
+     * @return ApiPatch
      */
-    public function getStyle(string $id): ApiStyle {
+    public function getStyle(string $id): ApiPatch {
         $response = $this->getRemote('/styles/' . $id);
-        $styleJSON = json_decode($response['body']);
-        return ApiStyle::fromJson($styleJSON);
+        $styleJSON = json_decode($response['body']['patches']);
+        return ApiPatch::fromJson($styleJSON);
     }
 
     private function getRemote(string $method, array $params = array()) {
@@ -46,15 +46,15 @@ class Polyshapes {
     }
 
     /**
-     * @return ApiStyle[]
+     * @return ApiPatch[]
      */
     public function getMyStyles(): array {
         $url = '/accounts/' . $this->getAccountId() . '/styles';
         $response = $this->getRemote($url);
-        $stylesJSON = json_decode($response['body']);
+        $stylesJSON = json_decode($response['body']['patches']);
         $styles = array();
         foreach ($stylesJSON as $styleJSON) {
-            $styles[] = ApiStyle::fromJson($styleJSON);
+            $styles[] = ApiPatch::fromJson($styleJSON);
         }
         return $styles;
     }
@@ -87,17 +87,17 @@ class Polyshapes {
         return wp_safe_remote_post(Plugin::getApiUrl() . $method, array('body' => $params));
     }
 
-    public function isImported(ApiStyle $style): bool {
+    public function isImported(ApiPatch $style): bool {
         $filename = Plugin::getBasePath() . 'public/styles/' . $style->getId() . '/cables.txt';
         return file_exists($filename);
     }
 
-    public function getStyleDirUrl(ApiStyle $style) {
+    public function getStyleDirUrl(ApiPatch $style) {
         $filename = Plugin::getBaseUrl() . 'public/styles/' . $style->getId() . '/';
         return $filename;
     }
 
-    public function importStyle(ApiStyle $style) {
+    public function importStyle(ApiPatch $style) {
 
         $method = '/styles/' . $style->getId() . '/archive';
         $response = $this->getRemote($method);

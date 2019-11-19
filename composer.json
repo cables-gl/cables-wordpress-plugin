@@ -1,14 +1,15 @@
 {
-  "name": "polyshapes-wpplugin",
+  "name": "cables-wpplugin",
   "version": "0.8.1",
   "type": "wordpress-plugin",
-  "description": "Plugin to access data of your polyshapes.io account",
+  "description": "Plugin to access patches of your cables.gl account",
   "keywords": [
     "wordpress",
     "plugin",
-    "polyshapes"
+    "cables",
+    "cables.gl"
   ],
-  "homepage": "https://www.polyshapes.io/",
+  "homepage": "https://cables.gl/",
   "authors": [
     {
       "name": "undefined development",
@@ -24,14 +25,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Polyshapes\\Plugin\\": [
+      "Cables\\Plugin\\": [
         "src/"
       ]
     }
   },
   "require": {
     "php": ">=7.0",
-    "twig/twig": "1.35.0",
     "yahnis-elsts/plugin-update-checker": "4.4",
     "symfony/yaml": "3.4.0"
   }

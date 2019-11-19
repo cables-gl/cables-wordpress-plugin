@@ -1,9 +1,0 @@
-<div class="wrap">
-    <h2>{{ "page_integration_mainheadline"|i18n }}</h2>
-    <h2 class="nav-tab-wrapper">
-        <a href="?page=polyshapes_backend_imports&tab=tab1" class="nav-tab{% if active_tab == 'tab1' %} nav-tab-active{% endif %}">{{ "page_integration_tab1_tabtitle"|i18n }}</a>
-        <a href="?page=polyshapes_backend_imports&tab=tab2&style={{ style.id }}" class="nav-tab{% if active_tab == 'tab2' %} nav-tab-active{% endif %}">{{ "page_integration_tab2_tabtitle"|i18n }}</a>
-        <a href="?page=polyshapes_backend_imports&tab=tab3&style={{ style.id }}" class="nav-tab{% if active_tab == 'tab3' %} nav-tab-active{% endif %}">{{ "page_integration_tab3_tabtitle"|i18n }}</a>
-    </h2>
-    {% include 'admin/integration/' ~ active_tab ~ '.twig' %}
-</div>

@@ -6,9 +6,10 @@
  * Time: 12:40
  */
 
-namespace Polyshapes\Plugin;
+namespace Cables\Plugin;
 
 use Symfony\Component\Yaml\Yaml;
+use Twig\Template;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
@@ -26,9 +27,9 @@ class Plugin {
     private static $translations = array();
 
     /**
-     * @var Twig_Environment
+     * @var \TemplateEngine
      */
-    private $twig;
+    private $template;
 
     /**
      * Plugin constructor.
@@ -39,19 +40,9 @@ class Plugin {
         static::$config = Yaml::parseFile($basePath . 'config/config.yml');
         static::$basePath = $basePath;
 
-        $loader = new Twig_Loader_Filesystem($basePath . '/templates/');
-        $twig = new Twig_Environment($loader, array('debug' => true));
-        $polyshapes_url = static::getConfig()['polyshapes_url'];
-        $polyshapes_api_url = static::getConfig()['polyshapes_api_url'];
-        $twig->addGlobal('polyshapes_api_url', $polyshapes_api_url);
-        $twig->addGlobal('polyshapes_url', $polyshapes_url);
-        $twig->addGlobal('polyshapes_screenshot_baseurl', static::getScreenshotBaseUrl());
-        $twig->addFilter(new \Twig\TwigFilter('i18n', array(static::class, 'getTranslatedString'), ['is_safe' => ['html']]));
-        $twig->addFunction('polyshapes_style_screenshot_url', new \Twig\TwigFunction('polyshapes_style_screenshot_url', array($this, 'getStyleScreenshotUrl')));
-        $twig->addExtension(new Twig_Extension_Debug());
-        $this->twig = $twig;
+        $this->template = new TemplateEngine\Php();
 
-        $shortcodes = new Shortcodes($twig);
+        $shortcodes = new Shortcodes($this->template);
         $shortcodes->register();
 
     }
@@ -62,20 +53,20 @@ class Plugin {
     }
 
     public function query_vars($vars) {
-        $vars[] = 'polyshapes_action';
+        $vars[] = 'cables_action';
         $vars[] = 'style_screenshot';
         $vars[] = 'style';
         return $vars;
     }
 
     public function parse_request($wp) {
-        if (array_key_exists('polyshapes_action', $wp->query_vars)) {
-            $action = $wp->query_vars['polyshapes_action'];
+        if (array_key_exists('cables_action', $wp->query_vars)) {
+            $action = $wp->query_vars['cables_action'];
             switch ($action) {
                 case 'style_screenshot':
                     header('Content-Type: image/png', true);
                     $styleId = $wp->query_vars['style'];
-                    $api = new Api\Polyshapes();
+                    $api = new Api\Cables();
                     echo $api->getStyleScreenshot($styleId);
                     break;
                 default:
@@ -85,20 +76,20 @@ class Plugin {
         }
     }
 
-    public function getStyleScreenshotUrl($styleId) {
-        return static::getScreenshotBaseUrl() . $styleId;
+    public static function getPatchScreenshotUrl($patchId) {
+        return static::getScreenshotBaseUrl() . $patchId . '/screenshot.png';
     }
 
     public static function getScreenshotBaseUrl() {
-        return get_site_url() . '?polyshapes_action=style_screenshot&style=';
+        return static::getConfig()['cables_url'] . '/project/';
     }
 
     public function display() {
         if (is_admin()) {
-            $backend = new Backend($this->twig);
+            $backend = new Backend($this->template);
             $backend->display();
         } else {
-            $frontend = new Frontend($this->twig);
+            $frontend = new Frontend($this->template);
             $frontend->display();
         }
     }
@@ -121,7 +112,7 @@ class Plugin {
      * @return string
      */
     public static function getApiUrl() {
-        return static::getConfig()['polyshapes_api_url'];
+        return static::getConfig()['cables_api_url'];
     }
 
     /**
@@ -146,7 +137,7 @@ class Plugin {
      * @return array
      */
     public static function getPluginOptions() {
-        $options = get_option('polyshapes_backend');
+        $options = get_option('cables_backend');
         if ($options && is_array($options)) {
             return $options;
         } else {
@@ -175,7 +166,7 @@ class Plugin {
     public static function setPluginOption($option, $value) {
         $options = static::getPluginOptions();
         $options[$option] = $value;
-        return update_option('polyshapes_backend', $options);
+        return update_option('cables_backend', $options);
     }
 
     public static function getTranslatedString($string) {
@@ -196,7 +187,7 @@ class Plugin {
         }
 
         $translations = static::flattenArray($translation);
-        $key = 'polyshapes_' . $string;
+        $key = 'cables_' . $string;
         if (array_key_exists($key, $translations)) {
             return $translations[$key];
         } else {

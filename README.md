@@ -1,22 +1,22 @@
-=== polyshapes.io Wordpress Plugin ===
-Tags: polyshapes, wordpress, plugin
+=== cables.gl Wordpress Plugin ===
+Tags: cables, cables.gl, wordpress, plugin
 Requires at least: 4.3.1
-Tested up to: 4.3.1
+Tested up to: 5.3
 Version: 0.8.1
 
-Plugin to access data of your polyshapes.io account
+Plugin to access patches of your cables.gl account
 
 == Description ==
 
-Plugin provides shortcodes, theme integration and the display shapes that you
-have in your polyshapes.io account
+Plugin provides shortcodes, theme integration and the display patches that you
+have created in your cables.gl account
 
 == Installation ==
 
-1. Upload `polyshapes-wpplugin/` to the `/wp-content/plugins/` directory
+1. Upload `cables-wpplugin/` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Login as an Adminuser
-4. Click on "Polyshapes"
+4. Click on "Cables"
 5. fiddle around
 
 == Frequently Asked Questions ==

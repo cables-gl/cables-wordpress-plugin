@@ -6,44 +6,45 @@
  * Time: 08:18
  */
 
-namespace Polyshapes\Plugin;
+namespace Cables\Plugin;
 
-use Polyshapes\Plugin\Api;
-use Twig_Environment;
+use Cables\Plugin\Api;
+use Cables\Plugin\TemplateEngine\TemplateEngine;
 
 class Backend {
 
     /**
-     * @var Twig_Environment
+     * @var TemplateEngine
      */
-    private $twig;
+    private $template;
 
-    /**
-     * Backend constructor.
-     */
-    public function __construct(Twig_Environment $twig) {
-        $this->twig = $twig;
+  /**
+   * Backend constructor.
+   * @param TemplateEngine $template
+   */
+    public function __construct(TemplateEngine $template) {
+        $this->template = $template;
     }
 
     public function display() {
         static::enqueue_scripts();
         add_action('admin_menu', array($this, 'admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
-        add_action('admin_post_polyshapes_login', array($this, 'polyshapes_login'));
-        add_action('admin_post_polyshapes_logout', array($this, 'polyshapes_logout'));
-        add_action('admin_post_polyshapes_set_style_options', array($this, 'polyshapes_set_style_options'));
+        add_action('admin_post_cables_login', array($this, 'cables_login'));
+        add_action('admin_post_cables_logout', array($this, 'cables_logout'));
+        add_action('admin_post_cables_set_style_options', array($this, 'cables_set_style_options'));
 
     }
 
     public function enqueue_scripts() {
-        wp_enqueue_script('polyshapes_backend', plugins_url() . '/polyshapes-wpplugin/public/js/backend.js');
-        wp_enqueue_style('polyshapes_backend', plugins_url() . '/polyshapes-wpplugin/public/css/backend.css');
+        wp_enqueue_script('cables_backend', plugins_url() . '/cables-wpplugin/public/js/backend.js');
+        wp_enqueue_style('cables_backend', plugins_url() . '/cables-wpplugin/public/css/backend.css');
     }
 
     public function register_settings() {
-        register_setting('polyshapes_backend', 'polyshapes_backend', array($this, 'validate_setting'));
-        add_settings_section('polyshapes_backend_theme', 'Polyshapes Settings', array($this, 'section_cb'), __FILE__);
-        add_settings_field('api_key', 'Api-Key:', array($this, 'api_key_setting'), __FILE__, 'polyshapes_backend_theme');
+        register_setting('cables_backend', 'cables_backend', array($this, 'validate_setting'));
+        add_settings_section('cables_backend_theme', 'Polyshapes Settings', array($this, 'section_cb'), __FILE__);
+        add_settings_field('api_key', 'Api-Key:', array($this, 'api_key_setting'), __FILE__, 'cables_backend_theme');
     }
 
     public function api_key_setting() {
@@ -56,27 +57,27 @@ class Backend {
     }
 
     public function section_cb() {
-        echo "Settings to configure the integration of polyshapes.io into your Wordpress installation.";
+        echo "Settings to configure the integration of cables.io into your Wordpress installation.";
     }
 
     public function admin_menu() {
-        add_menu_page(Plugin::getTranslatedString('page_backend_menu_main'), Plugin::getTranslatedString('page_backend_menu_main'), 'manage_options', 'polyshapes_backend', array($this, 'polyshapes_dashboard'), 'dashicons-admin-appearance');
-        add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_dashboard'), 'Dashboard', 'manage_options', 'polyshapes_backend', array($this, 'polyshapes_dashboard'));
+        add_menu_page(Plugin::getTranslatedString('page_backend_menu_main'), Plugin::getTranslatedString('page_backend_menu_main'), 'manage_options', 'cables_backend', array($this, 'cables_dashboard'), 'dashicons-admin-appearance');
+        add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_dashboard'), 'Dashboard', 'manage_options', 'cables_backend', array($this, 'cables_dashboard'));
 
         if (Plugin::getPluginOption(Plugin::OPTIONS_API_KEY)) {
-            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'polyshapes_backend_imports', array($this, 'imports_page'));
-            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_settings'), Plugin::getTranslatedString('page_backend_menu_settings'), 'administrator', 'polyshapes_backend_settings', array($this, 'settings_page'));
-            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_import'), null, 'manage_options', 'polyshapes_backend_import', array($this, 'import_page'));
-            add_submenu_page('polyshapes_backend', Plugin::getTranslatedString('page_backend_menu_style'), null, 'manage_options', 'polyshapes_backend_style', array($this, 'style_page'));
+            add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_imports'), Plugin::getTranslatedString('page_backend_menu_imports'), 'manage_options', 'cables_backend_imports', array($this, 'imports_page'));
+            add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_settings'), Plugin::getTranslatedString('page_backend_menu_settings'), 'administrator', 'cables_backend_settings', array($this, 'settings_page'));
+            add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_import'), null, 'manage_options', 'cables_backend_import', array($this, 'import_page'));
+            add_submenu_page('cables_backend', Plugin::getTranslatedString('page_backend_menu_style'), null, 'manage_options', 'cables_backend_style', array($this, 'style_page'));
         }
     }
 
-    public function polyshapes_dashboard() {
+    public function cables_dashboard() {
         $options = Plugin::getPluginOptions();
-        $api = new Api\Polyshapes();
+        $api = new Api\Cables();
         $params = array();
         if (!$options['api_key']) {
-            $template = $this->twig->loadTemplate('admin/auth.twig');
+            $template = $this->template->loadTemplate('admin/auth');
             $params['action_url'] = esc_url(admin_url('admin-post.php'));
         } else {
             $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
@@ -100,17 +101,17 @@ class Backend {
             $params['integratedStyles'] = $integratedStyles;
             $params['notIntegratedStyles'] = $notIntgratedStyles;
             $params['account'] = $api->getAccountInfo();
-            $template = $this->twig->loadTemplate('admin/dashboard/dashboard.twig');
+            $template = $this->template->loadTemplate('admin/dashboard/dashboard');
         }
-        echo $this->twig->render($template, $params);
+        echo $this->template->render($template, $params);
     }
 
     public function import_page() {
         $styleId = $_GET['style'];
-        $api = new Api\Polyshapes();
+        $api = new Api\Cables();
         $style = $api->getStyle($styleId);
-        $api->importStyle($style);
-        $admin_url = admin_url('admin.php?page=polyshapes_backend_style&style=' . $styleId);
+        $api->importPatch($style);
+        $admin_url = admin_url('admin.php?page=cables_backend_style&style=' . $styleId);
         wp_redirect($admin_url);
         print "<a href='" . $admin_url . "'>go to style</a>";
         exit;
@@ -118,7 +119,7 @@ class Backend {
 
     public function imports_page() {
         $params = array();
-        $api = new Api\Polyshapes();
+        $api = new Api\Cables();
 
         $active_tab = 'tab1';
         if (isset($_GET['tab']) && (isset($_GET['style']) && !empty($_GET['style']))) {
@@ -131,7 +132,7 @@ class Backend {
                 $style = $api->getStyle($styleId);
                 $styleConfig = array();
                 if (!$style->isImported()) {
-                    $api->importStyle($style);
+                    $api->importPatch($style);
                 }
                 $options = Plugin::getPluginOptions();
                 if (is_array($options['styles'])) {
@@ -154,7 +155,7 @@ class Backend {
                 $style = $api->getStyle($styleId);
                 $styleConfig = array();
                 if (!$style->isImported()) {
-                    $api->importStyle($style);
+                    $api->importPatch($style);
                 }
                 $options = Plugin::getPluginOptions();
                 if (is_array($options['styles'])) {
@@ -175,47 +176,44 @@ class Backend {
                 break;
             default:
             case 'tab1':
-                $params['styles'] = $api->getMyStyles();
+                $params['patches'] = $api->getMyPatches();
                 break;
 
         }
-        $template = $this->twig->loadTemplate('admin/integration/integration.twig');
+        $template = $this->template->loadTemplate('admin/integration/integration');
         $params['style'] = $style;
         $params['active_tab'] = $active_tab;
-        echo $this->twig->render($template, $params);
+        echo $this->template->render($template, $params);
     }
 
-    public function polyshapes_login() {
+    public function cables_login() {
         status_header(200);
-        $email = $_REQUEST['email'];
-        $password = $_REQUEST['password'];
-        $api = new Api\Polyshapes();
-        $response = $api->login($email, $password);
-        if ($response && isset($response->key)) {
-            Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, $response->key);
-            Plugin::setPluginOption(Plugin::OPTIONS_ACCOUNT_ID, $response->accountId);
+        $apikey = $_REQUEST['apikey'];
+        if ($apikey) {
+            Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, $apikey);
+            Plugin::setPluginOption(Plugin::OPTIONS_ACCOUNT_ID, 5711);
         }
-        $admin_url = admin_url('admin.php?page=polyshapes_backend');
+        $admin_url = admin_url('admin.php?page=cables_backend');
         wp_redirect($admin_url);
         exit;
     }
 
-    public function polyshapes_logout() {
+    public function cables_logout() {
         status_header(200);
         $email = $_REQUEST['email'];
         Plugin::setPluginOption(Plugin::OPTIONS_API_KEY, null);
         Plugin::setPluginOption(Plugin::OPTIONS_ACCOUNT_ID, null);
-        $admin_url = admin_url('admin.php?page=polyshapes_backend');
+        $admin_url = admin_url('admin.php?page=cables_backend');
         wp_redirect($admin_url);
         exit;
     }
 
-    public function polyshapes_set_style_options() {
+    public function cables_set_style_options() {
         status_header(200);
 
         $redirect = $_REQUEST['redirect'];
 
-        $integrations = $_REQUEST['polyshapes_integration'] ? $_REQUEST['polyshapes_integration'] : array();
+        $integrations = $_REQUEST['cables_integration'] ? $_REQUEST['cables_integration'] : array();
         $integrateHeader = array_key_exists('header', $integrations);
         $integrateHero = array_key_exists('hero', $integrations);
         $integrateBackground = array_key_exists('background', $integrations);
@@ -247,7 +245,7 @@ class Backend {
 
         $styleId = $_REQUEST['style'];
 
-        $pageTypes = $_REQUEST['polyshapes_integration_pagetype'];
+        $pageTypes = $_REQUEST['cables_integration_pagetype'];
         $mobile = $_REQUEST['mobile'];
 
         $styles = Plugin::getPluginOption(Plugin::OPTIONS_STYLES);
@@ -264,7 +262,7 @@ class Backend {
         Plugin::setPluginOption(Plugin::OPTIONS_STYLES, $styles);
 
         if (!$redirect) {
-            $redirect = admin_url('admin.php?page=polyshapes_backend_style&style=' . $styleId);
+            $redirect = admin_url('admin.php?page=cables_backend_style&style=' . $styleId);
         } else {
             $redirect = admin_url($redirect . '&style=' . $styleId);
         }
@@ -274,8 +272,8 @@ class Backend {
 
     public function style_page() {
 
-        $template = $this->twig->loadTemplate('admin/style.twig');
-        $api = new Api\Polyshapes();
+        $template = $this->template->loadTemplate('admin/style');
+        $api = new Api\Cables();
         $styleId = $_GET['style'];
         $style = $api->getStyle($styleId);
         $imported = $api->isImported($style);
@@ -295,16 +293,16 @@ class Backend {
             'cssSelectors' => $this->getPossibleCssSelectors(),
             'pageTemplates' => $pageTemplates
         );
-        echo $this->twig->render($template, $context);
+        echo $this->template->render($template, $context);
     }
 
     public function settings_page() {
 
-        $api = new Api\Polyshapes();
+        $api = new Api\Cables();
         $vars = array();
 
         ob_start();
-        settings_fields('polyshapes_backend');
+        settings_fields('cables_backend');
         $vars['fields'] = ob_get_contents();
         ob_end_clean();
 
@@ -318,8 +316,8 @@ class Backend {
         $vars['account'] = $api->getAccountInfo();
         $vars['apikey'] = Plugin::getPluginOption(Plugin::OPTIONS_API_KEY);
 
-        $template = $this->twig->loadTemplate('admin/settings.twig');
-        echo $this->twig->render($template, $vars);
+        $template = $this->template->loadTemplate('admin/settings');
+        echo $this->template->render($template, $vars);
 
     }
 

@@ -6,35 +6,39 @@
  * Time: 14:02
  */
 
-namespace Polyshapes\Plugin;
+namespace Cables\Plugin;
 
 
-use Twig_Environment;
+use Cables\Plugin\TemplateEngine\TemplateEngine;
 
 class Shortcodes {
 
-    public static $SHORTCODE_SINGLE_POLYSHAPE = 'polyshape';
-
-    private $twig;
+    public static $SHORTCODE_SINGLE_PATCH = 'cables_patch';
 
     /**
-     * Shortcodes constructor.
+     * @var TemplateEngine
      */
-    public function __construct(Twig_Environment $twig) {
-        $this->twig = $twig;
+    private $template;
+
+  /**
+   * Shortcodes constructor.
+   * @param TemplateEngine $twig
+   */
+    public function __construct(TemplateEngine $twig) {
+        $this->template = $twig;
     }
 
     public function register() {
-        add_shortcode(static::$SHORTCODE_SINGLE_POLYSHAPE, array($this, 'singleStyleCode'));
+        add_shortcode(static::$SHORTCODE_SINGLE_PATCH, array($this, 'singleStyleCode'));
     }
 
     public function singleStyleCode($atts, $content, $tag) {
-        $template = $this->twig->loadTemplate('frontend/style.shortcode.twig');
-        $api = new Api\Polyshapes();
+        $template = $this->template->loadTemplate('frontend/style.shortcode.twig');
+        $api = new Api\Cables();
         $style = $api->getStyle($atts['id']);
-        echo $this->twig->render($template, array(
+        echo $this->template->render($template, array(
             'style' => $style,
-            'targetSelector' => '#polypatch',
+            'targetSelector' => '#cablespatch',
             'isImported' => $api->isImported($style),
             'styleDir' => $api->getStyleDirUrl($style)
         ));
