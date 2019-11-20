@@ -3,7 +3,7 @@
 Plugin Name: cables.gl Wordpress
 Plugin URI: https://cables.gl
 Description: Integration of cables.gl patches into the Wordpress CMS
-Version: 0.9.1
+Version: 0.9.2
 Author: undefined development
 Author URI: http://undev.de
 License: MIT
@@ -34,7 +34,9 @@ function cables_patch_screenshot_url($patchId) {
   return Plugin::getPatchScreenshotUrl($patchId);
 }
 $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://ci.undev.de/releases/undev-studio/polyshapes_api_wpclient/master/release.json',
+    'https://github.com/cables-gl/cables-wordpress-plugin/',
     __FILE__, //Full path to the main plugin file or functions.php.
-    'undev/polyshapes-wpplugin'
+    'cables-gl/cables-wordpress-plugin'
 );
+$myUpdateChecker->getVcsApi()->enableReleaseAssets();
+
