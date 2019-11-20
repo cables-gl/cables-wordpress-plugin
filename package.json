@@ -1,6 +1,6 @@
 {
   "name": "cables-wpplugin",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "license": "MIT",
   "devDependencies": {
     "grunt": "1.0.2",
