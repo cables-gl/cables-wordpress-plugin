@@ -22,10 +22,10 @@ class Shortcodes {
 
   /**
    * Shortcodes constructor.
-   * @param TemplateEngine $twig
+   * @param TemplateEngine $template
    */
-    public function __construct(TemplateEngine $twig) {
-        $this->template = $twig;
+    public function __construct(TemplateEngine $template) {
+        $this->template = $template;
     }
 
     public function register() {
@@ -38,7 +38,6 @@ class Shortcodes {
         $patch = $api->getPatch($atts['id']);
         echo $this->template->render($template, array(
             'patch' => $patch,
-            'targetSelector' => '#cablespatch',
             'isImported' => $api->isImported($patch),
             'patchDir' => $api->getPatchDirUrl($patch)
         ));

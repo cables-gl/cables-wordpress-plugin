@@ -1,4 +1,4 @@
-<?php if(count($context['patch']) > 0): ?>
+<?php if(is_array($context['patches']) && count($context['patches']) > 0): ?>
     <script type="text/javascript">
         function showError(err) {
             alert(err);
@@ -56,13 +56,15 @@
         <script type="text/javascript">
             window.addEventListener("load", function (event) {
                 var nodeList = document.querySelectorAll('<?php echo $config['cssSelector']; ?>');
-                for (var i = 0; i < nodeList.length; i++) {
+                if(typeof CABLES.EMBED.replaceWithPatch === 'function') {
+                  for (var i = 0; i < nodeList.length; i++) {
                     CABLES.EMBED.replaceWithPatch(nodeList[i], {
-                        patchFile: '<?php echo $config['patchDir']; ?>js/patch.json',
-                        prefixAssetPath: '<?php echo $config['patchDir']; ?>/',
-                        onError: showError,
-                        glCanvasResizeToWindow: true
+                      patchFile: '<?php echo $config['patchDir']; ?>js/patch.json',
+                      prefixAssetPath: '<?php echo $config['patchDir']; ?>/',
+                      onError: showError,
+                      glCanvasResizeToWindow: true
                     });
+                  }
                 }
             });
         </script>
