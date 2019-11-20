@@ -2,7 +2,7 @@
 Tags: cables, cables.gl, wordpress, plugin
 Requires at least: 4.3.1
 Tested up to: 5.3
-Version: 0.9.5
+Version: 0.10.0
 
 Plugin to access patches of your cables.gl account
 
