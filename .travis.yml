@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - 12
+
+matrix:
+  include:
+    - os: linux
+      services: docker
+      language: generic
+
+script: npm rebuild node-sass && yarn install && grunt && grunt package
+
+branches:
+  only:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file_glob: true
+  file: target/cables-wpplugin.zip
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true
