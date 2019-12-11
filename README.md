@@ -10,9 +10,9 @@ have created in your cables.gl account
 ## Installation
 
 * Download latest release .zip file
-* Login as an Adminuser
-* Upload the Plugin to your Wordpress installation
-* Click on "Cables"
+* Login as an Adminuser on your wordpress site
+* Upload the zipped Plugin to your Wordpress installation
+* Click on "Cables" in the main menu on the left
 * Insert API-Key (create a new one in your account settings in cables.gl)
 * fiddle around
 
