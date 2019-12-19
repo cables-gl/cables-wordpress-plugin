@@ -31,7 +31,7 @@ cables:
         button: "Load More"
       sidebar1:
         headline: "New to cables?"
-        image:
+        image: "https://i.ytimg.com/vi/EPFNHYah9F4/hqdefault.jpg"
         text: "Watch the video to get you started on creating beautiful website backgrounds with cables.gl."
       sidebar2:
         image:
@@ -129,12 +129,18 @@ cables:
       block3:
         headline: "Advanced integration"
         text: "Use this shortcode anywhere in the Wordpress-Editor to display your patch in-place:"
+        defaults: "The patch is displayed in a 100% width and a scaled height of 75% of the width if not styled otherwise"
+        options: "You can use these additional attributes to control the style of your patch (or style directly in theme-css)"
+        height: "<pre style=\"display: inline-block\">height='200px'</pre> will set your patch height at 200px (this takes anything css 'height' understands as an argument)"
+        width: "<pre style=\"display: inline-block\">width='200px'</pre> will set your patch height at 200px (this takes anything css 'height' understands as an argument)"
+        containerStyle: "<pre style=\"display: inline-block\">containerStyle='...'</pre>you can put additional styles for the container element here (e.g. border: 1px solid red)"
+        patchStyle: "<pre style=\"display: inline-block\">patchStyle='...'</pre>you can put additional styles for the patch element here (e.g. margin-left: 10px)"
       sidebar1:
         headline: "Your patch"
         text: "Configure the places the patch is integrated on the left side"
     settings:
       mainheadline: "Cables: Settings"
-      headline: "You are currently logged in to cables.gl as"
+      headline: "You are currently logged in to cables.gl"
       apikey:
         headline: "Your current login information"
         login: "Login:"
@@ -144,6 +150,6 @@ cables:
         text: "Please visit your <a href=''>Account Page</a> in cables.gl to update any of your user information."
       block2:
         headline: "Log out of cables.gl"
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        text: "This will remove your API-Key from your WordPress installation and allows you to use another account."
         button: "Log out now"
 

@@ -10,12 +10,13 @@ class Php implements TemplateEngine {
   }
 
   public function render($template, $context) {
-
     $cables_url = Plugin::getConfig()['cables_url'];
     $cables_api_url = Plugin::getConfig()['cables_api_url'];
     $context['cables_api_url'] = $cables_api_url;
     $context['cables_url'] = $cables_url;
     $context['cables_screenshot_baseurl'] = Plugin::getScreenshotBaseUrl();
+    ob_start();
     include($template);
+    return ob_get_clean();
   }
 }

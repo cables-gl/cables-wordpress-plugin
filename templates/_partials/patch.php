@@ -1,5 +1,11 @@
 <?php if($context['isImported']): ?>
-    <canvas id="glcanvas"/>
+    <? if($context['style']): ?>
+    <canvas id="glcanvas"
+            style="width: <?php echo $context['style']['width']; ?>;<?php if($context['style']['height']):?> height: <?php echo $context['style']['height']; ?>;<?php endif;?><?php echo " " . $context['style']['patchStyle']; ?>"
+    />
+    <?php else: ?>
+        <canvas id="glcanvas"/>
+    <?php endif; ?>
 
     <script type="text/javascript" src="<?php echo $context['patchDir']; ?>js/libs.core.min.js"></script>
     <script type="text/javascript" src="<?php echo $context['patchDir']; ?>js/cables.min.js"></script>

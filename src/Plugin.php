@@ -182,6 +182,7 @@ class Plugin {
             static::$translations[$lang] = $translation;
         } else {
             $defaultLang = static::getConfig()['default_language'];
+            $languageFile = static::$basePath . 'config/i18n/' . $defaultLang . '.yml';
             $translation = Yaml::parseFile($languageFile);
             static::$translations[$defaultLang] = $translation;
         }

@@ -1,7 +1,7 @@
 <div class="wrap">
     <div class="icon32"></div>
     <h2><?php echo i18n("page_settings_mainheadline"); ?></h2>
-    <h3><?php echo i18n("page_settings_headline"); ?> "<?php echo $context['account']->email; ?>"</h3>
+    <h3><?php echo i18n("page_settings_headline"); ?></h3>
     <div id="cables_auth">
         <div class="metabox-holder columns-1">
             <div class="meta-box-sortables ui-sortable">

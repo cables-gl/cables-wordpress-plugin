@@ -36,10 +36,22 @@ class Shortcodes {
         $template = $this->template->loadTemplate('frontend/patch.shortcode');
         $api = new Api\Cables();
         $patch = $api->getPatch($atts['id']);
-        echo $this->template->render($template, array(
+        if(!$atts['width']) {
+          $atts['width'] = '100%';
+          $atts['containerstyle'] .= 'position:relative; padding-bottom: 75%';
+          $atts['patchstyle'] .= 'position:absolute; height: 75%';
+        }
+
+        return $this->template->render($template, array(
             'patch' => $patch,
             'isImported' => $api->isImported($patch),
-            'patchDir' => $api->getPatchDirUrl($patch)
+            'patchDir' => $api->getPatchDirUrl($patch),
+            'style' => [
+              'width' => $atts['width'],
+              'height' => $atts['height'],
+              'containerStyle' => $atts['containerstyle'],
+              'patchStyle' => $atts['patchstyle']
+            ]
         ));
     }
 

@@ -42,6 +42,15 @@
                             <div class="shortcode">
                                 <?php echo i18n("page_patch_block3_text"); ?>
                                 <pre>[cables_patch id='<?php echo $context['patch']->id; ?>']</pre>
+                                <hr/>
+                                <p>
+                                    <?php echo i18n('page_patch_block3_defaults') ?><br/><br/>
+                                    <?php echo i18n('page_patch_block3_options') ?><br/>
+                                    <?php echo i18n('page_patch_block3_height') ?><br/>
+                                    <?php echo i18n('page_patch_block3_width') ?><br/>
+                                    <?php echo i18n('page_patch_block3_containerStyle') ?><br/>
+                                    <?php echo i18n('page_patch_block3_patchStyle') ?><br/>
+                                </p>
                             </div>
                             </p>
                         </div>

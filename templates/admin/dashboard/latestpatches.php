@@ -1,3 +1,4 @@
+<?php if($context['notIntegratedPatches']): ?>
 <div class="wrap">
     <h3><span><?php echo i18n("page_dashboard_latestpatches_headline"); ?></span></h3>
     <div id="col-container">
@@ -15,3 +16,4 @@
     </div>
     <div style="clear:both;"></div>
 </div>
+<?php endif; ?>
