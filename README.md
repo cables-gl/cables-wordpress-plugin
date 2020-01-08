@@ -9,7 +9,7 @@ have created in your cables.gl account
 
 ## Installation
 
-* Download latest release .zip file
+* [Download](https://github.com/cables-gl/cables-wordpress-plugin/releases) latest release .zip file
 * Login as an Adminuser on your wordpress site
 * Upload the zipped Plugin to your Wordpress installation
 * Click on "Cables" in the main menu on the left
