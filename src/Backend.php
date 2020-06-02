@@ -10,13 +10,11 @@ namespace Cables\Plugin\Wordpress;
 
 use Cables\Api\CablesApi;
 use Cables\Api\Interfaces\Config;
-use Twig_Environment;
 
 class Backend {
-    /**
-     * @var Twig_Environment
-     */
-    private $twig;
+
+
+    private $pluginDir;
 
     /**
      * @var Config
@@ -31,8 +29,8 @@ class Backend {
     /**
      * Backend constructor.
      */
-    public function __construct(Twig_Environment $twig) {
-        $this->twig = $twig;
+    public function __construct($pluginDir) {
+        $this->pluginDir = $pluginDir;
         $this->config = new WordpressCablesConfig();
         $this->api = new CablesApi($this->config);
     }
@@ -91,12 +89,9 @@ class Backend {
             }
         }
         if (!$cables_api_key || empty($imported)) {
-            $template = $this->twig->loadTemplate('admin/home.twig');
-            $options = array(
-                'api_key' => $cables_api_key,
-                'importedPatches' => $imported
-            );
-            echo $this->twig->render($template, $options);
+            $options['api_key'] = $cables_api_key;
+            $options['importedPatches'] = $imported;
+            TemplateEngine::render('admin/home', $options);
         } else {
             $myListTable = new Patches_Table($imported, $this->api);
             echo '<div class="wrap"><h2>Recently Imported Patches</h2>';
@@ -122,15 +117,13 @@ class Backend {
                 $importPatch = $patch;
             }
         }
-        $template = $this->twig->loadTemplate('admin/import.twig');
         $this->api->importPatch($importPatch);
-        echo $this->twig->render($template, array(
+        echo TemplateEngine::render('admin/import', array(
             'id' => $patchId
         ));
     }
 
     public function patch_page() {
-        $template = $this->twig->loadTemplate('admin/patch.twig');
         $patchId = $_GET['patch'];
         $myPatch = null;
         foreach ($this->api->getMyPatches() as $patch) {
@@ -138,7 +131,7 @@ class Backend {
                 $myPatch = $patch;
             }
         }
-        echo $this->twig->render($template, array(
+        echo TemplateEngine::render('admin/patch.twig', array(
             'id' => $patchId,
             'patch' => $myPatch,
             'patchDir' => $this->api->getPatchDirUrl($myPatch),
@@ -162,8 +155,7 @@ class Backend {
 
         $vars['save'] = esc_attr('Save Changes');
 
-        $template = $this->twig->loadTemplate('admin/settings.twig');
-        echo $this->twig->render($template, $vars);
+        echo TemplateEngine::render('admin/settings', $vars);
 
     }
 

@@ -9,19 +9,16 @@
 namespace Cables\Plugin\Wordpress;
 
 use Cables\Api\CablesApi;
-use Twig_Environment;
+use TemplateEngine;
 
 class Shortcodes {
 
     public static $SHORTCODE_SINGLE_PATCH = 'patch';
 
-    private $twig;
-
     /**
      * Shortcodes constructor.
      */
-    public function __construct(Twig_Environment $twig) {
-        $this->twig = $twig;
+    public function __construct() {
         $this->config = new WordpressCablesConfig();
         $this->api = new CablesApi($this->config);
     }
@@ -31,10 +28,9 @@ class Shortcodes {
     }
 
     public function singlePatchCode($atts, $content, $tag) {
-        $template = $this->twig->loadTemplate('frontend/shape.shortcode.twig');
         $shape = $this->api->getShape($atts['id']);
         $js = $this->api->getJavscriptForShape($shape);
-        echo $this->twig->render($template, array(
+        echo TemplateEngine::render('frontend/shape.shortcode.twig', array(
             'shape' => $shape,
             'javascript' => $js,
             'targetSelector' => '#polypatch'

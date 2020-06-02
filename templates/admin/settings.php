@@ -6,11 +6,11 @@
     <p>Settings to configure the integration of cables.gl into your Wordpress installation.</p>
     <form method="post" action="options.php">
 
-        {{ fields | raw}}
-        {{ sections | raw }}
+        <?php echo $options['fields']; ?>
+        <?php echo $options['sections']; ?>
 
         <p class="submit">
-            <input name="Submit" type="submit" class="button-primary" value="{{ save }}" />
+            <input name="Submit" type="submit" class="button-primary" value="<?php echo $options['save']; ?>" />
         </p>
     </form>
 </div>

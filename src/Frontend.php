@@ -9,20 +9,13 @@
 namespace Cables\Plugin\Wordpress;
 
 use Cables\Api\CablesApi;
-use Twig_Environment;
 
 class Frontend {
 
     /**
-     * @var Twig_Environment
-     */
-    private $twig;
-
-    /**
      * Frontend constructor.
      */
-    public function __construct(Twig_Environment $twig) {
-        $this->twig = $twig;
+    public function __construct() {
         $this->config = new WordpressCablesConfig();
         $this->api = new CablesApi($this->config);
     }

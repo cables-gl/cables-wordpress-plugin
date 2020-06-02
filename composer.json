@@ -12,7 +12,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@bitbucket.org:undev/cables_api_php_client.git"
+      "url": "git@github.com:cables-gl/cables-api-phpclient.git"
     }
   ],
   "config": {
@@ -27,7 +27,6 @@
   },
   "require": {
     "php": ">=7.0.0",
-    "twig/twig": "1.35.0",
     "cables/cables_api_php_client": "dev-master as 0.0.1"
   }
 }
