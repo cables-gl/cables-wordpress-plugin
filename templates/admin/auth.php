@@ -9,7 +9,7 @@
                     <div class="inside">
                         <p>
                             <?php echo i18n("page_auth_block1_text"); ?>
-                            <a class="button-primary" name="Login" href="echo $context['cables_url']/settings"><?php echo i18n("page_auth_block1_button"); ?></a>
+                            <a class="button-primary" name="Login" href="<?php echo $context['cables_url']?>/settings" target="_blank"><?php echo i18n("page_auth_block1_button"); ?></a>
                         </p>
                         <form action="<?php echo $context['action_url']; ?>" method="POST">
                             <input type="hidden" name="action" value="cables_login">

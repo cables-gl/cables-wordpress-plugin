@@ -28,9 +28,10 @@
                                            type="checkbox"<?php if($context['patchConfig']['mobile']): ?> checked="checked"<?php endif; ?>>
                                     <label for="element_replacement"><?php echo i18n("page_patch_block2_text"); ?></label>
                                 </p>
-                                <p class="submit">
+                                <div class="buttons" style="display: flex; flex-direction: row; justify-content: space-between;">
                                     <input name="Submit" type="submit" class="button-primary" value="Save Changes">
-                                </p>
+                                    <input name="delete" type="submit" class="button-primary" value="Delete">
+                                </div>
                             </div>
                         </div>
                     </form>

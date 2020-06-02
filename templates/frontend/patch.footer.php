@@ -48,9 +48,7 @@
 <?php endif; ?>
 <?php if($context['patches']): foreach($context['patches'] as $config): ?>
 
-    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/libs.core.min.js"></script>
-    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/cables.min.js"></script>
-    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/ops.js"></script>
+    <script type="text/javascript" src="<?php echo $config['patchDir']; ?>js/patch.js"></script>
 
     <?php if(!empty($config['cssSelector'])): ?>
         <script type="text/javascript">
@@ -59,7 +57,6 @@
                 if(typeof CABLES.EMBED.replaceWithPatch === 'function') {
                   for (var i = 0; i < nodeList.length; i++) {
                     CABLES.EMBED.replaceWithPatch(nodeList[i], {
-                      patchFile: '<?php echo $config['patchDir']; ?>js/patch.json',
                       prefixAssetPath: '<?php echo $config['patchDir']; ?>/',
                       onError: showError,
                       glCanvasResizeToWindow: true
@@ -79,7 +76,7 @@
                 body.insertBefore(canvEl, body.firstChild);
                 patchBackground = new CABLES.Patch(
                     {
-                        patchFile: '<?php echo $config['patchDir']; ?>js/patch.json',
+                        patch: CABLES.exportedPatch,
                         prefixAssetPath: '<?php echo $config['patchDir']; ?>/',
                         glCanvasId: 'cables_background',
                         glCanvasResizeToWindow: true,

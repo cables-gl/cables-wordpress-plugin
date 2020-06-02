@@ -229,6 +229,7 @@ class Backend {
 
         $redirect = $_REQUEST['redirect'];
 
+        $delete = $_REQUEST['delete'];
         $integrations = $_REQUEST['cables_integration'] ? $_REQUEST['cables_integration'] : array();
         $integrateHeader = array_key_exists('header', $integrations);
         $integrateHero = array_key_exists('hero', $integrations);
@@ -268,13 +269,22 @@ class Backend {
         if (!is_array($patches)) {
             $patches = array();
         }
-        $patches[$patchId] = array(
+        if($delete) {
+          unset($patches[$patchId]);
+          $api = new Api\Cables();
+          $api->deletePatchFiles($patchId);
+          Plugin::setPluginOption(Plugin::OPTIONS_PATCHES, $patches);
+          wp_redirect(admin_url('/admin.php?page=cables_backend'));
+          exit;
+        }else{
+          $patches[$patchId] = array(
             'background' => !!$integrateBackground,
             'integrations' => $integrations,
             'cssSelector' => $cssSelector,
             'page_types' => $pageTypes,
             'mobile' => !!$mobile
-        );
+          );
+        }
         Plugin::setPluginOption(Plugin::OPTIONS_PATCHES, $patches);
 
         if (!$redirect) {

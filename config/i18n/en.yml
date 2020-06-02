@@ -126,6 +126,7 @@ cables:
         headline: "Mobile integration"
         text: "Show on mobile"
         button: "Save Changes"
+        delete: "Delete"
       block3:
         headline: "Advanced integration"
         text: "Use this shortcode anywhere in the Wordpress-Editor to display your patch in-place:"

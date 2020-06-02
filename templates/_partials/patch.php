@@ -7,9 +7,7 @@
         <canvas id="glcanvas"/>
     <?php endif; ?>
 
-    <script type="text/javascript" src="<?php echo $context['patchDir']; ?>js/libs.core.min.js"></script>
-    <script type="text/javascript" src="<?php echo $context['patchDir']; ?>js/cables.min.js"></script>
-    <script type="text/javascript" src="<?php echo $context['patchDir']; ?>js/ops.js"></script>
+    <script type="text/javascript" src="<?php echo $context['patchDir']; ?>js/patch.js"></script>
 
     <script>
 
@@ -17,14 +15,24 @@
             alert(err);
         }
 
-        window.addEventListener("load", function (event) {
+        function patchInitialized() {
+          console.info("patch initialized")
+        }
+
+        function patchFinishedLoading() {
+          console.info("patch finshed loading")
+        }
+
+        document.addEventListener('CABLES.jsLoaded', function(event) {
             CABLES.patch = new CABLES.Patch(
                 {
-                    patchFile: '<?php echo $context['patchDir']; ?>js/patch.json',
+                    patch: CABLES.exportedPatch,
                     prefixAssetPath: '<?php echo $context['patchDir']; ?>/',
                     glCanvasId: 'glcanvas',
                     glCanvasResizeToWindow: false,
-                    onError: showError
+                    onError: showError,
+                    onPatchLoaded: patchInitialized,
+                    onFinishedLoading: patchFinishedLoading,
                 });
         });
 
