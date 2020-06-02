@@ -34,7 +34,7 @@ class Plugin {
     /**
      * Plugin constructor.
      */
-    public function __construct(string $baseUrl, string $basePath) {
+    public function __construct($baseUrl, $basePath) {
 
         static::$baseUrl = $baseUrl;
         static::$config = Yaml::parseFile($basePath . 'config/config.yml');
