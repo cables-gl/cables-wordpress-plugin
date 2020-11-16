@@ -1,8 +1,11 @@
-environment: dev
+environment: live
 global:
   cables_url: https://cables.gl
   cables_api_url: https://cables.gl/api
   default_language: en
+live:
+  cables_url: https://cables.gl
+  cables_api_url: https://cables.gl/api
 dev:
   cables_url: https://dev.cables.gl
   cables_api_url: https://dev.cables.gl/api
