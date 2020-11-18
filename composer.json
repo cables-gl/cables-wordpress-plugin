@@ -1,6 +1,6 @@
 {
   "name": "cables-wpplugin",
-  "version": "0.11.4",
+  "version": "0.12.0",
   "type": "wordpress-plugin",
   "description": "Plugin to access patches of your cables.gl account",
   "keywords": [

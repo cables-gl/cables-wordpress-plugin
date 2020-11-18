@@ -19,16 +19,23 @@ class Cables
    */
   public function getPatch(string $patchId): ApiPatch
   {
-    $response = $this->getRemote('/mypatches/');
-    $patchesJSON = json_decode($response['body'])->patches;
-    $patchJSON = "{}";
-    foreach ($patchesJSON as $patch) {
-      if ($patch->_id == $patchId) {
-        $patchJSON = $patch;
-        break;
-      }
+    $patchFile = Plugin::getBasePath() . 'public/patches/' . $patchId . '/patch.json';
+    if(file_exists($patchFile)) {
+        $patchJSON = json_decode(file_get_contents($patchFile));
+    }else{
+        $response = $this->getRemote('/mypatches/');
+        $patchesJSON = json_decode($response['body'])->patches;
+        $patchJSON = "{}";
+        foreach ($patchesJSON as $patch) {
+            if ($patch->_id == $patchId) {
+                $patchJSON = $patch;
+                break;
+            }
+        }
+        file_put_contents($patchFile, json_encode($patchJSON, JSON_PRETTY_PRINT));
     }
-    return ApiPatch::fromJson($patchJSON);
+    $apiPatch = ApiPatch::fromJson($patchJSON);
+    return $apiPatch;
   }
 
   private function getRemote(string $method, array $params = array(), $methodIsUrl = false)
