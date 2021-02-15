@@ -3,7 +3,7 @@
 Plugin Name: cables.gl Wordpress
 Plugin URI: https://cables.gl
 Description: Integration of cables.gl patches into the Wordpress CMS
-Version: 0.12.1
+Version: 0.12.2
 Author: undefined development
 Author URI: http://undev.de
 License: MIT

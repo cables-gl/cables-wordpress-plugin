@@ -175,7 +175,7 @@ class Plugin {
         $lang = trim($localeFields[0]);
         $translation = array();
         $languageFile = static::$basePath . 'config/i18n/' . $lang . '.yml';
-        if (array_key_exists($lang, static::$translations) & static::$translations[$lang]) {
+        if (isset(static::$translations[$lang]) && static::$translations[$lang]) {
             $translation = static::$translations[$lang];
         } else if (file_exists($languageFile)) {
             $translation = Yaml::parseFile($languageFile);

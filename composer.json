@@ -1,6 +1,6 @@
 {
   "name": "cables-wpplugin",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "type": "wordpress-plugin",
   "description": "Plugin to access patches of your cables.gl account",
   "keywords": [
@@ -32,7 +32,7 @@
   },
   "require": {
     "php": ">=7.0",
-    "yahnis-elsts/plugin-update-checker": "4.8.1",
+    "yahnis-elsts/plugin-update-checker": "4.10",
     "symfony/yaml": "3.4.0"
   }
 }

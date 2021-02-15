@@ -58,8 +58,15 @@ class Cables
 
   private function getClientId()
   {
+    $client_id = "wordpress";
     $url = parse_url(get_site_url());
-    return "wordpress_" . $url['host'] . $url['path'];
+    if(isset($url['host'])) {
+      $client_id = $client_id . "_" . $url['host'];
+    }
+    if(isset($url['host'])) {
+      $client_id = $client_id . "_" . $url['path'];
+    }
+    return $client_id;
   }
 
   private function getAccountId()
