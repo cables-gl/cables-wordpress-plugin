@@ -1,5 +1,5 @@
 <?php if($context['isImported']): ?>
-    <? if($context['style']): ?>
+    <?php if($context['style']): ?>
     <canvas id="glcanvas"
             style="width: <?php echo $context['style']['width']; ?>;<?php if($context['style']['height']):?> height: <?php echo $context['style']['height']; ?>;<?php endif;?><?php echo " " . $context['style']['patchStyle']; ?>"
     />

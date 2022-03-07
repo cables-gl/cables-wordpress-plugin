@@ -1,25 +1,31 @@
-version: "3"
+version: '3.1'
 
 services:
   wordpress:
-    image: wordpress:php7.3
+    image: wordpress:php7.4
     links:
       - wordpress_db:mysql
     ports:
-      - 8082:80
-    depends_on:
-      - wordpress_db
+      - 8080:80
     environment:
+      WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: db4wp
-    networks:
-      - cables_wordpress_network
+      WORDPRESS_TABLE_PREFIX: wp23o8z4hb_
+    volumes:
+      - ./:/var/www/html/wp-content/plugins/cables-wpplugin
+      - ./docker/docker_php_config.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./docker/htaccess:/var/www/html/.htaccess
   wordpress_db:
-    image: mysql:5.6
+    image: mariadb:10.5
     environment:
       MYSQL_ROOT_PASSWORD: db4wp
-    networks:
-      - cables_wordpress_network
-
-networks:
- cables_wordpress_network:
-    driver: "bridge"
+      MYSQL_DATABASE: wordpress
+  phpmyadmin:
+    image: corbinu/docker-phpmyadmin
+    links:
+      - wordpress_db:mysql
+    ports:
+      - 8181:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: db4wp
