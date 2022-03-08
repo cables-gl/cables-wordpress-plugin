@@ -77,11 +77,11 @@ class Plugin {
     }
 
     public static function getPatchScreenshotUrl($patchId) {
-        return static::getScreenshotBaseUrl() . $patchId . '/screenshot.png';
+        return static::getScreenshotBaseUrl() . $patchId . '/thumb.webp';
     }
 
     public static function getScreenshotBaseUrl() {
-        return static::getConfig()['cables_url'] . '/project/';
+        return static::getConfig()['cables_url'] . '/thumb/s/';
     }
 
     public function display() {
