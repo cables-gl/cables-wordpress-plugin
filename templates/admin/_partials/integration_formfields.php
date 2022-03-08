@@ -25,15 +25,4 @@
     <input type="checkbox" name="cables_integration_pagetype[page]" id="cables_integration_pagetype_page"<?php echo $context['patchConfig']['page_types']['page'] ? ' checked="checked"' : '' ?>/>
     <label for="cables_integration_pagetype_page"><?php echo i18n("page_integration_tab2_pagetype_page"); ?></label>
 
-    <?php if(!empty($context['pageTemplates'])): ?>
-    <input type="checkbox" name="cables_integration_pagetype[custom]" id="cables_integration_pagetype_custom"<?php echo $context['patchConfig']['page_types']['custom'] ? ' checked="checked"' : '' ?>/>
-    <label for="cables_integration_pagetype_custom"><?php echo i18n("page_integration_tab2_pagetype_selected_field"); ?></label>
-    <select id="cables_integration_pagetype_customtypes" name="cables_integration_pagetype[customtypes]" multiple="multiple">
-        <option value="hund"><?php echo i18n("page_integration_tab2_pagetype_selected_label"); ?></option>
-        <?php foreach($context['pageTemplates'] as $pageTemplate): ?>
-            <?php echo $pageTemplate; ?>
-            <option value="katze"><?php echo i18n("page_integration_tab2_pagetype_selected_label"); ?></option>
-        <?php endforeach; ?>
-    </select>
-    <?php endif ?>
 </p>

@@ -156,15 +156,13 @@ class Backend {
                         $patchConfig = $options['patches'][$patchId];
                     }
                 }
-                $pageTemplates = wp_get_theme()->get_page_templates();
                 $params = array(
                     'patch' => $patchId,
                     'isImported' => $patch->isImported(),
                     'patchConfig' => $patchConfig,
                     'patchDir' => $api->getPatchDirUrl($patch),
                     'action_url' => esc_url(admin_url('admin-post.php')),
-                    'cssSelectors' => $this->getPossibleCssSelectors(),
-                    'pageTemplates' => $pageTemplates
+                    'cssSelectors' => $this->getPossibleCssSelectors()
                 );
                 break;
             case 'tab3':
@@ -179,15 +177,13 @@ class Backend {
                         $patchConfig = $options['patches'][$patchId];
                     }
                 }
-                $pageTemplates = wp_get_theme()->get_page_templates();
                 $params = array(
                     'patch' => $patchId,
                     'isImported' => $patch->isImported(),
                     'patchConfig' => $patchConfig,
                     'patchDir' => $api->getPatchDirUrl($patch),
                     'action_url' => esc_url(admin_url('admin-post.php')),
-                    'cssSelectors' => $this->getPossibleCssSelectors(),
-                    'pageTemplates' => $pageTemplates
+                    'cssSelectors' => $this->getPossibleCssSelectors()
                 );
                 break;
             default:
@@ -309,15 +305,13 @@ class Backend {
                 $patchConfig = $options['patches'][$patchId];
             }
         }
-        $pageTemplates = wp_get_theme()->get_page_templates();
         $context = array(
             'patch' => $patch,
             'isImported' => $imported,
             'patchConfig' => $patchConfig,
             'patchDir' => $api->getPatchDirUrl($patch),
             'action_url' => esc_url(admin_url('admin-post.php')),
-            'cssSelectors' => $this->getPossibleCssSelectors(),
-            'pageTemplates' => $pageTemplates
+            'cssSelectors' => $this->getPossibleCssSelectors()
         );
         echo $this->template->render($template, $context);
     }
